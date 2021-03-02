@@ -17,6 +17,45 @@
 #define W_WIDTH 1024
 #define W_HEIGHT 768
 
+static const GLfloat cube_triangles_positions[] = {
+    -1.0f,-1.0f,-1.0f, // triangle 1 : begin
+    -1.0f,-1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f, // triangle 1 : end
+    1.0f, 1.0f,-1.0f, // triangle 2 : begin
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f,-1.0f, // triangle 2 : end
+    1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f,-1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f,-1.0f,
+    -1.0f, 1.0f,-1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f
+};
+
 int main(void)
 {
     GLFWwindow* window;
@@ -61,16 +100,16 @@ int main(void)
     }
 
     {
-        float positions[] = {
+        /*float positions[] = {
             -1.0f, -1.0f,  0.0f,
              1.0f, -1.0f,  0.0f,
              0.0f,  1.0f,  0.0f
-        };
+        };*/
 
         glm::vec3 camera_position(4, 3, 3);
 
         VertexArray va;
-        VertexBuffer vb(positions, 3 * 3 * sizeof(float)); // number of vertices stored * floats per vertex
+        VertexBuffer vb(cube_triangles_positions, 12* 3 * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // set the layout to a couple of floats
@@ -87,9 +126,10 @@ int main(void)
 
         glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = glm::lookAt(camera_position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)) * glm::mat4(1.0f);
 
-        float z = 0.0f;
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        glm::mat4 MVP = proj * view * model;
+        shader.SetUniformMat4f("u_MVP", MVP);
 
         Renderer renderer;
 
@@ -98,13 +138,7 @@ int main(void)
         {
             renderer.Clear();
 
-            z += 0.01f;
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, z));
-            glm::mat4 MVP = proj * view * model;
-            shader.SetUniformMat4f("u_MVP", MVP);
-
-
-            renderer.Draw(va, 3, shader);
+            renderer.Draw(va, 12*3, shader);
 
 
             /* Swap front and back buffers */
