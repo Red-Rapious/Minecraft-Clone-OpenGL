@@ -122,6 +122,7 @@ int main(void)
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
         GLCall(glEnable(GL_CULL_FACE));
+        GLCall(glClearColor(0.0, 0.0, 0.0, 1.0));
 
         glm::vec3 camera_position(3, 3, 3);
 
@@ -145,9 +146,10 @@ int main(void)
         Control control(window, camera_position);
 
 
-        std::unordered_map<glm::vec2, Chunck*> chuncksCoordsMap;
-        Chunck chunck(glm::vec3(0,0,0));
-        chuncksCoordsMap[glm::vec3(0, 0, 0)] = &chunck;
+        std::unordered_map<ChunckCoord, Chunck*, ChunkCoordHash> chuncksCoordsMap;
+        ChunckCoord coord(0, 0);
+        Chunck chunck(coord);
+        chuncksCoordsMap[chunck.GetCoord()] = &chunck;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
