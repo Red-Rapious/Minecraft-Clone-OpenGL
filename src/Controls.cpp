@@ -5,26 +5,27 @@
 #include "GLFW/glfw3.h"
 
 #include <iostream>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 
 Control::Control(GLFWwindow * window, glm::vec3 cameraPosition, float hAngle, float vAngle, float iFOV, float speed, float mouseSpeed)
 	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_initialFOV(iFOV), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
 {
-	//glfwSetScrollCallback(window, GetMouseWheel);
+	//glfwSetScrollCallback(window, (void (*)(GLFWwindow*, double, double))GetMouseWheel);
 	UpdateWSize();
 	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
 }
 
 glm::mat4 Control::getProjectionMatrix() const
 {
-	return glm::mat4(1.0f);
+	return glm::perspective(glm::radians(m_initialFOV), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
 }
 
 glm::mat4 Control::getViewMatrix() const
 {
-	
-
 	return glm::mat4(1.0f);
+	//return glm::lookAt(m_cameraPosition, m_cameraPosition + m_direction, m_up);
 }
 
 void Control::UpdateMouse()
@@ -84,7 +85,7 @@ void Control::UpdateKeyboard()
 
 void Control::UpdateDeltaTime()
 {
-	double currentTime = glfwGetTime();
+	float currentTime = glfwGetTime();
 	m_deltaTime = float(currentTime - m_lastTime);
 	m_lastTime = currentTime;
 }
