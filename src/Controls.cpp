@@ -33,6 +33,7 @@ glm::mat4 Control::getViewMatrix()
 {
 	//glm::vec3 center = m_cameraPosition + m_direction;
 	glm::vec3 center = glm::vec3(0, 0, 0);
+	m_up.y = -m_up.y; // quick fix because otherwise the camera is upside down
 	return glm::lookAt(m_cameraPosition, center, m_up);
 }
 

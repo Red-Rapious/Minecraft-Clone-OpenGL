@@ -19,6 +19,7 @@
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
 
+
 static const GLfloat cube_triangles_positions[] = {
     -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
     -1.0f,-1.0f, 1.0f,    0.0f,  0.0f, // D
@@ -66,8 +67,12 @@ static const GLfloat cube_triangles_positions[] = {
 
      1.0f, 1.0f, 1.0f,    0.0f,  1.0f, // F
     -1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // E
-     1.0f,-1.0f, 1.0f,    1.0f,  0.0f  // C
+     1.0f,-1.0f, 1.0f,    0.0f,  0.0f  // C
 };
+
+// TODO:
+// - add mouse wheel support
+// - fix wrong straff side
 
 int main(void)
 {
