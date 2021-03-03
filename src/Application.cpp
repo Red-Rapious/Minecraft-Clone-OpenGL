@@ -3,14 +3,14 @@
 
 #include <iostream>
 
-#include "Renderer.h"
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "VertexBufferLayout.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Controls.h"
+#include "graphics/Renderer.h"
+#include "graphics/IndexBuffer.h"
+#include "graphics/VertexBuffer.h"
+#include "graphics/VertexArray.h"
+#include "graphics/VertexBufferLayout.h"
+#include "graphics/Shader.h"
+#include "graphics/Texture.h"
+#include "graphics/Controls.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -70,10 +70,6 @@ static const GLfloat cube_triangles_positions[] = {
      1.0f,-1.0f, 1.0f,    0.0f,  0.0f  // C
 };
 
-// TODO:
-// - add mouse wheel support
-// - fix wrong straff side
-
 int main(void)
 {
     GLFWwindow* window;
@@ -86,7 +82,6 @@ int main(void)
         return -1;
     }
         
-
     /* Setting profile to CORE to use vertex arrays objects */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -109,8 +104,6 @@ int main(void)
 
     /* Set the swap interval to make the render smooth */
     glfwSwapInterval(1);
-
-    
 
     /* Initialising GLEW */
     if (glewInit() != GLEW_OK)

@@ -9,16 +9,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/fast_trigonometry.hpp"
 
-
-void GetMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
-{
-	//std::cout << yoffset << "\n";
-}
-
 Control::Control(GLFWwindow * window, glm::vec3 cameraPosition, float hAngle, float vAngle, float iFOV, float speed, float mouseSpeed)
 	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_initialFOV(iFOV), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
 {
-	//glfwSetScrollCallback(window, ::GetMouseWheel);
 	UpdateWSize();
 	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
 	GLCall(glfwSetCursorPos(m_window, m_windowWidth / 2, m_windowHeight / 2));
