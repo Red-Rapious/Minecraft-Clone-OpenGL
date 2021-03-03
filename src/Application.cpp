@@ -151,6 +151,8 @@ int main(void)
         Chunck chunck(coord);
         chuncksCoordsMap[chunck.GetCoord()] = &chunck;
 
+        chunck.FillPlaneWithBlocks(0, BlockType::GRASS);
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {

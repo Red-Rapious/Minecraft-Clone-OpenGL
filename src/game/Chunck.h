@@ -4,7 +4,7 @@
 
 enum class BlockType
 {
-	GRASS
+	NONE, GRASS
 };
 
 struct ChunckCoord
@@ -35,7 +35,10 @@ private:
 
 public:
 	Chunck(ChunckCoord coord);
-	inline void SetBlockType(glm::vec3 block_position, BlockType type);
+	void SetBlockType(glm::vec3 block_position, BlockType type);
+	void FillPlaneWithBlocks(unsigned int height, BlockType type);
+
 	inline ChunckCoord GetCoord() const { return m_coord; };
+
 };
 
