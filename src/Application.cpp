@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <unordered_map>
 
 #include "graphics/Renderer.h"
 #include "graphics/IndexBuffer.h"
@@ -15,6 +16,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
+
+#include "game/Chunck.h"
 
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
@@ -140,6 +143,11 @@ int main(void)
 
         Renderer renderer;
         Control control(window, camera_position);
+
+
+        std::unordered_map<glm::vec2, Chunck*> chuncksCoordsMap;
+        Chunck chunck(glm::vec3(0,0,0));
+        chuncksCoordsMap[glm::vec3(0, 0, 0)] = &chunck;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
