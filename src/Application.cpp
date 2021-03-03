@@ -120,14 +120,12 @@ int main(void)
         GLCall(glEnable(GL_DEPTH_TEST));
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
-
-        //GLCall(glEnable(GL_CULL_FACE));
-        GLCall(glDisable(GL_CULL_FACE));
+        GLCall(glEnable(GL_CULL_FACE));
 
         glm::vec3 camera_position(3, 3, 3);
 
         VertexArray va;
-        VertexBuffer vb(cube_triangles_positions, 12* 3 * 3 * sizeof(float)); // number of vertices stored * floats per vertex
+        VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
@@ -136,11 +134,6 @@ int main(void)
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
-
-
-        /*glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = glm::lookAt(camera_position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));*/
-
         
 
         Texture texture("res/textures/image.png");
@@ -164,7 +157,7 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            renderer.Draw(va, 12*3, shader);
+            renderer.Draw(va, 12*(3+2), shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

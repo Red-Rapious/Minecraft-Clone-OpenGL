@@ -29,7 +29,7 @@ private:
 	
 
 public:
-	Control(GLFWwindow* window, glm::vec3 cameraPosition, float hAngle = 3.14f /* Pi radiants */, float vAngle = 0.0f, float iFOV = 250.0f, float speed = 3.0f, float mouseSpeed = 0.05f);
+	Control(GLFWwindow* window, glm::vec3 cameraPosition, float hAngle = 3.14f /* Pi radiants */, float vAngle = 0.0f, float iFOV = 250.0f, float speed = 3.0f, float mouseSpeed = 0.1f);
 	
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();

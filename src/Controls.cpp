@@ -20,6 +20,7 @@ Control::Control(GLFWwindow * window, glm::vec3 cameraPosition, float hAngle, fl
 	//glfwSetScrollCallback(window, ::GetMouseWheel);
 	UpdateWSize();
 	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
+	GLCall(glfwSetCursorPos(m_window, m_windowWidth / 2, m_windowHeight / 2));
 }
 
 glm::mat4 Control::getProjectionMatrix()
@@ -41,7 +42,6 @@ void Control::UpdateMouse()
 	GLCall(glfwSetCursorPos(m_window, m_windowWidth /2, m_windowHeight /2));
 
 	/* Compute new orientation */
-	//float deltaTime = 0.1;
 	m_horizontalAngle += m_mouseSpeed * m_deltaTime * float(m_windowWidth / 2 - xpos);
 	m_verticalAngle += m_mouseSpeed * m_deltaTime * float(m_windowHeight / 2 - ypos);
 
@@ -56,7 +56,6 @@ void Control::UpdateKeyboard()
 
 	/* Moves following one vector */
 	// Move forward
-	//m_deltaTime = 0.1f;
 	if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS) {
 		m_cameraPosition += m_direction * m_deltaTime * m_speed;
 	}
