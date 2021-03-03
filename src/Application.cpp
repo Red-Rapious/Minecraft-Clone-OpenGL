@@ -10,13 +10,14 @@
 #include "VertexBufferLayout.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Controls.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 
-#define W_WIDTH 1024
-#define W_HEIGHT 768
+constexpr auto W_WIDTH = 1024;
+constexpr auto W_HEIGHT = 768;
 
 static const GLfloat cube_triangles_positions[] = {
     -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
@@ -88,6 +89,7 @@ int main(void)
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "OpenGL", NULL, NULL); // 4:3
+    //glfwSetWindowPos(window, 0, 0);
 
     if (!window)
     {
@@ -146,13 +148,16 @@ int main(void)
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Renderer renderer;
+        Control control(window, camera_position);
 
         /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window))
+        while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {
             renderer.Clear();
 
             renderer.Draw(va, 12*3, shader);
+
+            control.UpdateInput();
 
 
             /* Swap front and back buffers */
