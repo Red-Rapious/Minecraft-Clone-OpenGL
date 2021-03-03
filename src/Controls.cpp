@@ -7,6 +7,7 @@
 #include <iostream>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/fast_trigonometry.hpp"
 
 
 void GetMouseWheel(GLFWwindow* window, double xoffset, double yoffset)
@@ -30,7 +31,9 @@ glm::mat4 Control::getProjectionMatrix()
 
 glm::mat4 Control::getViewMatrix()
 {
-	return glm::lookAt(m_cameraPosition, m_cameraPosition + m_direction, m_up);
+	//glm::vec3 center = m_cameraPosition + m_direction;
+	glm::vec3 center = glm::vec3(0, 0, 0);
+	return glm::lookAt(m_cameraPosition, center, m_up);
 }
 
 void Control::UpdateMouse()
@@ -103,6 +106,10 @@ void Control::UpdateInput()
 	UpdateDeltaTime();
 	UpdateMouse();
 	UpdateKeyboard();
+
+	int radius = 3;
+	double currentTime = glfwGetTime();
+	m_cameraPosition = glm::vec3(0, 0, 0) + glm::vec3(radius * glm::cos(currentTime*2), 0, radius * glm::sin(currentTime*2));
 }
 
 void Control::UpdateWSize()
