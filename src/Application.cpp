@@ -121,7 +121,10 @@ int main(void)
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
 
-        glm::vec3 camera_position(4, 3, 3);
+        //GLCall(glEnable(GL_CULL_FACE));
+        GLCall(glDisable(GL_CULL_FACE));
+
+        glm::vec3 camera_position(3, 3, 3);
 
         VertexArray va;
         VertexBuffer vb(cube_triangles_positions, 12* 3 * 3 * sizeof(float)); // number of vertices stored * floats per vertex
@@ -133,15 +136,12 @@ int main(void)
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
-        //shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 0.0f);
 
 
-        glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = glm::lookAt(camera_position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        /*glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W_WIDTH / (float)W_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = glm::lookAt(camera_position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));*/
 
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-        glm::mat4 MVP = proj * view * model;
-        shader.SetUniformMat4f("u_MVP", MVP);
+        
 
         Texture texture("res/textures/image.png");
         texture.Bind(); // default slot is 0
@@ -155,10 +155,16 @@ int main(void)
         {
             renderer.Clear();
 
-            renderer.Draw(va, 12*3, shader);
-
             control.UpdateInput();
 
+            glm::mat4 proj = control.getProjectionMatrix();
+            glm::mat4 view = control.getViewMatrix();
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+            glm::mat4 MVP = proj * view * model;
+            shader.SetUniformMat4f("u_MVP", MVP);
+
+            renderer.Draw(va, 12*3, shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
