@@ -465,6 +465,7 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="res\shaders\Basic.shader" />
+    <None Include="res\shaders\Color.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependancies\GLEW\include\GL\eglew.h">

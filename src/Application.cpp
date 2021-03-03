@@ -103,10 +103,7 @@ int main(void)
     /* Set the swap interval to make the render smooth */
     glfwSwapInterval(1);
 
-    // Enable depth test
-    GLCall(glEnable(GL_DEPTH_TEST));
-    // Accept fragment if it closer to the camera than the former one
-    GLCall(glDepthFunc(GL_LESS));
+    
 
     /* Initialising GLEW */
     if (glewInit() != GLEW_OK)
@@ -117,6 +114,10 @@ int main(void)
     }
 
     {
+        // Enable depth test
+        GLCall(glEnable(GL_DEPTH_TEST));
+        // Accept fragment if it closer to the camera than the former one
+        GLCall(glDepthFunc(GL_LESS));
 
         glm::vec3 camera_position(4, 3, 3);
 
