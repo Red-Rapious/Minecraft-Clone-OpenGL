@@ -45,7 +45,7 @@
     <ClCompile Include="src\graphics\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\Chunck.cpp">
+    <ClCompile Include="src\game\Chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1365,7 +1365,7 @@
     <ClInclude Include="src\graphics\VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\Chunck.hpp">
+    <ClInclude Include="src\game\Chunk.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

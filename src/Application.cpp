@@ -17,7 +17,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 
-#include "game/Chunck.h"
+#include "game/Chunk.hpp"
 
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
@@ -146,9 +146,10 @@ int main(void)
         Control control(window, camera_position);
 
 
-        std::unordered_map<ChunckCoord, Chunck*, ChunkCoordHash> chuncksCoordsMap;
-        ChunckCoord coord(0, 0);
-        Chunck chunck(coord);
+        std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chuncksCoordsMap;
+        ChunkCoord coord;
+        coord.idx, coord.idz = 0, 0;
+        Chunk chunck(coord);
         chuncksCoordsMap[chunck.GetCoord()] = &chunck;
 
         chunck.FillPlaneWithBlocks(0, BlockType::GRASS);

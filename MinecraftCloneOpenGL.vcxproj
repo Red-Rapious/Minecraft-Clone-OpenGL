@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\game\Chunck.cpp" />
+    <ClCompile Include="src\game\Chunk.cpp" />
     <ClCompile Include="src\graphics\Controls.cpp" />
     <ClCompile Include="src\graphics\IndexBuffer.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
@@ -316,7 +316,7 @@
     <ClInclude Include="Dependancies\GLEW\include\GL\wglew.h" />
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3.h" />
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3native.h" />
-    <ClInclude Include="src\game\Chunck.hpp" />
+    <ClInclude Include="src\game\Chunk.hpp" />
     <ClInclude Include="src\graphics\Controls.h" />
     <ClInclude Include="src\graphics\IndexBuffer.h" />
     <ClInclude Include="src\graphics\Renderer.h" />
