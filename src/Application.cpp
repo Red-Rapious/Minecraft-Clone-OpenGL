@@ -18,6 +18,7 @@
 #include "glm/gtx/transform.hpp"
 
 #include "game/Chunk.hpp"
+#include "game/Map.hpp"
 
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;

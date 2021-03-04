@@ -52,7 +52,7 @@ public:
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
-    const float* GetVertexBufferToRender() const;
+    std::vector<float> GetVertexBufferToRender() const;
     void UpdateVertexBufferToRender();
 };
 

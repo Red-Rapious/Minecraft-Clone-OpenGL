@@ -17,7 +17,7 @@ static void addVertexToVertexBuffer(std::vector<float>& vertexBuffer, glm::vec3 
 }
 
 void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord)
-// TODO: Add each vertex to the vertex buffer depending on the faceType, and using addVertexToVertexBuffer
+// TODO: Add each vertex to the vertex buffer depending on the faceType and blockCoord (maybe add it at the end), and using addVertexToVertexBuffer
 {
 	switch (faceType)
 	{
@@ -67,10 +67,9 @@ void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
 	}
 }
 
-const float* Chunk::GetVertexBufferToRender() const
+std::vector<float> Chunk::GetVertexBufferToRender() const
 {
-	const float* ret = &m_vertexBuffer[0];
-	return ret;
+	return m_vertexBuffer;
 }
 
 void Chunk::UpdateVertexBufferToRender()
@@ -85,7 +84,7 @@ void Chunk::UpdateVertexBufferToRender()
 				{
 					glm::vec3 coord(x, y, z);
 
-					/* For each face, check if there's a face next to it */
+					/* For each face, check if there's a face next to it ; if not, render the face*/
 					// FRONT
 					if (m_blocksArray[x][y][z - 1] == BlockType::NONE)
 					{
