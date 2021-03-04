@@ -147,6 +147,8 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\game\Chunk.cpp" />
+    <ClCompile Include="src\game\Constants.hpp" />
+    <ClCompile Include="src\game\Map.cpp" />
     <ClCompile Include="src\graphics\Controls.cpp" />
     <ClCompile Include="src\graphics\IndexBuffer.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
@@ -170,6 +172,7 @@
     <None Include="Dependancies\GLEW\doc\install.html" />
     <None Include="Dependancies\GLEW\doc\log.html" />
     <None Include="Dependancies\GLEW\doc\wglew.html" />
+    <None Include="README.md" />
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\Color.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
@@ -317,6 +320,7 @@
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3.h" />
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3native.h" />
     <ClInclude Include="src\game\Chunk.hpp" />
+    <ClInclude Include="src\game\Map.hpp" />
     <ClInclude Include="src\graphics\Controls.h" />
     <ClInclude Include="src\graphics\IndexBuffer.h" />
     <ClInclude Include="src\graphics\Renderer.h" />

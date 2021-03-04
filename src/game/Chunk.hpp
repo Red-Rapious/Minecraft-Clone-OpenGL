@@ -1,6 +1,8 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include <vector>
+#include "Constants.hpp"
 
 enum class BlockType
 {
@@ -26,14 +28,15 @@ public:
         return (static_cast<std::uint32_t>(a) << 16u) | static_cast<std::uint32_t>(b);
     }
 };
-
+/* */
 
 
 class Chunk
 {
 private:
-	BlockType m_blocksArray[16][255][16];
+	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
+    std::vector<float> m_vertexBuffer;
 
 public:
 	Chunk(ChunkCoord coord);
@@ -41,6 +44,7 @@ public:
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
-
+    float* GetVertexBufferToRender() const;
+    void UpdateVertexBufferToRender();
 };
 

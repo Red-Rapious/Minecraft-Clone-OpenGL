@@ -48,6 +48,12 @@
     <ClCompile Include="src\game\Chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Constants.hpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependancies\GLEW\doc\advanced.html" />
@@ -472,6 +478,7 @@
     </None>
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\Color.shader" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependancies\GLEW\include\GL\eglew.h">
@@ -1366,6 +1373,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\Chunk.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Map.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

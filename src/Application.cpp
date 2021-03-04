@@ -146,13 +146,13 @@ int main(void)
         Control control(window, camera_position);
 
 
-        std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chuncksCoordsMap;
+        /*std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chunksCoordsMap;
         ChunkCoord coord;
         coord.idx, coord.idz = 0, 0;
-        Chunk chunck(coord);
-        chuncksCoordsMap[chunck.GetCoord()] = &chunck;
+        Chunk chunk(coord);
+        chunksCoordsMap[chunk.GetCoord()] = &chunk;
 
-        chunck.FillPlaneWithBlocks(0, BlockType::GRASS);
+        chunk.FillPlaneWithBlocks(0, BlockType::GRASS);*/
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
