@@ -2,6 +2,7 @@
 
 #include "glm/glm.hpp"
 #include <vector>
+#include "glm/glm.hpp"
 #include "Constants.hpp"
 
 enum class BlockType
@@ -30,6 +31,10 @@ public:
 };
 /* */
 
+enum class FaceType
+{
+    FRONT, BACK, RIGHT, LEFT, BELLOW, UP
+};
 
 class Chunk
 {
@@ -38,13 +43,16 @@ private:
 	ChunkCoord m_coord;
     std::vector<float> m_vertexBuffer;
 
+    void ClearVertexBuffer();
+    void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord);
+
 public:
 	Chunk(ChunkCoord coord);
 	void SetBlockType(glm::vec3 block_position, BlockType type);
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
-    float* GetVertexBufferToRender() const;
+    const float* GetVertexBufferToRender() const;
     void UpdateVertexBufferToRender();
 };
 
