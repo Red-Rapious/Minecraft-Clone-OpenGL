@@ -316,7 +316,7 @@
     <ClInclude Include="Dependancies\GLEW\include\GL\wglew.h" />
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3.h" />
     <ClInclude Include="Dependancies\GLWF\include\GLFW\glfw3native.h" />
-    <ClInclude Include="src\game\Chunck.h" />
+    <ClInclude Include="src\game\Chunck.hpp" />
     <ClInclude Include="src\graphics\Controls.h" />
     <ClInclude Include="src\graphics\IndexBuffer.h" />
     <ClInclude Include="src\graphics\Renderer.h" />

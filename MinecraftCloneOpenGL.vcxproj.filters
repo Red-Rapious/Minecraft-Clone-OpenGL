@@ -1365,7 +1365,7 @@
     <ClInclude Include="src\graphics\VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\Chunck.h">
+    <ClInclude Include="src\game\Chunck.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
