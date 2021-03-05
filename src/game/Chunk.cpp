@@ -99,7 +99,7 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 }
 
 Chunk::Chunk(ChunkCoord coord)
-	: m_coord(coord), m_blocksArray()
+	: m_coord(coord), m_blocksArray(), m_vertexBuffer()
 {
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
@@ -115,6 +115,9 @@ Chunk::Chunk(ChunkCoord coord)
 			}
 		}
 	}
+
+	UpdateVertexBufferToRender();
+	std::cout << "cunstructor end " << m_vertexBuffer.size() << "   " << m_vertexBuffer.max_size() << "\n";
 }
 
 inline void Chunk::SetBlockType(glm::vec3 block_position, BlockType type)
@@ -128,10 +131,10 @@ void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
 	{
 		for (unsigned int j = 0 ; j < CHUNK_Z_BLOCK_COUNT; j++)
 		{
-			//std::cout << i << "   " << height << "    " << j << "\n";
 			m_blocksArray[i][1][j] = type;
 		}
 	}
+
 }
 
 std::vector<float> Chunk::GetVertexBufferToRender() const
@@ -141,6 +144,8 @@ std::vector<float> Chunk::GetVertexBufferToRender() const
 
 void Chunk::UpdateVertexBufferToRender()
 {
+
+	ClearVertexBuffer();
 	BlockType analysedBlockType;
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{

@@ -2,6 +2,7 @@
 #include "Map.hpp"
 #include "glm/glm.hpp"
 #include <vector>
+#include <iostream>
 
 void Map::AddChunkToMap(Chunk chunk)
 {
@@ -16,16 +17,20 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 
 const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 {
-	std::vector<float> vertexBuffer;
+	std::vector<float> worldVertexBuffer;
+	//worldVertexBuffer.push_back(0.0f);
 	for (std::pair<ChunkCoord, Chunk*> element : m_chunksUMap)
 	{
 		/* If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer */
 		if (calculateChunksDistance(element.first, chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
+			std::cout << "end " << element.second->m_vertexBuffer.size() << "\n";
+			
 			std::vector<float> chunkVertexBuffer = element.second->GetVertexBufferToRender();
-			vertexBuffer.insert(vertexBuffer.end(), chunkVertexBuffer.begin(), chunkVertexBuffer.end());
+			worldVertexBuffer.insert(worldVertexBuffer.end(), chunkVertexBuffer.begin(), chunkVertexBuffer.end());
 		}
 	}
 
-	return &vertexBuffer[0];
+	m_vertexCount = worldVertexBuffer.size();
+	return &worldVertexBuffer[0];
 }

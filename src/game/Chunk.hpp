@@ -41,7 +41,7 @@ class Chunk
 private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
-    std::vector<float> m_vertexBuffer;
+    
 
     void ClearVertexBuffer();
     void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
@@ -54,5 +54,9 @@ public:
 	inline ChunkCoord GetCoord() const { return m_coord; };
     std::vector<float> GetVertexBufferToRender() const;
     void UpdateVertexBufferToRender();
+
+
+
+    std::vector<float> m_vertexBuffer;
 };
 
