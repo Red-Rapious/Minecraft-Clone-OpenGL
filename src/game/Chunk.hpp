@@ -44,7 +44,7 @@ private:
     std::vector<float> m_vertexBuffer;
 
     void ClearVertexBuffer();
-    void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord);
+    void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
 
 public:
 	Chunk(ChunkCoord coord);

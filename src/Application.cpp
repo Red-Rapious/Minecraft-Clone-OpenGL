@@ -127,8 +127,16 @@ int main(void)
 
         glm::vec3 camera_position(3, 3, 3);
 
+        Map map;
+        ChunkCoord coord;
+        coord.idx, coord.idz = 0, 0;
+        Chunk chunk(coord);
+        map.AddChunkToMap(chunk);
+        chunk.FillPlaneWithBlocks(0, BlockType::GRASS);
+
         VertexArray va;
         VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
+        //VertexBuffer vb(map.GetVertexBufferToRender(coord), 12 * (3 + 2) * 3 * sizeof(float));
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
@@ -154,6 +162,9 @@ int main(void)
         chunksCoordsMap[chunk.GetCoord()] = &chunk;
 
         chunk.FillPlaneWithBlocks(0, BlockType::GRASS);*/
+
+        
+
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
