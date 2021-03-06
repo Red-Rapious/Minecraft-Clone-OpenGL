@@ -4,9 +4,17 @@
 #include <vector>
 #include <iostream>
 
+
+Map::Map()
+	: m_vertexCount(0)
+{
+}
+
 void Map::AddChunkToMap(Chunk chunk)
 {
-	m_chunksUMap[chunk.GetCoord()] = &chunk;
+	unsigned int s = m_chunkVector.size();
+	m_chunkVector.push_back(chunk);
+	m_chunksUMap[chunk.GetCoord()] = &m_chunkVector[s];
 }
 
 static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2)
@@ -17,20 +25,24 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 
 const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 {
-	m_worldVertexBuffer.push_back(0.0f);
-
-	for (std::pair<ChunkCoord, std::unique_ptr<Chunk>> element : m_chunksUMap)
+	//for (std::pair<ChunkCoord, Chunk*> element : m_chunksUMap)
+	for (unsigned int i = 0 ; i < m_chunkVector.size() ; i++)
 	{
 		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
-		if (calculateChunksDistance(element.first, chunkPlayerPosition) <= RENDER_DISTANCE)
+		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
-			std::cout << "end " << element.second->m_vertexBuffer.size() << "\n";
+			//std::cout << "end " << m_chunkVector[i].m_vertexBuffer.size() << "\n";
 			
-			std::vector<float>* chunkVertexBuffer = element.second->GetVertexBufferToRender();
+			std::vector<float>* chunkVertexBuffer = m_chunkVector[i].GetVertexBufferToRender();
+			
 			m_worldVertexBuffer.insert(m_worldVertexBuffer.end(), (*chunkVertexBuffer).begin(), (*chunkVertexBuffer).end());
 		}
 	}
 
-	m_vertexCount = m_worldVertexBuffer.size();
-	return &m_worldVertexBuffer[0];
+	m_vertexCount = m_worldVertexBuffer.size() / 5;
+	if (m_worldVertexBuffer.size() != 0)
+		return &m_worldVertexBuffer[0];
+	else
+		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
+	return nullptr;
 }

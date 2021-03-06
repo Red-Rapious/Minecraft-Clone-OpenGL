@@ -41,6 +41,7 @@ class Chunk
 private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
+    std::vector<float> m_vertexBuffer;
     
 
     void ClearVertexBuffer();
@@ -50,13 +51,12 @@ public:
 	Chunk(ChunkCoord coord);
 	void SetBlockType(glm::vec3 block_position, BlockType type);
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
+    void DeleteAllBlocks();
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
     std::vector<float>* GetVertexBufferToRender();
     void UpdateVertexBufferToRender();
 
-
-
-    std::vector<float> m_vertexBuffer;
+    unsigned int GetNumberOfNonAirBlocks(bool out=false) const;
 };
 

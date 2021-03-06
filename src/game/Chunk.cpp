@@ -103,6 +103,30 @@ Chunk::Chunk(ChunkCoord coord)
 	: m_coord(coord), m_blocksArray(), m_vertexBuffer()
 {
 	// Initialise the chunk to an empty cube of air
+	DeleteAllBlocks();
+	//UpdateVertexBufferToRender();
+	std::cout << "cunstructor end\n";
+}
+
+inline void Chunk::SetBlockType(glm::vec3 block_position, BlockType type)
+{
+	m_blocksArray[(unsigned int)block_position.x][(unsigned int)block_position.y][(unsigned int)block_position.z] = type;
+}
+
+void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
+{
+	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT ; x++)
+	{
+		for (unsigned int z = 0 ; z < CHUNK_Z_BLOCK_COUNT; z++)
+		{
+			m_blocksArray[x][height][z] = type;
+		}
+	}
+
+}
+
+void Chunk::DeleteAllBlocks()
+{
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
 		std::vector<std::vector<BlockType>> vect;
@@ -117,51 +141,31 @@ Chunk::Chunk(ChunkCoord coord)
 			}
 		}
 	}
-
-	m_vertexBuffer.push_back(0.0f);
-	m_vertexBuffer.push_back(0.0f);
-	//UpdateVertexBufferToRender();
-	std::cout << "cunstructor end: " << m_vertexBuffer.size() << "   " << m_vertexBuffer.max_size() << "\n";
-}
-
-inline void Chunk::SetBlockType(glm::vec3 block_position, BlockType type)
-{
-	m_blocksArray[(unsigned int)block_position.x][(unsigned int)block_position.y][(unsigned int)block_position.z] = type;
-}
-
-void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
-{
-	for (unsigned int i = 0; i < CHUNK_X_BLOCK_COUNT ; i++)
-	{
-		for (unsigned int j = 0 ; j < CHUNK_Z_BLOCK_COUNT; j++)
-		{
-			m_blocksArray[i][1][j] = type;
-		}
-	}
-
 }
 
 std::vector<float>* Chunk::GetVertexBufferToRender()
 {
-	//ClearVertexBuffer();
 	UpdateVertexBufferToRender();
 	return &m_vertexBuffer;
 }
 
 void Chunk::UpdateVertexBufferToRender()
 {
-
 	ClearVertexBuffer();
 	BlockType analysedBlockType;
-	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+	std::cout << "STARTING with " << GetNumberOfNonAirBlocks() << "blocks\n";
+	
+	for (unsigned int x = 1; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
-		for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+		for (unsigned int y = 1; y < CHUNK_Y_BLOCK_COUNT; y++)
 		{
-			for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
+			for (unsigned int z = 1; z < CHUNK_Z_BLOCK_COUNT; z++)
 			{
+				
 				analysedBlockType = m_blocksArray[x][y][z];
-				if (analysedBlockType != BlockType::NONE && !(x == 0 || y == 0 || z == 0 || x == CHUNK_X_BLOCK_COUNT-1 || y == CHUNK_Y_BLOCK_COUNT-1 || z == CHUNK_Z_BLOCK_COUNT-1)) // else: do not render the face
+				if (analysedBlockType != BlockType::NONE && !(x == CHUNK_X_BLOCK_COUNT-1 || y == CHUNK_Y_BLOCK_COUNT-1 || z == CHUNK_Z_BLOCK_COUNT-1)) // else: do not render the face
 				{
+					
 					glm::vec3 coord(x, y, z);
 
 					/* For each face, check if there's a face next to it ; if not, render the face*/
@@ -205,4 +209,27 @@ void Chunk::UpdateVertexBufferToRender()
 			}
 		}
 	}
+}
+
+unsigned int Chunk::GetNumberOfNonAirBlocks(bool out) const
+{
+	/* Debug func that count the number of "true" blocks */
+	unsigned int count = 0;
+
+	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+	{
+		for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+		{
+			for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
+			{
+				if (m_blocksArray[x][y][z] != BlockType::NONE)
+					count++;
+			}
+		}
+	}
+
+	if (out)
+		std::cout << "Number of non air blocks: " << count << "\n";
+
+	return count;
 }
