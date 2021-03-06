@@ -141,7 +141,7 @@ int main(void)
         //VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         
         map.GetVertexBufferToRender(coord);
-        VertexBuffer vb(map.GetVertexBufferToRender(coord), map.GetVertexCount() * (3 + 2) * 3 * sizeof(float));
+        VertexBuffer vb(map.GetVertexBufferToRender(coord), map.GetVertexCount() * (3 + 2) * sizeof(float));
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
@@ -160,17 +160,6 @@ int main(void)
         Control control(window, camera_position);
 
 
-        /*std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chunksCoordsMap;
-        ChunkCoord coord;
-        coord.idx, coord.idz = 0, 0;
-        Chunk chunk(coord);
-        chunksCoordsMap[chunk.GetCoord()] = &chunk;
-
-        chunk.FillPlaneWithBlocks(0, BlockType::GRASS);*/
-
-        
-
-
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {
@@ -185,7 +174,7 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            renderer.Draw(va, 12*(3+2), shader);
+            renderer.Draw(va, map.GetVertexCount() *(3+2) / 3, shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

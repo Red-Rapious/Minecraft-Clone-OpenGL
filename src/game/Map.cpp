@@ -41,7 +41,7 @@ const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 
 	m_vertexCount = m_worldVertexBuffer.size() / 5;
 	if (m_worldVertexBuffer.size() != 0)
-		return &m_worldVertexBuffer[0];
+		return m_worldVertexBuffer.data();
 	else
 		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
 	return nullptr;
