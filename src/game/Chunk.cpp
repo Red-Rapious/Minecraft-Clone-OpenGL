@@ -1,6 +1,7 @@
 #include "Chunk.hpp"
 #include "Constants.hpp"
 #include <iostream>
+#include <vector>
 
 void Chunk::ClearVertexBuffer()
 {
@@ -101,6 +102,7 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 Chunk::Chunk(ChunkCoord coord)
 	: m_coord(coord), m_blocksArray(), m_vertexBuffer()
 {
+	// Initialise the chunk to an empty cube of air
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
 		std::vector<std::vector<BlockType>> vect;
@@ -116,8 +118,10 @@ Chunk::Chunk(ChunkCoord coord)
 		}
 	}
 
-	UpdateVertexBufferToRender();
-	std::cout << "cunstructor end " << m_vertexBuffer.size() << "   " << m_vertexBuffer.max_size() << "\n";
+	m_vertexBuffer.push_back(0.0f);
+	m_vertexBuffer.push_back(0.0f);
+	//UpdateVertexBufferToRender();
+	std::cout << "cunstructor end: " << m_vertexBuffer.size() << "   " << m_vertexBuffer.max_size() << "\n";
 }
 
 inline void Chunk::SetBlockType(glm::vec3 block_position, BlockType type)
@@ -137,9 +141,11 @@ void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
 
 }
 
-std::vector<float> Chunk::GetVertexBufferToRender() const
+std::vector<float>* Chunk::GetVertexBufferToRender()
 {
-	return m_vertexBuffer;
+	//ClearVertexBuffer();
+	UpdateVertexBufferToRender();
+	return &m_vertexBuffer;
 }
 
 void Chunk::UpdateVertexBufferToRender()

@@ -133,13 +133,16 @@ int main(void)
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
         chunk.FillPlaneWithBlocks(0, BlockType::GRASS);
+        map.GetVertexBufferToRender(coord);
         
 
         VertexArray va;
 
         VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
-        std::cout << "begin " << chunk.m_vertexBuffer.size() << "   " << chunk.m_vertexBuffer.max_size() << "\n";
-        map.GetVertexBufferToRender(coord);
+        
+
+        //std::cout << "Application end " << chunk.m_vertexBuffer.size() << "   " << chunk.m_vertexBuffer.max_size() << "\n";
+        //map.GetVertexBufferToRender(coord);
         //VertexBuffer vb(map.GetVertexBufferToRender(coord), map.GetVertexCount() * (3 + 2) * 3 * sizeof(float));
         VertexBufferLayout layout;
 

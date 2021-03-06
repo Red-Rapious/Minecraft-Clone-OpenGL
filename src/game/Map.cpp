@@ -17,20 +17,20 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 
 const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 {
-	std::vector<float> worldVertexBuffer;
-	//worldVertexBuffer.push_back(0.0f);
-	for (std::pair<ChunkCoord, Chunk*> element : m_chunksUMap)
+	m_worldVertexBuffer.push_back(0.0f);
+
+	for (std::pair<ChunkCoord, std::unique_ptr<Chunk>> element : m_chunksUMap)
 	{
-		/* If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer */
+		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
 		if (calculateChunksDistance(element.first, chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
 			std::cout << "end " << element.second->m_vertexBuffer.size() << "\n";
 			
-			std::vector<float> chunkVertexBuffer = element.second->GetVertexBufferToRender();
-			worldVertexBuffer.insert(worldVertexBuffer.end(), chunkVertexBuffer.begin(), chunkVertexBuffer.end());
+			std::vector<float>* chunkVertexBuffer = element.second->GetVertexBufferToRender();
+			m_worldVertexBuffer.insert(m_worldVertexBuffer.end(), (*chunkVertexBuffer).begin(), (*chunkVertexBuffer).end());
 		}
 	}
 
-	m_vertexCount = worldVertexBuffer.size();
-	return &worldVertexBuffer[0];
+	m_vertexCount = m_worldVertexBuffer.size();
+	return &m_worldVertexBuffer[0];
 }
