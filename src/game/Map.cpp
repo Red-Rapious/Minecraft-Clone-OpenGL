@@ -4,12 +4,6 @@
 #include <vector>
 #include <iostream>
 
-
-Map::Map()
-	: m_vertexCount(0)
-{
-}
-
 void Map::AddChunkToMap(Chunk chunk)
 {
 	unsigned int s = m_chunkVector.size();
@@ -23,7 +17,7 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
 }
 
-const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
+std::vector<float> Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 {
 	//for (std::pair<ChunkCoord, Chunk*> element : m_chunksUMap)
 	for (unsigned int i = 0 ; i < m_chunkVector.size() ; i++)
@@ -39,10 +33,7 @@ const float* Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 		}
 	}
 
-	m_vertexCount = m_worldVertexBuffer.size() / 5;
-	if (m_worldVertexBuffer.size() != 0)
-		return m_worldVertexBuffer.data();
-	else
+	if (m_worldVertexBuffer.size() == 0)
 		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
-	return nullptr;
+	return m_worldVertexBuffer;
 }

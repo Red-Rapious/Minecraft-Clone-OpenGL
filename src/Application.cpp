@@ -141,7 +141,9 @@ int main(void)
         //VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         
         map.GetVertexBufferToRender(coord);
-        VertexBuffer vb(map.GetVertexBufferToRender(coord), map.GetVertexCount() * (3 + 2) * sizeof(float));
+
+        std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
+        VertexBuffer vb(vertexBufferArray.data(), vertexBufferArray.size() * sizeof(float));
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
@@ -174,7 +176,7 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            renderer.Draw(va, map.GetVertexCount() *(3+2) / 3, shader);
+            renderer.Draw(va, vertexBufferArray.size() / 3, shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
