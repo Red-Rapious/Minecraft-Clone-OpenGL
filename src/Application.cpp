@@ -134,7 +134,7 @@ int main(void)
         coord.idz = 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(5.0, 1.0, 5.0), BlockType::GRASS);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1, 1, 1), BlockType::GRASS);
         //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(3, BlockType::GRASS);
 
         
