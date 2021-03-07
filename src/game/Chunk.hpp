@@ -49,7 +49,7 @@ private:
 
 public:
 	Chunk(ChunkCoord coord);
-	void SetBlockType(glm::vec3 block_position, BlockType type);
+	void SetBlockType(glm::vec3 blockPosition, BlockType type);
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
     void DeleteAllBlocks();
 

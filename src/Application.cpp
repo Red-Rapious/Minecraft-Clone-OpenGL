@@ -130,12 +130,16 @@ int main(void)
 
         Map map;
         ChunkCoord coord;
-        coord.idx= 0;
+        coord.idx = 0;
         coord.idz = 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(5.0, 1.0, 5.0), BlockType::GRASS);
+        //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(3, BlockType::GRASS);
 
+        
+        //VertexArray va2;
+        //VertexBuffer vb2(cube_triangles_positions, 12 * (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         VertexArray va;
         std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
         
@@ -145,12 +149,13 @@ int main(void)
         layout.Push<float>(3); // add 3 floats for the vertex positions
         layout.Push<float>(2); // add 2 floats for the texture coords
         va.AddBuffer(vb, layout); // give the layout to opengl
+        //va2.AddBuffer(vb2, layout);
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
         
 
-        Texture texture("res/textures/image.png");
+        Texture texture("res/textures/textures_test.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
@@ -173,6 +178,7 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", MVP);
 
             renderer.Draw(va, vertexBufferArray.size(), shader);
+            //renderer.Draw(va2, 12*5, shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
