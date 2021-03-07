@@ -23,7 +23,7 @@
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
 
-
+/*
 static const GLfloat cube_triangles_positions[] = {
     -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
     -1.0f,-1.0f, 1.0f,    0.0f,  0.0f, // D
@@ -73,6 +73,7 @@ static const GLfloat cube_triangles_positions[] = {
     -1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // E
      1.0f,-1.0f, 1.0f,    0.0f,  0.0f  // C
 };
+*/
 
 int main(void)
 {
@@ -132,16 +133,10 @@ int main(void)
         coord.idx, coord.idz = 0, 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(12, BlockType::GRASS);
-        map.GetVertexBufferToRender(coord);
-        
+        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
         VertexArray va;
-
         //VertexBuffer vb(cube_triangles_positions, 12* (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
-        
-        map.GetVertexBufferToRender(coord);
-
         std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
         VertexBuffer vb(vertexBufferArray.data(), vertexBufferArray.size() * sizeof(float));
         VertexBufferLayout layout;

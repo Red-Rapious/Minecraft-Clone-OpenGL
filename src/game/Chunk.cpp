@@ -18,7 +18,7 @@ static void addVertexToVertexBuffer(std::vector<float>& vertexBuffer, glm::vec3 
 	vertexBuffer.push_back((float)textureCoord.y);
 }
 
-static glm::vec2 getTextureOriginCoord(BlockType blocktype)
+static glm::vec2 getTextureOriginCoord(BlockType blockType, FaceType faceType)
 {
 	return glm::vec2(0, 0);
 }
@@ -69,13 +69,76 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		textureCoord[5] = glm::vec2(0, 1); // F
 	
 	case FaceType::LEFT:
-		std::cout << "TODO: LEFT FACE SUPPOSED TO BE RENDERED\n";
+		vertexCoord[0] = glm::vec3(-1, -1, 1); // D
+		vertexCoord[1] = glm::vec3(-1, -1, -1); // A
+		vertexCoord[2] = glm::vec3(-1, 1, -1); // H
+
+		vertexCoord[3] = glm::vec3(-1, -1, 1); // D
+		vertexCoord[4] = glm::vec3(-1, 1, -1); // H
+		vertexCoord[5] = glm::vec3(-1, 1, 1); // E
+
+
+		textureCoord[0] = glm::vec2(0, 0); // D
+		textureCoord[1] = glm::vec2(1, 0); // A
+		textureCoord[2] = glm::vec2(1, 1); // H
+
+		textureCoord[3] = glm::vec2(0, 0); // D
+		textureCoord[4] = glm::vec2(1, 1); // H
+		textureCoord[5] = glm::vec2(0, 1); // E
+
 	case FaceType::RIGHT:
-		std::cout << "TODO: RIGHT FACE SUPPOSED TO BE RENDERED\n";
+		vertexCoord[0] = glm::vec3(1, -1, 1); // B
+		vertexCoord[1] = glm::vec3(1, -1, 1); // C
+		vertexCoord[2] = glm::vec3(1, 1, 1); // F
+
+		vertexCoord[3] = glm::vec3(1, -1, 1); // B
+		vertexCoord[4] = glm::vec3(1, 1, 1); // F
+		vertexCoord[5] = glm::vec3(1, 1, -1); // G
+
+
+		textureCoord[0] = glm::vec2(0, 0); // B
+		textureCoord[1] = glm::vec2(1, 0); // C
+		textureCoord[2] = glm::vec2(1, 1); // F
+
+		textureCoord[3] = glm::vec2(0, 0); // B
+		textureCoord[4] = glm::vec2(1, 1); // F
+		textureCoord[5] = glm::vec2(0, 1); // G
+
 	case FaceType::UP:
-		std::cout << "TODO: UP FACE SUPPOSED TO BE RENDERED\n";
+		vertexCoord[0] = glm::vec3(-1, 1, -1); // H
+		vertexCoord[1] = glm::vec3(1, 1, -1); // G
+		vertexCoord[2] = glm::vec3(1, 1, 1); // F
+
+		vertexCoord[3] = glm::vec3(-1, 1, -1); // H
+		vertexCoord[4] = glm::vec3(1, 1, 1); // F
+		vertexCoord[5] = glm::vec3(-1, 1, 1); // E
+
+
+		textureCoord[0] = glm::vec2(0, 0); // H
+		textureCoord[1] = glm::vec2(1, 0); // G
+		textureCoord[2] = glm::vec2(1, 1); // F
+
+		textureCoord[3] = glm::vec2(0, 0); // H
+		textureCoord[4] = glm::vec2(1, 1); // F
+		textureCoord[5] = glm::vec2(0, 1); // E
+
 	case FaceType::BELLOW:
-		std::cout << "TODO: BELLOW FACE SUPPOSED TO BE RENDERED\n";
+		vertexCoord[0] = glm::vec3(1, -1, -1); // B
+		vertexCoord[1] = glm::vec3(-1, -1, -1); // A
+		vertexCoord[2] = glm::vec3(-1, -1, 1); // D
+
+		vertexCoord[3] = glm::vec3(1, -1, -1); // B
+		vertexCoord[4] = glm::vec3(-1, -1, 1); // D
+		vertexCoord[5] = glm::vec3(1, -1, 1); // C
+
+
+		textureCoord[0] = glm::vec2(0, 0); // B
+		textureCoord[1] = glm::vec2(1, 0); // A
+		textureCoord[2] = glm::vec2(1, 1); // D
+
+		textureCoord[3] = glm::vec2(0, 0); // B
+		textureCoord[4] = glm::vec2(1, 1); // D
+		textureCoord[5] = glm::vec2(0, 1); // C
 	}
 
 	// Add the block coord (in world space) to the vertex
@@ -86,7 +149,7 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 	}
 
 	// Add the texture origin (depending on the texture to put on the block)
-	glm::vec2 textureOriginCoord = getTextureOriginCoord(blockType);
+	glm::vec2 textureOriginCoord = getTextureOriginCoord(blockType, faceType);
 	for (int i = 0; i < sizeof(textureCoord)/sizeof(textureCoord[0]) ; i++)
 	{
 		textureCoord[i] += textureOriginCoord;
@@ -104,13 +167,11 @@ Chunk::Chunk(ChunkCoord coord)
 {
 	// Initialise the chunk to an empty cube of air
 	DeleteAllBlocks();
-	//UpdateVertexBufferToRender();
-	std::cout << "cunstructor end\n";
 }
 
-inline void Chunk::SetBlockType(glm::vec3 block_position, BlockType type)
+inline void Chunk::SetBlockType(glm::vec3 blockPosition, BlockType type)
 {
-	m_blocksArray[(unsigned int)block_position.x][(unsigned int)block_position.y][(unsigned int)block_position.z] = type;
+	m_blocksArray[(unsigned int)blockPosition.x][(unsigned int)blockPosition.y][(unsigned int)blockPosition.z] = type;
 }
 
 void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
@@ -153,7 +214,6 @@ void Chunk::UpdateVertexBufferToRender()
 {
 	ClearVertexBuffer();
 	BlockType analysedBlockType;
-	std::cout << "STARTING with " << GetNumberOfNonAirBlocks() << "blocks\n";
 	
 	for (unsigned int x = 1; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
