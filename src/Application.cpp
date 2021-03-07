@@ -23,58 +23,6 @@
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
 
-/*
-static const GLfloat cube_triangles_positions[] = {
-    -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
-    -1.0f,-1.0f, 1.0f,    0.0f,  0.0f, // D
-    -1.0f, 1.0f, 1.0f,    0.0f,  1.0f, // E
-    
-     1.0f, 1.0f,-1.0f,    1.0f,  1.0f, // G
-    -1.0f,-1.0f,-1.0f,    0.0f,  0.0f, // A
-    -1.0f, 1.0f,-1.0f,    0.0f,  1.0f, // H
-
-     1.0f,-1.0f, 1.0f,    0.0f,  1.0f, // C
-    -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
-     1.0f,-1.0f,-1.0f,    0.0f,  0.0f, // B
-
-     1.0f, 1.0f,-1.0f,    1.0f,  1.0f, // G
-     1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // B
-    -1.0f,-1.0f,-1.0f,    0.0f,  0.0f, // A
-
-    -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
-    -1.0f, 1.0f, 1.0f,    0.0f,  1.0f, // E
-    -1.0f, 1.0f,-1.0f,    1.0f,  1.0f, // H
-
-     1.0f,-1.0f, 1.0f,    0.0f,  1.0f, // C
-    -1.0f,-1.0f, 1.0f,    1.0f,  1.0f, // D
-    -1.0f,-1.0f,-1.0f,    1.0f,  0.0f, // A
-
-    -1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // E
-    -1.0f,-1.0f, 1.0f,    1.0f,  0.0f, // D
-     1.0f,-1.0f, 1.0f,    0.0f,  0.0f, // C
-
-     1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // F
-     1.0f,-1.0f,-1.0f,    0.0f,  0.0f, // B
-     1.0f, 1.0f,-1.0f,    0.0f,  1.0f, // G
-
-     1.0f,-1.0f,-1.0f,    0.0f,  0.0f, // B
-     1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // F
-     1.0f,-1.0f, 1.0f,    1.0f,  0.0f, // C
-
-     1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // F
-     1.0f, 1.0f,-1.0f,    1.0f,  0.0f, // G
-    -1.0f, 1.0f,-1.0f,    0.0f,  0.0f, // H
-
-     1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // F
-    -1.0f, 1.0f,-1.0f,    0.0f,  0.0f, // H
-    -1.0f, 1.0f, 1.0f,    0.0f,  1.0f, // E
-
-     1.0f, 1.0f, 1.0f,    0.0f,  1.0f, // F
-    -1.0f, 1.0f, 1.0f,    1.0f,  1.0f, // E
-     1.0f,-1.0f, 1.0f,    0.0f,  0.0f  // C
-};*/
-
-
 int main(void)
 {
     GLFWwindow* window;
@@ -127,7 +75,7 @@ int main(void)
         GLCall(glCullFace(GL_FRONT));
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
-        glm::vec3 camera_position(3, 3, 3);
+        glm::vec3 camera_position(20, 5, 20);
 
         Map map;
         ChunkCoord coord;
@@ -136,11 +84,20 @@ int main(void)
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
         map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1, 1, 1), BlockType::GRASS);
-        //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(3, BlockType::GRASS);
+
+        for (unsigned int x = 5; x < 10; x++)
+        {
+            for (unsigned int y = 5; y < 10; y++)
+            {
+                for (unsigned int z = 5; z < 10; z++)
+                {
+                    map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(x,y,z), BlockType::GRASS);
+                }
+            }
+        }
+            
 
         
-        //VertexArray va2;
-        //VertexBuffer vb2(cube_triangles_positions, 12 * (3+2) * 3 * sizeof(float)); // number of vertices stored * floats per vertex
         VertexArray va;
         std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
         
@@ -150,7 +107,6 @@ int main(void)
         layout.Push<float>(3); // add 3 floats for the vertex positions
         layout.Push<float>(2); // add 2 floats for the texture coords
         va.AddBuffer(vb, layout); // give the layout to opengl
-        //va2.AddBuffer(vb2, layout);
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
@@ -179,7 +135,6 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", MVP);
 
             renderer.Draw(va, vertexBufferArray.size(), shader);
-            //renderer.Draw(va2, 12*5, shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

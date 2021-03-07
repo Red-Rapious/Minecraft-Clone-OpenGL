@@ -26,7 +26,7 @@ std::vector<float> Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
 			
-			std::vector<float>* chunkVertexBuffer = m_chunkVector[i].GetVertexBufferToRender();
+			std::vector<float>* chunkVertexBuffer = m_chunkVector[i].GetVertexBufferToRender(false);
 			
 			m_worldVertexBuffer.insert(m_worldVertexBuffer.end(), (*chunkVertexBuffer).begin(), (*chunkVertexBuffer).end());
 		}

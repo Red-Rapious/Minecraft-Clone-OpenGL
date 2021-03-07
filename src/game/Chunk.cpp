@@ -117,25 +117,6 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		break;
 
 	case FaceType::UP:
-		vertexCoord[0] = glm::vec3(0.5f, -0.5f, -0.5f); // B
-		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
-		vertexCoord[2] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
-
-		vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
-		vertexCoord[4] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
-		vertexCoord[5] = glm::vec3(0.5f, -0.5f, 0.5f); // C
-
-
-		textureCoord[0] = glm::vec2(1, 0); // B
-		textureCoord[1] = glm::vec2(0, 0); // A
-		textureCoord[2] = glm::vec2(0, 1); // D
-
-		textureCoord[3] = glm::vec2(1, 0); // B
-		textureCoord[4] = glm::vec2(0, 1); // D
-		textureCoord[5] = glm::vec2(1, 1); // C
-		break;
-
-	case FaceType::BELLOW:
 		vertexCoord[0] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
 		vertexCoord[1] = glm::vec3(0.5f, 0.5f, -0.5f); // G
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, 0.5f); // F
@@ -152,6 +133,25 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		textureCoord[3] = glm::vec2(0, 1); // H
 		textureCoord[4] = glm::vec2(1, 0); // F
 		textureCoord[5] = glm::vec2(0, 0); // E
+		break;
+
+	case FaceType::BELLOW:
+		vertexCoord[0] = glm::vec3(0.5f, -0.5f, -0.5f); // B
+		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
+		vertexCoord[2] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
+
+		vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
+		vertexCoord[4] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
+		vertexCoord[5] = glm::vec3(0.5f, -0.5f, 0.5f); // C
+
+
+		textureCoord[0] = glm::vec2(1, 0); // B
+		textureCoord[1] = glm::vec2(0, 0); // A
+		textureCoord[2] = glm::vec2(0, 1); // D
+
+		textureCoord[3] = glm::vec2(1, 0); // B
+		textureCoord[4] = glm::vec2(0, 1); // D
+		textureCoord[5] = glm::vec2(1, 1); // C
 		break;
 	}
 
@@ -225,20 +225,93 @@ void Chunk::DeleteAllBlocks()
 	}
 }
 
-std::vector<float>* Chunk::GetVertexBufferToRender()
+std::vector<float>* Chunk::GetVertexBufferToRender(const bool& chunkChanges, const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
-	UpdateVertexBufferToRender();
+	UpdateInsideVertexBufferToRender();
+	UpdateOutsideVertexBufferToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
 	return &m_vertexBuffer;
 }
 
-void Chunk::UpdateVertexBufferToRender()
+void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
+{
+	// TODO: check if there's a block up and down the block if its rendered
+
+
+
+	if (chunkNorth)
+	{
+		// TODO: check on the map if there's a block sticked to it
+	}
+	else
+	{
+		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+		{
+			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+			{
+				if (m_blocksArray[x][y][0]!=BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::BACK, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
+
+			}
+		}
+	}
+
+	if (chunkSouth)
+	{
+		// TODO: check on the map if there's a block sticked to it
+	}
+	else
+	{
+		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+		{
+			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+			{
+				if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1] != BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::FRONT, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+			}
+		}
+	}
+
+	if (chunkWest)
+	{
+		// TODO: check on the map if there's a block sticked to it
+	}
+	else
+	{
+		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
+		{
+			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+			{
+				if (m_blocksArray[0][y][z] != BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::LEFT, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+			}
+		}
+	}
+
+	if (chunkEast)
+	{
+		// TODO: check on the map if there's a block sticked to it
+	}
+	else
+	{
+		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
+		{
+			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+			{
+				if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::RIGHT, glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+			}
+		}
+	}
+}
+
+void Chunk::UpdateInsideVertexBufferToRender()
 {
 	ClearVertexBuffer();
 	BlockType analysedBlockType;
 	
 	for (unsigned int x = 1; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
-		for (unsigned int y = 1; y < CHUNK_Y_BLOCK_COUNT; y++)
+		for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 		{
 			for (unsigned int z = 1; z < CHUNK_Z_BLOCK_COUNT; z++)
 			{
@@ -263,13 +336,13 @@ void Chunk::UpdateVertexBufferToRender()
 					}
 
 					// UP
-					if (m_blocksArray[x][y+1][z] == BlockType::NONE)
+					if (y==CHUNK_Y_BLOCK_COUNT-1 || m_blocksArray[x][y+1][z] == BlockType::NONE)
 					{
 						AddFaceToVertexBuffer(FaceType::UP, coord, analysedBlockType);
 					}
 
 					// BELLOW
-					if (m_blocksArray[x][y - 1][z] == BlockType::NONE)
+					if (y==0 || m_blocksArray[x][y - 1][z] == BlockType::NONE)
 					{
 						AddFaceToVertexBuffer(FaceType::BELLOW, coord, analysedBlockType);
 					}
@@ -286,13 +359,22 @@ void Chunk::UpdateVertexBufferToRender()
 						AddFaceToVertexBuffer(FaceType::RIGHT, coord, analysedBlockType);
 					}
 
+
+					/*AddFaceToVertexBuffer(FaceType::FRONT, coord, analysedBlockType);
+					AddFaceToVertexBuffer(FaceType::BACK, coord, analysedBlockType);
+					AddFaceToVertexBuffer(FaceType::LEFT, coord, analysedBlockType);
+					AddFaceToVertexBuffer(FaceType::RIGHT, coord, analysedBlockType);
+					AddFaceToVertexBuffer(FaceType::UP, coord, analysedBlockType);
+					AddFaceToVertexBuffer(FaceType::BELLOW, coord, analysedBlockType);*/
+
+
 				}
 			}
 		}
 	}
 }
 
-unsigned int Chunk::GetNumberOfNonAirBlocks(bool out) const
+unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 {
 	/* Debug func that count the number of "true" blocks */
 	unsigned int count = 0;

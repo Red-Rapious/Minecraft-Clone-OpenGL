@@ -33,7 +33,7 @@ public:
 
 enum class FaceType
 {
-    FRONT, BACK, RIGHT, LEFT, BELLOW, UP
+    FRONT, BACK, RIGHT, LEFT, UP, BELLOW
 };
 
 class Chunk
@@ -46,17 +46,19 @@ private:
 
     void ClearVertexBuffer();
     void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
+    void UpdateInsideVertexBufferToRender();
+    void UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast);
 
 public:
 	Chunk(ChunkCoord coord);
 	void SetBlockType(glm::vec3 blockPosition, BlockType type);
+    inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
     void DeleteAllBlocks();
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
-    std::vector<float>* GetVertexBufferToRender();
-    void UpdateVertexBufferToRender();
+    std::vector<float>* GetVertexBufferToRender(const bool& chunkChanges, const bool& chunkNorth = false, const bool& chunkSouth = false, const bool& chunkWest = false, const bool& chunkEast = false);
 
-    unsigned int GetNumberOfNonAirBlocks(bool out=false) const;
+    unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
 };
 
