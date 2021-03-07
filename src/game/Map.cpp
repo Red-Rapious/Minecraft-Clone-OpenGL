@@ -25,7 +25,6 @@ std::vector<float> Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
 		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
 		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
-			//std::cout << "end " << m_chunkVector[i].m_vertexBuffer.size() << "\n";
 			
 			std::vector<float>* chunkVertexBuffer = m_chunkVector[i].GetVertexBufferToRender();
 			
