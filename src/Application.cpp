@@ -124,6 +124,7 @@ int main(void)
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
         GLCall(glEnable(GL_CULL_FACE));
+        GLCall(glCullFace(GL_FRONT));
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
         glm::vec3 camera_position(3, 3, 3);
