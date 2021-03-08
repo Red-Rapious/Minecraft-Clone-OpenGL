@@ -43,7 +43,7 @@ private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
     VertexIndexBufferCouple m_vertexIndexBufferCouple;
-    unsigned int m_indexCount;
+    //unsigned int m_indexCount;
     
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();

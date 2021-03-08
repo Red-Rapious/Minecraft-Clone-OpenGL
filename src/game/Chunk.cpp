@@ -183,15 +183,15 @@ void Chunk::AddFaceToCouple(FaceType faceType, glm::vec3 blockCoord, BlockType b
 	// Add the good indices to the index buffer
 	for (unsigned int i = 0; i < 6; i++)
 	{
-		m_vertexIndexBufferCouple.m_indexBuffer.push_back(indices[i]+m_indexCount);
+		m_vertexIndexBufferCouple.m_indexBuffer.push_back(indices[i]+ m_vertexIndexBufferCouple.m_indexCount);
 		
 	}
 	std::cout << "\n";
-	m_indexCount+=4;
+	m_vertexIndexBufferCouple.m_indexCount+=4;
 }
 
 Chunk::Chunk(ChunkCoord coord)
-	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple(), m_indexCount(0)
+	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple()
 {
 	// Initialise the chunk to an empty cube of air
 	DeleteAllBlocks();
@@ -238,6 +238,7 @@ void Chunk::DeleteAllBlocks()
 
 VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const bool& chunkChanges, const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
+	m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	UpdateInsideCoupleToRender();
 	UpdateOutsideCoupleToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
 	return m_vertexIndexBufferCouple;

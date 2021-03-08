@@ -100,12 +100,12 @@ int main(void)
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
-        /*ChunkCoord coord2;
+        ChunkCoord coord2;
         coord2.idx = 1;
         coord2.idz = 0;
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
-        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);*/
+        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
             
 
         /* Graphics part */

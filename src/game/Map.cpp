@@ -25,7 +25,7 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
 		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
-			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(false);
+			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(m_worldCouple.m_indexCount, false);
 			m_worldCouple += chunkCouple;
 		}
 	}
