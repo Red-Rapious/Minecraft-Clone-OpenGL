@@ -27,7 +27,6 @@ constexpr auto FULLSCREEN = false;
 
 int main(void)
 {
-    
 
     GLFWwindow* window;
 
@@ -95,7 +94,7 @@ int main(void)
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
         //map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(0,1,0), BlockType::GRASS);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
+        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
         ChunkCoord coord2(1, 0);
@@ -121,7 +120,7 @@ int main(void)
         shader.Bind();
         
 
-        Texture texture("res/textures/textures_test.png");
+        Texture texture("res/textures/MinecraftTexturesHD.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
@@ -135,6 +134,7 @@ int main(void)
             renderer.Clear();
 
             control.UpdateInput();
+            control.GetCameraPosition();
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();

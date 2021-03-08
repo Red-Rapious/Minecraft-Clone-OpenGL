@@ -6,7 +6,7 @@ constexpr int         CHUNK_Z_BLOCK_COUNT = 16;
 constexpr float       BLOCK_LENGTH = 1.f;
 
 constexpr int         TEXTURE_SIDE_LENGTH = 16; // in pixels
-constexpr int		  BLOCK_TYPES_TEXTURES_NUMBER = 1;
+constexpr int		  BLOCK_TYPES_TEXTURES_NUMBER = 10;
 
 constexpr int RENDER_DISTANCE = 10; // in chunks
 

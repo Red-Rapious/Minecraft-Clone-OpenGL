@@ -2,6 +2,7 @@
 #include "Constants.hpp"
 #include <iostream>
 #include <vector>
+#include <memory>
 
 /* VERTEX AND INDEX BUFFERS PART */
 static float getTextureOriginY(BlockType blockType)
@@ -237,7 +238,7 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 
 /* FACE TO RENDER ALGORITHM PART */
-VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap)
+VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	RenderAllFacesNeeded(chunksUMap);
@@ -245,7 +246,7 @@ VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex
 }
 
 
-void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap)
+void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	const bool RENDER_UNGEN_CHUNKS_FACES = true;
 	const bool RENDER_BOTTOM_CHUNK_FACES = true;

@@ -3,12 +3,18 @@
 #include "glm/glm.hpp"
 #include <vector>
 #include <iostream>
+#include <memory>
+#include <unordered_map>
 
-void Map::AddChunkToMap(Chunk chunk)
+ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 {
-	unsigned int s = m_chunkVector.size();
+	return ChunkCoord(position.x / CHUNK_X_BLOCK_COUNT, position.z / CHUNK_Z_BLOCK_COUNT);
+}
+
+void Map::AddChunkToMap(const Chunk& chunk)
+{
 	m_chunkVector.push_back(chunk);
-	m_chunksUMap[chunk.GetCoord()] = &m_chunkVector[s];
+	m_chunksUMap[chunk.GetCoord()] = std::make_unique<Chunk>(chunk);
 }
 
 static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2)
@@ -34,4 +40,9 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 	if (m_worldCouple.m_vertexBuffer.size() == 0)
 		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
 	return m_worldCouple;
+}
+
+void Map::UpdateChunkGeneration(const glm::vec3& cameraPosition)
+{
+	ChunkCoord chunkWithPlayer = ConvertPositionToChunkCoord(cameraPosition);
 }

@@ -36,4 +36,6 @@ public:
 
 	void UpdateInput();
 	void UpdateWSize();
+
+	inline glm::vec3 GetCameraPosition() const { return m_cameraPosition;  };
 };

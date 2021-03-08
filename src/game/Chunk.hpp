@@ -6,10 +6,11 @@
 #include "Constants.hpp"
 #include "../graphics/VertexIndexBufferCouple.hpp"
 #include <unordered_map>
+#include <memory>
 
 enum class BlockType
 {
-	NONE, GRASS
+	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, WOOD
 };
 
 
@@ -63,6 +64,6 @@ public:
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
     // Render functions
-    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
-    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
+    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };
