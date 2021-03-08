@@ -25,7 +25,6 @@ glm::mat4 Control::getProjectionMatrix()
 glm::mat4 Control::getViewMatrix()
 {
 	glm::vec3 sightPoint = m_cameraPosition + m_direction;
-	//glm::vec3 sightPoint = glm::vec3(0, 0, 0); // for rotation around the center
 	m_up = -m_up; // quick fix because otherwise the camera is upside down
 	return glm::lookAt(m_cameraPosition, sightPoint, m_up);
 }
@@ -41,9 +40,6 @@ void Control::UpdateMouse()
 	/* Compute new orientation */
 	m_horizontalAngle += m_mouseSpeed * m_deltaTime * float(m_windowWidth / 2 - xpos);
 	m_verticalAngle += m_mouseSpeed * m_deltaTime * float(m_windowHeight / 2 - ypos);
-
-	/* Update FOV with the mouse wheel*/
-	//float FoV = m_initialFOV - 5 * GetMouseWheel();
 
 }
 
@@ -101,11 +97,6 @@ void Control::UpdateInput()
 	//UpdateWSize();
 	UpdateMouse();
 	UpdateKeyboard();
-	
-	/* Rotation around the center */
-	//int radius = 3;
-	//double currentTime = glfwGetTime();
-	//m_cameraPosition = glm::vec3(0, 0, 0) + glm::vec3(radius * glm::cos(currentTime*2), 0, radius * glm::sin(currentTime*2));
 }
 
 void Control::UpdateWSize()

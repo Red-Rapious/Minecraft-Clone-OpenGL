@@ -241,224 +241,8 @@ VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex
 {
 	m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	RenderAllFacesNeeded(chunksUMap);
-	//UpdateInsideCoupleToRender();
-	//UpdateOutsideCoupleToRender(false, false, false, false);
 	return m_vertexIndexBufferCouple;
 }
-
-/*
-void Chunk::UpdateOutsideCoupleToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
-{
-	// Check if there's a block up and down the block
-	for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-	{
-		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
-		{
-			// SOUTH
-			if (m_blocksArray[x][y][0] != BlockType::NONE)
-			{
-				if (y==0)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
-
-				else if (m_blocksArray[x][y - 1][0] == BlockType::NONE)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
-
-				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
-
-				else if (m_blocksArray[x][y + 1][0] == BlockType::NONE)
-					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
-			}
-
-			// NORTH
-			if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT-1] != BlockType::NONE)
-			{
-				if (y == CHUNK_Y_BLOCK_COUNT-1)
-					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
-
-				else if (m_blocksArray[x][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
-
-				if (y == 0)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
-				
-				else if (m_blocksArray[x][y - 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
-
-				
-			}
-				
-		}
-
-
-		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
-		{
-			// SOUTH
-			if (m_blocksArray[0][y][z] != BlockType::NONE)
-			{
-				if (y == 0)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
-
-				else if (m_blocksArray[0][y - 1][z] == BlockType::NONE)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
-				
-				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToCouple(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
-
-				else if (m_blocksArray[0][y + 1][z] == BlockType::NONE)
-					AddFaceToCouple(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
-			}
-
-			// NORTH
-			if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
-			{
-				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToCouple(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
-				
-				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToCouple(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
-
-				if (y == 0)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
-				
-				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y - 1][z] == BlockType::NONE)
-					AddFaceToCouple(FaceType::DOWN, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
-
-				}
-
-		}
-	}
-
-
-	// For each border block, render the faces depending of the chunks around
-	if (chunkSouth)
-	{
-		// TODO: check on the map if there's a block sticked to it
-	}
-	else
-	{
-		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
-		{
-			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-			{
-				if (m_blocksArray[x][y][0]!=BlockType::NONE)
-					AddFaceToCouple(FaceType::FRONT, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
-
-			}
-		}
-	}
-
-	if (chunkNorth)
-	{
-		// TODO: check on the map if there's a block sticked to it
-	}
-	else
-	{
-		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
-		{
-			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-			{
-				if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1] != BlockType::NONE)
-					AddFaceToCouple(FaceType::BACK, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
-			}
-		}
-	}
-
-	if (chunkWest)
-	{
-		// TODO: check on the map if there's a block sticked to it
-	}
-	else
-	{
-		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
-		{
-			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-			{
-				if (m_blocksArray[0][y][z] != BlockType::NONE)
-					AddFaceToCouple(FaceType::LEFT, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
-			}
-		}
-	}
-
-	if (chunkEast)
-	{
-		// TODO: check on the map if there's a block sticked to it
-	}
-	else
-	{
-		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
-		{
-			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-			{
-				if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
-					AddFaceToCouple(FaceType::RIGHT, glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
-			}
-		}
-	}
-}
-
-void Chunk::UpdateInsideCoupleToRender()
-{
-	ClearVertexBuffer();
-	BlockType analysedBlockType;
-	
-	for (unsigned int x = 1; x < CHUNK_X_BLOCK_COUNT; x++)
-	{
-		for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-		{
-			for (unsigned int z = 1; z < CHUNK_Z_BLOCK_COUNT; z++)
-			{
-				
-				analysedBlockType = m_blocksArray[x][y][z];
-				if (analysedBlockType != BlockType::NONE && !(x == CHUNK_X_BLOCK_COUNT-1 || y == CHUNK_Y_BLOCK_COUNT-1 || z == CHUNK_Z_BLOCK_COUNT-1)) // else: do not render the face
-				{
-					glm::vec3 coord(x, y, z);
-
-					// For each face, check if there's a face next to it ; if not, render the face
-					// FRONT
-					if (m_blocksArray[x][y][z - 1] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::FRONT, coord, analysedBlockType);
-					}
-
-					// BACK
-					if (m_blocksArray[x][y][z + 1] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::BACK, coord, analysedBlockType);
-					}
-
-					// UP
-					if (y==CHUNK_Y_BLOCK_COUNT-1 || m_blocksArray[x][y+1][z] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::UP, coord, analysedBlockType);
-					}
-
-					// DOWN
-					if (y==0 || m_blocksArray[x][y - 1][z] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::DOWN, coord, analysedBlockType);
-					}
-
-					// LEFT
-					if (m_blocksArray[x-1][y][z] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::LEFT, coord, analysedBlockType);
-					}
-
-					// RIGHT
-					if (m_blocksArray[x+1][y][z] == BlockType::NONE)
-					{
-						AddFaceToCouple(FaceType::RIGHT, coord, analysedBlockType);
-					}
-				}
-			}
-		}
-	}
-}*/
-
-
-
-
 
 
 void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap)
@@ -476,7 +260,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 				if (m_blocksArray[x][y][z] != BlockType::NONE)
 				{
 					bool renderFace[6] = { false };
-					//bool overwriteFace[6] = { false };
 
 					/* For each face, check if its supposed to be rendered */
 					// FRONT
@@ -495,7 +278,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						}
 						else
 							renderFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
-							//overwriteFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
 					}
 					else
 					{
@@ -518,7 +300,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						}
 						else
 							renderFace[(int)FaceType::BACK] = RENDER_UNGEN_CHUNKS_FACES;
-							//overwriteFace[(int)FaceType::BACK] = RENDER_UNGEN_CHUNKS_FACES;
 					}
 					else
 					{
@@ -541,7 +322,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						}
 						else
 							renderFace[(int)FaceType::RIGHT] = RENDER_UNGEN_CHUNKS_FACES;
-							//overwriteFace[(int)FaceType::RIGHT] = RENDER_UNGEN_CHUNKS_FACES;
 					}
 					else
 					{
@@ -555,7 +335,7 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						
 						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
-							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0)
+							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0) // here, this condition isn't supposed to be true
 							{
 
 								// render the face if the blocks that correspond on the other chunk is empty
@@ -568,7 +348,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						}
 						else
 							renderFace[(int)FaceType::LEFT] = RENDER_UNGEN_CHUNKS_FACES;
-							//overwriteFace[(int)FaceType::LEFT] = RENDER_UNGEN_CHUNKS_FACES;
 					}
 					else
 					{
@@ -578,7 +357,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 					// UP
 					if (y == CHUNK_Y_BLOCK_COUNT-1)
 					{
-						//overwriteFace[(int)FaceType::UP] = true;
 						renderFace[(int)FaceType::UP] = true;
 					}
 					else
@@ -589,7 +367,6 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 					// DOWN
 					if (y == 0)
 					{
-						//overwriteFace[(int)FaceType::DOWN] = RENDER_BOTTOM_CHUNK_FACES;
 						renderFace[(int)FaceType::DOWN] = RENDER_BOTTOM_CHUNK_FACES;
 					}
 					else

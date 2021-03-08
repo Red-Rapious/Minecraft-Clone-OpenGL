@@ -49,19 +49,20 @@ private:
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
     void AddFaceToCouple(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
-    //void UpdateInsideCoupleToRender();
-    //void UpdateOutsideCoupleToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast);
-
+   
 public:
 	Chunk(ChunkCoord coord);
     inline ChunkCoord GetCoord() const { return m_coord; };
+
+    // Utility functions
     void SetBlockType(glm::vec3 blockPosition, BlockType type);
     void DeleteAllBlocks();
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
     
+    unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
+
+    // Render functions
     VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
     void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
-
-    unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
 };
