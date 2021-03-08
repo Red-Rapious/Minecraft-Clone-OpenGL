@@ -1386,5 +1386,11 @@
     <Image Include="res\textures\textures_test.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\textures\MinecraftTexturesHD.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\MinecraftTexturesPixel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -22,6 +22,7 @@
 
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
+constexpr auto FULLSCREEN = false;
 
 int main(void)
 {
@@ -41,7 +42,10 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "OpenGL", NULL, NULL); // 4:3
+    if (FULLSCREEN)
+        window = glfwCreateWindow(1920, 1280, "Minecraft OpenGL", glfwGetPrimaryMonitor(), NULL); // 4:3
+    else
+        window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft OpenGL", NULL, NULL); // 4:3
     //glfwSetWindowPos(window, 0, 0);
 
     if (!window)
@@ -77,13 +81,6 @@ int main(void)
         GLCall(glCullFace(GL_FRONT));
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
-
-        // When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
-        //GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-        // When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
-        //GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-        // Generate mipmaps, by the way.
-        //GLCall(glGenerateMipmap(GL_TEXTURE_2D));
 
 
         /* Map and camera creation (will be moved later) */
@@ -122,7 +119,7 @@ int main(void)
         shader.Bind();
         
 
-        Texture texture("res/textures/textures_test.png");
+        Texture texture("res/textures/MinecraftTexturesHD.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 

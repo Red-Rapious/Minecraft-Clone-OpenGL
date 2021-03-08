@@ -98,6 +98,7 @@ void Control::ComputeVectors()
 void Control::UpdateInput()
 {
 	UpdateDeltaTime();
+	//UpdateWSize();
 	UpdateMouse();
 	UpdateKeyboard();
 	

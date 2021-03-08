@@ -615,6 +615,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\image.png" />
+    <Image Include="res\textures\MinecraftTexturesHD.png" />
+    <Image Include="res\textures\MinecraftTexturesPixel.png" />
     <Image Include="res\textures\textures_test.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
