@@ -27,6 +27,8 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 		{
 			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(m_worldCouple.m_indexCount, false);
 			m_worldCouple += chunkCouple;
+
+			m_chunkVector[i].RenderAllFacesNeeded(m_chunksUMap);
 		}
 	}
 

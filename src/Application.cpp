@@ -91,18 +91,14 @@ int main(void)
 
         Map map;
 
-        ChunkCoord coord;
-        coord.idx = 0;
-        coord.idz = 0;
+        ChunkCoord coord(0, 0);
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
         //map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(0,1,0), BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
-        ChunkCoord coord2;
-        coord2.idx = 1;
-        coord2.idz = 0;
+        ChunkCoord coord2(1, 0);
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
         map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
@@ -148,7 +144,6 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", MVP);
 
             renderer.Draw(va, ib, shader);
-            //renderer.Draw(va, vertexCouple.m_vertexBuffer.size(), shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

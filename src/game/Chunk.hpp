@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "Constants.hpp"
 #include "../graphics/VertexIndexBufferCouple.hpp"
+#include <unordered_map>
 
 enum class BlockType
 {
@@ -17,6 +18,7 @@ struct ChunkCoord {
     std::int16_t idx;
     std::int16_t idz;
 
+    inline ChunkCoord(int16_t x, int16_t z) : idx(x), idz(z) {};
     inline bool operator==(const ChunkCoord& rhs) const noexcept { return this->idx == rhs.idx && this->idz == rhs.idz; }
 };
 
@@ -34,7 +36,7 @@ public:
 
 enum class FaceType
 {
-    FRONT, BACK, RIGHT, LEFT, UP, BELLOW
+    FRONT, BACK, RIGHT, LEFT, UP, DOWN
 };
 
 class Chunk
@@ -43,7 +45,6 @@ private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
     VertexIndexBufferCouple m_vertexIndexBufferCouple;
-    //unsigned int m_indexCount;
     
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
@@ -62,5 +63,7 @@ public:
     VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex = 0, const bool& chunkChanges=false, const bool& chunkNorth = false, const bool& chunkSouth = false, const bool& chunkWest = false, const bool& chunkEast = false);
 
     unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
-};
 
+
+    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chunksUMap);
+};
