@@ -75,7 +75,7 @@ int main(void)
         GLCall(glCullFace(GL_FRONT));
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
-        glm::vec3 camera_position(20, 5, 20);
+        glm::vec3 camera_position(0, 5, 0);
 
         Map map;
         ChunkCoord coord;
@@ -83,7 +83,9 @@ int main(void)
         coord.idz = 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1, 1, 2), BlockType::GRASS);
         map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1, 1, 1), BlockType::GRASS);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(3, 1, 1), BlockType::GRASS);
 
         for (unsigned int x = 5; x < 10; x++)
         {
