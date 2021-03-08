@@ -20,14 +20,12 @@ static void addVertexToVertexBuffer(std::vector<float>& vertexBuffer, glm::vec3 
 
 static float getTextureOriginY(BlockType blockType)
 {
-	//return glm::vec2(((int)faceType)*TEXTURE_SIDE_LENGTH, (BLOCK_TYPES_TEXTURES_NUMBER-(int)(blockType))*TEXTURE_SIDE_LENGTH);
-	return (BLOCK_TYPES_TEXTURES_NUMBER - (int)(blockType)) * TEXTURE_SIDE_LENGTH;
+	return (BLOCK_TYPES_TEXTURES_NUMBER - (int)(blockType));
 }
 
 static float getTextureCoordX(FaceType faceType)
 {
-	//return glm::vec2(((int)faceType)*TEXTURE_SIDE_LENGTH, (BLOCK_TYPES_TEXTURES_NUMBER-(int)(blockType))*TEXTURE_SIDE_LENGTH);
-	return ((int)faceType) * TEXTURE_SIDE_LENGTH;
+	return ((int)faceType);
 }
 
 void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, BlockType blockType)
@@ -162,8 +160,6 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 
 	float textureOriginX = 0.0f;
 	float textureOriginY = 0.0f;
-	unsigned int totalHeight = TEXTURE_SIDE_LENGTH * BLOCK_TYPES_TEXTURES_NUMBER;
-	unsigned int totalWidth = TEXTURE_SIDE_LENGTH * 6; // 6 = number of face types
 	for (int i = 0; i < sizeof(vertexCoord) / sizeof(vertexCoord[0]); i++)
 	{
 		// Add the block coord (in world space) to the vertex
@@ -176,8 +172,8 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		// Add the texture origin on the texture map
 		textureOriginY = getTextureOriginY(blockType); // TODO: dont compute it for every face, only for every block
 		textureOriginX = getTextureCoordX(faceType);
-		textureCoord[i].x = (textureOriginX + textureCoord[i].x * TEXTURE_SIDE_LENGTH) / totalWidth;
-		textureCoord[i].y = (textureOriginY + textureCoord[i].y * TEXTURE_SIDE_LENGTH) / totalHeight;
+		textureCoord[i].x = (textureOriginX + textureCoord[i].x) / 6;
+		textureCoord[i].y = (textureOriginY + textureCoord[i].y) / BLOCK_TYPES_TEXTURES_NUMBER;
 
 		// Add vertex to the vertex buffer
 		addVertexToVertexBuffer(m_vertexBuffer, vertexCoord[i], textureCoord[i]);
@@ -240,9 +236,106 @@ std::vector<float>* Chunk::GetVertexBufferToRender(const bool& chunkChanges, con
 
 void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
-	// TODO: check if there's a block up and down the block if its rendered
+	// Render up and bellow faces for every border block with y=0 and y=CHUNK_Y_BLOCK_COUNT-1
+
+	// Check if there's a block up and down the block
+	for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+	{
+		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+		{
+			// SOUTH
+			if (m_blocksArray[x][y][0] != BlockType::NONE)
+			{
+				if (y==0)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+
+				else if (m_blocksArray[x][y - 1][0] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+
+				if (y == CHUNK_Y_BLOCK_COUNT - 1)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+
+				else if (m_blocksArray[x][y + 1][0] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+			}
+
+			// NORTH
+			if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT-1] != BlockType::NONE)
+			{
+				if (y == CHUNK_Y_BLOCK_COUNT-1)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+
+				else if (m_blocksArray[x][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+
+				if (y == 0)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+				
+				else if (m_blocksArray[x][y - 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+
+				
+			}
+				
+		}
 
 
+		for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
+		{
+			// SOUTH
+			if (m_blocksArray[0][y][z] != BlockType::NONE)
+			{
+				if (y == 0)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+
+				else if (m_blocksArray[0][y - 1][z] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+				
+				if (y == CHUNK_Y_BLOCK_COUNT - 1)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+
+				else if (m_blocksArray[0][y + 1][z] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+			}
+
+			// NORTH
+			if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
+			{
+				if (y == CHUNK_Y_BLOCK_COUNT - 1)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+				
+				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+
+				if (y == 0)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+				
+				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y - 1][z] == BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+
+				}
+
+		}
+	}
+
+
+	// For each border block, render the faces depending of the chunks around
+	if (chunkSouth)
+	{
+		// TODO: check on the map if there's a block sticked to it
+	}
+	else
+	{
+		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+		{
+			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
+			{
+				if (m_blocksArray[x][y][0]!=BlockType::NONE)
+					AddFaceToVertexBuffer(FaceType::FRONT, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
+
+			}
+		}
+	}
 
 	if (chunkNorth)
 	{
@@ -254,25 +347,8 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 		{
 			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 			{
-				if (m_blocksArray[x][y][0]!=BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BACK, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
-
-			}
-		}
-	}
-
-	if (chunkSouth)
-	{
-		// TODO: check on the map if there's a block sticked to it
-	}
-	else
-	{
-		for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
-		{
-			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
-			{
 				if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1] != BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::FRONT, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+					AddFaceToVertexBuffer(FaceType::BACK, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
 			}
 		}
 	}

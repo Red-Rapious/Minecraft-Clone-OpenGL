@@ -67,14 +67,26 @@ int main(void)
     }
 
     {
+        /* GL enables */
         // Enable depth test
         GLCall(glEnable(GL_DEPTH_TEST));
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
+        // Cull face if its BEHIND - GL_FRONT is here to fix a strange bug
         GLCall(glEnable(GL_CULL_FACE));
         GLCall(glCullFace(GL_FRONT));
+        // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
+        // When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
+        //GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+        // When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
+        //GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+        // Generate mipmaps, by the way.
+        //GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+
+
+        /* Map and camera creation (will be moved later) */
         glm::vec3 camera_position(0, 5, 0);
 
         Map map;
@@ -84,6 +96,7 @@ int main(void)
         coord.idz = 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
+        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
         ChunkCoord coord2;
@@ -94,7 +107,7 @@ int main(void)
         map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
             
 
-        
+        /* Graphics part */
         VertexArray va;
         std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
         
