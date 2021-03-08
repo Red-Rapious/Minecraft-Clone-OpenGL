@@ -64,7 +64,4 @@ public:
     void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
 
     unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
-
-
-    
 };

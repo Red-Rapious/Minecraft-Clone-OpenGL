@@ -207,6 +207,11 @@ void Chunk::DeleteAllBlocks()
 
 unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 {
+	if (m_blocksArray.size() == 0)
+	{
+		std::cout << "[Chunk Blocks Error] The array of blocks is empty, cannot calculate any blocks\n";
+		return 0;
+	}
 	/* Debug func that count the number of "true" blocks */
 	unsigned int count = 0;
 
@@ -237,7 +242,7 @@ VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex
 	m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	RenderAllFacesNeeded(chunksUMap);
 	//UpdateInsideCoupleToRender();
-	//UpdateOutsideCoupleToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
+	//UpdateOutsideCoupleToRender(false, false, false, false);
 	return m_vertexIndexBufferCouple;
 }
 
@@ -449,8 +454,8 @@ void Chunk::UpdateInsideCoupleToRender()
 			}
 		}
 	}
-}
-*/
+}*/
+
 
 
 
@@ -517,7 +522,7 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
 							// render the face if the blocks that correspond on the other chunk is empty
-							renderFace[(int)FaceType::RIGHT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, z)) == BlockType::NONE;
+							renderFace[(int)FaceType::RIGHT] = (chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, z)) == BlockType::NONE);
 						}
 						else
 							renderFace[(int)FaceType::RIGHT] = RENDER_UNGEN_CHUNKS_FACES;
@@ -535,7 +540,8 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
 							// render the face if the blocks that correspond on the other chunk is empty
-							renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, CHUNK_X_BLOCK_COUNT-2)) == BlockType::NONE;
+							chunksUMap.at(otherChunkCoord)->GetNumberOfNonAirBlocks(true);
+							renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, CHUNK_Z_BLOCK_COUNT-2)) == BlockType::NONE;
 						}
 						else
 							renderFace[(int)FaceType::LEFT] = RENDER_UNGEN_CHUNKS_FACES;
@@ -554,7 +560,7 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 					}
 					else
 					{
-						renderFace[(int)FaceType::DOWN] = m_blocksArray[x][y + 1][z] == BlockType::NONE;
+						renderFace[(int)FaceType::UP] = m_blocksArray[x][y + 1][z] == BlockType::NONE;
 					}
 
 					// DOWN

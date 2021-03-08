@@ -87,7 +87,7 @@ int main(void)
 
 
         /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(0, 5, 0);
+        glm::vec3 camera_position(-2, 2, -2);
 
         Map map;
 
@@ -98,10 +98,10 @@ int main(void)
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
-        ChunkCoord coord2(1, 0);
+        /*ChunkCoord coord2(1, 0);
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
-        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
+        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);*/
             
 
         /* Graphics part */
@@ -149,6 +149,8 @@ int main(void)
             glfwSwapBuffers(window);
             /* Poll for and process events */
             glfwPollEvents();
+
+            
         }
 
     }

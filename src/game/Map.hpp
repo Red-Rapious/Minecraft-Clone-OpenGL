@@ -12,5 +12,5 @@ private:
 public:
 	void AddChunkToMap(Chunk chunk);
 	VertexIndexBufferCouple GetCoupleToRender(ChunkCoord chunkPlayerPosition);
-	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord);  };
+	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord); };
 };
