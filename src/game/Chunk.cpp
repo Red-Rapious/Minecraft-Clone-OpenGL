@@ -188,6 +188,7 @@ void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
 
 void Chunk::DeleteAllBlocks()
 {
+	m_blocksArray = {};
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
 		std::vector<std::vector<BlockType>> vect;
@@ -231,14 +232,16 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 
 /* FACE TO RENDER ALGORITHM PART */
-VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const bool& chunkChanges, const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
+VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap)
 {
 	m_vertexIndexBufferCouple.m_indexCount = originIndex;
-	UpdateInsideCoupleToRender();
-	UpdateOutsideCoupleToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
+	RenderAllFacesNeeded(chunksUMap);
+	//UpdateInsideCoupleToRender();
+	//UpdateOutsideCoupleToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
 	return m_vertexIndexBufferCouple;
 }
 
+/*
 void Chunk::UpdateOutsideCoupleToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
 	// Check if there's a block up and down the block
@@ -406,7 +409,7 @@ void Chunk::UpdateInsideCoupleToRender()
 				{
 					glm::vec3 coord(x, y, z);
 
-					/* For each face, check if there's a face next to it ; if not, render the face*/
+					// For each face, check if there's a face next to it ; if not, render the face
 					// FRONT
 					if (m_blocksArray[x][y][z - 1] == BlockType::NONE)
 					{
@@ -447,22 +450,16 @@ void Chunk::UpdateInsideCoupleToRender()
 		}
 	}
 }
+*/
 
 
 
 
 
-void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chunksUMap)
+void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap)
 {
 	const bool RENDER_UNGEN_CHUNKS_FACES = true;
-
-	ChunkCoord coord(0,1);
-
-	if (chunksUMap.find(coord) == chunksUMap.end())
-		std::cout << "NOT THERE";
-	else
-		std::cout << "THERE";
-
+	const bool RENDER_BOTTOM_CHUNK_FACES = true;
 
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
@@ -474,20 +471,21 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 				if (m_blocksArray[x][y][z] != BlockType::NONE)
 				{
 					bool renderFace[6] = { false };
-					bool overwriteFace[6] = { false };
+					//bool overwriteFace[6] = { false };
 
 					/* For each face, check if its supposed to be rendered */
 					// FRONT
 					if (z == 0)
 					{
 						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz - 1);
-						if (chunksUMap.find(otherChunkCoord) == chunksUMap.end()) // if a chunk exists where the face points towards
+						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
 							// render the face if the blocks that correspond on the other chunk is empty
 							renderFace[(int)FaceType::FRONT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 2)) == BlockType::NONE;
 						}
 						else
-							overwriteFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
+							renderFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
+							//overwriteFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
 					}
 					else
 					{
@@ -495,16 +493,90 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, Ch
 					}
 
 					// BACK
+					if (z == CHUNK_Z_BLOCK_COUNT-1)
+					{
+						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz + 1);
+						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
+						{
+							// render the face if the blocks that correspond on the other chunk is empty
+							renderFace[(int)FaceType::BACK] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, 0)) == BlockType::NONE;
+						}
+						else
+							renderFace[(int)FaceType::BACK] = RENDER_UNGEN_CHUNKS_FACES;
+							//overwriteFace[(int)FaceType::BACK] = RENDER_UNGEN_CHUNKS_FACES;
+					}
+					else
+					{
+						renderFace[(int)FaceType::BACK] = m_blocksArray[x][y][z + 1] == BlockType::NONE;
+					}
 
 					// RIGHT
+					if (x == CHUNK_X_BLOCK_COUNT-1)
+					{
+						ChunkCoord otherChunkCoord(m_coord.idx+1, m_coord.idz);
+						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
+						{
+							// render the face if the blocks that correspond on the other chunk is empty
+							renderFace[(int)FaceType::RIGHT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, z)) == BlockType::NONE;
+						}
+						else
+							renderFace[(int)FaceType::RIGHT] = RENDER_UNGEN_CHUNKS_FACES;
+							//overwriteFace[(int)FaceType::RIGHT] = RENDER_UNGEN_CHUNKS_FACES;
+					}
+					else
+					{
+						renderFace[(int)FaceType::RIGHT] = m_blocksArray[x + 1][y][z] == BlockType::NONE;
+					}
 
 					// LEFT
+					if (x == 0)
+					{
+						ChunkCoord otherChunkCoord(m_coord.idx - 1, m_coord.idz);
+						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
+						{
+							// render the face if the blocks that correspond on the other chunk is empty
+							renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, CHUNK_X_BLOCK_COUNT-2)) == BlockType::NONE;
+						}
+						else
+							renderFace[(int)FaceType::LEFT] = RENDER_UNGEN_CHUNKS_FACES;
+							//overwriteFace[(int)FaceType::LEFT] = RENDER_UNGEN_CHUNKS_FACES;
+					}
+					else
+					{
+						renderFace[(int)FaceType::RIGHT] = m_blocksArray[x - 1][y][z] == BlockType::NONE;
+					}
 
 					// UP
+					if (y == CHUNK_Y_BLOCK_COUNT-1)
+					{
+						//overwriteFace[(int)FaceType::UP] = true;
+						renderFace[(int)FaceType::UP] = true;
+					}
+					else
+					{
+						renderFace[(int)FaceType::DOWN] = m_blocksArray[x][y + 1][z] == BlockType::NONE;
+					}
 
 					// DOWN
+					if (y == 0)
+					{
+						//overwriteFace[(int)FaceType::DOWN] = RENDER_BOTTOM_CHUNK_FACES;
+						renderFace[(int)FaceType::DOWN] = RENDER_BOTTOM_CHUNK_FACES;
+					}
+					else
+					{
+						renderFace[(int)FaceType::DOWN] = m_blocksArray[x][y - 1][z] == BlockType::NONE;
+					}
+
 
 					/* Render each face supposed to be rendered */
+					for (unsigned int i = 0; i < 6; i++)
+					{
+						if (renderFace[i])
+						{
+							AddFaceToCouple((FaceType)i, glm::vec3(x,y,z), m_blocksArray[x][y][z]);
+						}
+					}
 				}
 			}
 		}

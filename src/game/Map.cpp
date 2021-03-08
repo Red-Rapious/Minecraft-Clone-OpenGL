@@ -13,7 +13,7 @@ void Map::AddChunkToMap(Chunk chunk)
 
 static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2)
 {
-	/* Return the distance between the two chunks */
+	/* Return the manhattan distance between the two chunks */
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
 }
 
@@ -25,10 +25,8 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
 		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
-			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(m_worldCouple.m_indexCount, false);
+			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(m_worldCouple.m_indexCount, m_chunksUMap);
 			m_worldCouple += chunkCouple;
-
-			m_chunkVector[i].RenderAllFacesNeeded(m_chunksUMap);
 		}
 	}
 

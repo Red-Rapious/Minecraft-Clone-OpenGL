@@ -54,16 +54,17 @@ private:
 
 public:
 	Chunk(ChunkCoord coord);
-	void SetBlockType(glm::vec3 blockPosition, BlockType type);
+    inline ChunkCoord GetCoord() const { return m_coord; };
+    void SetBlockType(glm::vec3 blockPosition, BlockType type);
+    void DeleteAllBlocks();
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
 	void FillPlaneWithBlocks(unsigned int height, BlockType type);
-    void DeleteAllBlocks();
-
-	inline ChunkCoord GetCoord() const { return m_coord; };
-    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex = 0, const bool& chunkChanges=false, const bool& chunkNorth = false, const bool& chunkSouth = false, const bool& chunkWest = false, const bool& chunkEast = false);
+    
+    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
+    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash>& chunksUMap);
 
     unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
 
 
-    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> chunksUMap);
+    
 };
