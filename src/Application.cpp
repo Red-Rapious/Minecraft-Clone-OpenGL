@@ -12,6 +12,7 @@
 #include "graphics/Shader.h"
 #include "graphics/Texture.h"
 #include "graphics/Controls.h"
+#include "graphics/VertexIndexBufferCouple.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -26,6 +27,8 @@ constexpr auto FULLSCREEN = false;
 
 int main(void)
 {
+    
+
     GLFWwindow* window;
 
     /* Initialize GLFW */
@@ -93,33 +96,36 @@ int main(void)
         coord.idz = 0;
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
+        //map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(0,1,0), BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
-        ChunkCoord coord2;
+        /*ChunkCoord coord2;
         coord2.idx = 1;
         coord2.idz = 0;
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
-        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
+        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);*/
             
 
         /* Graphics part */
         VertexArray va;
-        std::vector<float> vertexBufferArray = map.GetVertexBufferToRender(coord);
+        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender(coord);
         
-        VertexBuffer vb(vertexBufferArray.data(), vertexBufferArray.size() * sizeof(float));
+        VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
         layout.Push<float>(2); // add 2 floats for the texture coords
         va.AddBuffer(vb, layout); // give the layout to opengl
 
+        IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
+
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
         
 
-        Texture texture("res/textures/MinecraftTexturesHD.png");
+        Texture texture("res/textures/textures_test.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
@@ -141,7 +147,8 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            renderer.Draw(va, vertexBufferArray.size(), shader);
+            renderer.Draw(va, ib, shader);
+            //renderer.Draw(va, vertexCouple.m_vertexBuffer.size(), shader);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

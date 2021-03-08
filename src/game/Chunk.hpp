@@ -4,6 +4,7 @@
 #include <vector>
 #include "glm/glm.hpp"
 #include "Constants.hpp"
+#include "../graphics/VertexIndexBufferCouple.hpp"
 
 enum class BlockType
 {
@@ -41,13 +42,14 @@ class Chunk
 private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
-    std::vector<float> m_vertexBuffer;
+    VertexIndexBufferCouple m_vertexIndexBufferCouple;
+    unsigned int m_indexCount;
     
-
+    void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
-    void AddFaceToVertexBuffer(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
-    void UpdateInsideVertexBufferToRender();
-    void UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast);
+    void AddFaceToCouple(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
+    void UpdateInsideCoupleToRender();
+    void UpdateOutsideCoupleToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast);
 
 public:
 	Chunk(ChunkCoord coord);
@@ -57,7 +59,7 @@ public:
     void DeleteAllBlocks();
 
 	inline ChunkCoord GetCoord() const { return m_coord; };
-    std::vector<float>* GetVertexBufferToRender(const bool& chunkChanges, const bool& chunkNorth = false, const bool& chunkSouth = false, const bool& chunkWest = false, const bool& chunkEast = false);
+    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex = 0, const bool& chunkChanges=false, const bool& chunkNorth = false, const bool& chunkSouth = false, const bool& chunkWest = false, const bool& chunkEast = false);
 
     unsigned int GetNumberOfNonAirBlocks(const bool& out=false) const;
 };

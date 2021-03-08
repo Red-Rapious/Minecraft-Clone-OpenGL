@@ -5,17 +5,17 @@
 
 void Chunk::ClearVertexBuffer()
 {
-	m_vertexBuffer = {};
+	m_vertexIndexBufferCouple.m_vertexBuffer = {};
 }
 
-static void addVertexToVertexBuffer(std::vector<float>& vertexBuffer, glm::vec3 vertexCoord, glm::vec2 textureCoord)
+void Chunk::AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord)
 {
-	vertexBuffer.push_back((float)vertexCoord.x);
-	vertexBuffer.push_back((float)vertexCoord.y);
-	vertexBuffer.push_back((float)vertexCoord.z);
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.x);
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.y);
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.z);
 
-	vertexBuffer.push_back((float)textureCoord.x);
-	vertexBuffer.push_back((float)textureCoord.y);
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)textureCoord.x);
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)textureCoord.y);
 }
 
 static float getTextureOriginY(BlockType blockType)
@@ -28,10 +28,11 @@ static float getTextureCoordX(FaceType faceType)
 	return ((int)faceType);
 }
 
-void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, BlockType blockType)
+void Chunk::AddFaceToCouple(FaceType faceType, glm::vec3 blockCoord, BlockType blockType)
 {
-	glm::vec3 vertexCoord[6] = {}; // one for each vertex of each face
-	glm::vec2 textureCoord[6] = {};
+	glm::vec3 vertexCoord[4] = {}; // one for each vertex of each face
+	glm::vec2 textureCoord[4] = {};
+	unsigned int indices[6] = { 0,1,2,0,2,3 };
 
 	switch (faceType)
 	{
@@ -42,18 +43,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
 		vertexCoord[2] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
 
-		vertexCoord[3] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
-		vertexCoord[4] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
-		vertexCoord[5] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
+		//vertexCoord[3] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
+		//vertexCoord[4] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
+		vertexCoord[3] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
 
 
 		textureCoord[0] = glm::vec2(1, 0); // D
 		textureCoord[1] = glm::vec2(0, 0); // A
 		textureCoord[2] = glm::vec2(0, 1); // H
 
-		textureCoord[3] = glm::vec2(1, 0); // D
-		textureCoord[4] = glm::vec2(0, 1); // H
-		textureCoord[5] = glm::vec2(1, 1); // E
+		//textureCoord[3] = glm::vec2(1, 0); // D
+		//textureCoord[4] = glm::vec2(0, 1); // H
+		textureCoord[3] = glm::vec2(1, 1); // E
 		break;
 		
 	case FaceType::BACK:
@@ -61,18 +62,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(0.5f, -0.5f, 0.5f); // C
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, 0.5f); // F
 
-		vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
-		vertexCoord[4] = glm::vec3(0.5f, 0.5f, 0.5f); // F
-		vertexCoord[5] = glm::vec3(0.5f, 0.5f, -0.5f); // G
+		//vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
+		//vertexCoord[4] = glm::vec3(0.5f, 0.5f, 0.5f); // F
+		vertexCoord[3] = glm::vec3(0.5f, 0.5f, -0.5f); // G
 
 
 		textureCoord[0] = glm::vec2(1, 0); // B
 		textureCoord[1] = glm::vec2(0, 0); // C
 		textureCoord[2] = glm::vec2(0, 1); // F
 
-		textureCoord[3] = glm::vec2(1, 0); // B
-		textureCoord[4] = glm::vec2(0, 1); // F
-		textureCoord[5] = glm::vec2(1, 1); // G
+		//textureCoord[3] = glm::vec2(1, 0); // B
+		//textureCoord[4] = glm::vec2(0, 1); // F
+		textureCoord[3] = glm::vec2(1, 1); // G
 		break;
 		
 		
@@ -82,18 +83,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(0.5f, -0.5f, -0.5f); // B
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, -0.5f); // G
 
-		vertexCoord[3] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
-		vertexCoord[4] = glm::vec3(0.5f, 0.5f, -0.5f); // G
-		vertexCoord[5] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
+		//vertexCoord[3] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
+		//vertexCoord[4] = glm::vec3(0.5f, 0.5f, -0.5f); // G
+		vertexCoord[3] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
 
 
 		textureCoord[0] = glm::vec2(1, 0); // A
 		textureCoord[1] = glm::vec2(0, 0); // B
 		textureCoord[2] = glm::vec2(0, 1); // G
 
-		textureCoord[3] = glm::vec2(1, 0); // A
-		textureCoord[4] = glm::vec2(0, 1); // G
-		textureCoord[5] = glm::vec2(1, 1); // H
+		//textureCoord[3] = glm::vec2(1, 0); // A
+		//textureCoord[4] = glm::vec2(0, 1); // G
+		textureCoord[3] = glm::vec2(1, 1); // H
 		break;
 		
 
@@ -102,18 +103,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
 		vertexCoord[2] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
 
-		vertexCoord[3] = glm::vec3(0.5f, -0.5f, 0.5f); // C
-		vertexCoord[4] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
-		vertexCoord[5] = glm::vec3(0.5f, 0.5f, 0.5f); // F
+		//vertexCoord[3] = glm::vec3(0.5f, -0.5f, 0.5f); // C
+		//vertexCoord[4] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
+		vertexCoord[3] = glm::vec3(0.5f, 0.5f, 0.5f); // F
 
 
 		textureCoord[0] = glm::vec2(1, 0); // C
 		textureCoord[1] = glm::vec2(0, 0); // D
 		textureCoord[2] = glm::vec2(0, 1); // E
 
-		textureCoord[3] = glm::vec2(1, 0); // C
-		textureCoord[4] = glm::vec2(0, 1); // E
-		textureCoord[5] = glm::vec2(1, 1); // F
+		//textureCoord[3] = glm::vec2(1, 0); // C
+		//textureCoord[4] = glm::vec2(0, 1); // E
+		textureCoord[3] = glm::vec2(1, 1); // F
 		break;
 		
 
@@ -122,18 +123,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(0.5f, 0.5f, -0.5f); // G
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, 0.5f); // F
 
-		vertexCoord[3] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
-		vertexCoord[4] = glm::vec3(0.5f, 0.5f, 0.5f); // F
-		vertexCoord[5] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
+		//vertexCoord[3] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
+		//vertexCoord[4] = glm::vec3(0.5f, 0.5f, 0.5f); // F
+		vertexCoord[3] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
 
 
 		textureCoord[0] = glm::vec2(0, 0); // H
 		textureCoord[1] = glm::vec2(0, 1); // G
 		textureCoord[2] = glm::vec2(1, 1); // F
 
-		textureCoord[3] = glm::vec2(0, 0); // H
-		textureCoord[4] = glm::vec2(1, 1); // F
-		textureCoord[5] = glm::vec2(1, 0); // E
+		//textureCoord[3] = glm::vec2(0, 0); // H
+		//textureCoord[4] = glm::vec2(1, 1); // F
+		textureCoord[3] = glm::vec2(1, 0); // E
 		break;
 
 	case FaceType::BELLOW:
@@ -141,18 +142,18 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
 		vertexCoord[2] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
 
-		vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
-		vertexCoord[4] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
-		vertexCoord[5] = glm::vec3(0.5f, -0.5f, 0.5f); // C
+		//vertexCoord[3] = glm::vec3(0.5f, -0.5f, -0.5f); // B
+		//vertexCoord[4] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
+		vertexCoord[3] = glm::vec3(0.5f, -0.5f, 0.5f); // C
 
 
 		textureCoord[0] = glm::vec2(0, 0); // B
 		textureCoord[1] = glm::vec2(0, 1); // A
 		textureCoord[2] = glm::vec2(1, 1); // D
 
-		textureCoord[3] = glm::vec2(0, 0); // B
-		textureCoord[4] = glm::vec2(1, 1); // D
-		textureCoord[5] = glm::vec2(1, 0); // C
+		//textureCoord[3] = glm::vec2(0, 0); // B
+		//textureCoord[4] = glm::vec2(1, 1); // D
+		textureCoord[3] = glm::vec2(1, 0); // C
 		break;
 	}
 
@@ -176,13 +177,21 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 		textureCoord[i].y = (textureOriginY + textureCoord[i].y) / BLOCK_TYPES_TEXTURES_NUMBER;
 
 		// Add vertex to the vertex buffer
-		addVertexToVertexBuffer(m_vertexBuffer, vertexCoord[i], textureCoord[i]);
+		AddVertexToVertexBuffer(vertexCoord[i], textureCoord[i]);
 	}
 
+	// Add the good indices to the index buffer
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		m_vertexIndexBufferCouple.m_indexBuffer.push_back(indices[i]+m_indexCount);
+		
+	}
+	std::cout << "\n";
+	m_indexCount+=4;
 }
 
 Chunk::Chunk(ChunkCoord coord)
-	: m_coord(coord), m_blocksArray(), m_vertexBuffer()
+	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple(), m_indexCount(0)
 {
 	// Initialise the chunk to an empty cube of air
 	DeleteAllBlocks();
@@ -227,17 +236,15 @@ void Chunk::DeleteAllBlocks()
 	}
 }
 
-std::vector<float>* Chunk::GetVertexBufferToRender(const bool& chunkChanges, const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
+VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const bool& chunkChanges, const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
-	UpdateInsideVertexBufferToRender();
-	UpdateOutsideVertexBufferToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
-	return &m_vertexBuffer;
+	UpdateInsideCoupleToRender();
+	UpdateOutsideCoupleToRender(chunkNorth, chunkSouth, chunkWest, chunkEast);
+	return m_vertexIndexBufferCouple;
 }
 
-void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
+void Chunk::UpdateOutsideCoupleToRender(const bool& chunkNorth, const bool& chunkSouth, const bool& chunkWest, const bool& chunkEast)
 {
-	// Render up and bellow faces for every border block with y=0 and y=CHUNK_Y_BLOCK_COUNT-1
-
 	// Check if there's a block up and down the block
 	for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 	{
@@ -247,32 +254,32 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			if (m_blocksArray[x][y][0] != BlockType::NONE)
 			{
 				if (y==0)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
 
 				else if (m_blocksArray[x][y - 1][0] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
 
 				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
 
 				else if (m_blocksArray[x][y + 1][0] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
 			}
 
 			// NORTH
 			if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT-1] != BlockType::NONE)
 			{
 				if (y == CHUNK_Y_BLOCK_COUNT-1)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
 
 				else if (m_blocksArray[x][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
 
 				if (y == 0)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(x, y, 0), m_blocksArray[x][y][0]);
 				
 				else if (m_blocksArray[x][y - 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
 
 				
 			}
@@ -286,32 +293,32 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			if (m_blocksArray[0][y][z] != BlockType::NONE)
 			{
 				if (y == 0)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
 
 				else if (m_blocksArray[0][y - 1][z] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
 				
 				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
 
 				else if (m_blocksArray[0][y + 1][z] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
 			}
 
 			// NORTH
 			if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
 			{
 				if (y == CHUNK_Y_BLOCK_COUNT - 1)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
 				
 				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y + 1][CHUNK_Z_BLOCK_COUNT - 1] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+					AddFaceToCouple(FaceType::UP, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
 
 				if (y == 0)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
 				
 				else if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y - 1][z] == BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+					AddFaceToCouple(FaceType::BELLOW, glm::vec3(CHUNK_X_BLOCK_COUNT - 1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
 
 				}
 
@@ -331,7 +338,7 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 			{
 				if (m_blocksArray[x][y][0]!=BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::FRONT, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
+					AddFaceToCouple(FaceType::FRONT, glm::vec3(x,y,0), m_blocksArray[x][y][0]);
 
 			}
 		}
@@ -348,7 +355,7 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 			{
 				if (m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1] != BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::BACK, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
+					AddFaceToCouple(FaceType::BACK, glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT-1), m_blocksArray[x][y][CHUNK_Z_BLOCK_COUNT - 1]);
 			}
 		}
 	}
@@ -364,7 +371,7 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 			{
 				if (m_blocksArray[0][y][z] != BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::LEFT, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
+					AddFaceToCouple(FaceType::LEFT, glm::vec3(0, y, z), m_blocksArray[0][y][z]);
 			}
 		}
 	}
@@ -380,13 +387,13 @@ void Chunk::UpdateOutsideVertexBufferToRender(const bool& chunkNorth, const bool
 			for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 			{
 				if (m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z] != BlockType::NONE)
-					AddFaceToVertexBuffer(FaceType::RIGHT, glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
+					AddFaceToCouple(FaceType::RIGHT, glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z), m_blocksArray[CHUNK_X_BLOCK_COUNT - 1][y][z]);
 			}
 		}
 	}
 }
 
-void Chunk::UpdateInsideVertexBufferToRender()
+void Chunk::UpdateInsideCoupleToRender()
 {
 	ClearVertexBuffer();
 	BlockType analysedBlockType;
@@ -407,37 +414,37 @@ void Chunk::UpdateInsideVertexBufferToRender()
 					// FRONT
 					if (m_blocksArray[x][y][z - 1] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::FRONT, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::FRONT, coord, analysedBlockType);
 					}
 
 					// BACK
 					if (m_blocksArray[x][y][z + 1] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::BACK, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::BACK, coord, analysedBlockType);
 					}
 
 					// UP
 					if (y==CHUNK_Y_BLOCK_COUNT-1 || m_blocksArray[x][y+1][z] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::UP, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::UP, coord, analysedBlockType);
 					}
 
 					// BELLOW
 					if (y==0 || m_blocksArray[x][y - 1][z] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::BELLOW, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::BELLOW, coord, analysedBlockType);
 					}
 
 					// LEFT
 					if (m_blocksArray[x-1][y][z] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::LEFT, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::LEFT, coord, analysedBlockType);
 					}
 
 					// RIGHT
 					if (m_blocksArray[x+1][y][z] == BlockType::NONE)
 					{
-						AddFaceToVertexBuffer(FaceType::RIGHT, coord, analysedBlockType);
+						AddFaceToCouple(FaceType::RIGHT, coord, analysedBlockType);
 					}
 
 

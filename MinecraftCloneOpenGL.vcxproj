@@ -154,6 +154,7 @@
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
+    <ClCompile Include="src\graphics\VertexIndexBufferCouple.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\graphics\VertexArray.cpp" />
@@ -326,6 +327,7 @@
     <ClInclude Include="src\graphics\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Texture.h" />
+    <ClInclude Include="src\graphics\VertexIndexBufferCouple.hpp" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />

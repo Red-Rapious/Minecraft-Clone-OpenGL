@@ -17,22 +17,20 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
 }
 
-std::vector<float> Map::GetVertexBufferToRender(ChunkCoord chunkPlayerPosition)
+VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 {
-	//for (std::pair<ChunkCoord, Chunk*> element : m_chunksUMap)
+	m_worldCouple = VertexIndexBufferCouple();
 	for (unsigned int i = 0 ; i < m_chunkVector.size() ; i++)
 	{
 		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
 		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
 		{
-			
-			std::vector<float>* chunkVertexBuffer = m_chunkVector[i].GetVertexBufferToRender(false);
-			
-			m_worldVertexBuffer.insert(m_worldVertexBuffer.end(), (*chunkVertexBuffer).begin(), (*chunkVertexBuffer).end());
+			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(false);
+			m_worldCouple += chunkCouple;
 		}
 	}
 
-	if (m_worldVertexBuffer.size() == 0)
+	if (m_worldCouple.m_vertexBuffer.size() == 0)
 		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
-	return m_worldVertexBuffer;
+	return m_worldCouple;
 }

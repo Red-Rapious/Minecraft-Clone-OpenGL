@@ -1,15 +1,16 @@
 #pragma once
 #include <unordered_map>
+#include "../graphics/VertexIndexBufferCouple.hpp"
 
 class Map
 {
 private:
 	std::unordered_map<ChunkCoord, Chunk*, ChunkCoordHash> m_chunksUMap;
 	std::vector<Chunk> m_chunkVector;
-	std::vector<float> m_worldVertexBuffer;
+	VertexIndexBufferCouple m_worldCouple;
 
 public:
 	void AddChunkToMap(Chunk chunk);
-	std::vector<float> GetVertexBufferToRender(ChunkCoord chunkPlayerPosition);
+	VertexIndexBufferCouple GetCoupleToRender(ChunkCoord chunkPlayerPosition);
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord);  };
 };
