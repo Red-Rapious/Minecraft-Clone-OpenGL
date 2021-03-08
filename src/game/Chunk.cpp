@@ -167,13 +167,11 @@ void Chunk::AddFaceToVertexBuffer(FaceType faceType, glm::vec3 blockCoord, Block
 	for (int i = 0; i < sizeof(vertexCoord) / sizeof(vertexCoord[0]); i++)
 	{
 		// Add the block coord (in world space) to the vertex
-		//vertexCoord[i] += blockCoord; // block coord in chunk space
-
-		vertexCoord[i].x += blockCoord.z;
+		vertexCoord[i].x += blockCoord.z; // reverse to fix a coordinates bug
 		vertexCoord[i].y += blockCoord.y;
 		vertexCoord[i].z += blockCoord.x;
-
-		vertexCoord[i] += glm::vec3(m_coord.idx*CHUNK_X_BLOCK_COUNT, 0, m_coord.idz * CHUNK_Z_BLOCK_COUNT); // chunk coord in world space
+		
+		vertexCoord[i] += glm::vec3(m_coord.idz * CHUNK_Z_BLOCK_COUNT, 0, m_coord.idx * CHUNK_X_BLOCK_COUNT); // chunk coord in world space
 		
 		// Add the texture origin on the texture map
 		textureOriginY = getTextureOriginY(blockType); // TODO: dont compute it for every face, only for every block
