@@ -89,14 +89,15 @@ int main(void)
 
         /* Map and camera creation (will be moved later) */
         glm::vec3 camera_position(-2, 2, -2);
+        Control control(window, camera_position);
+
 
         Map map;
+        map.UpdatePlayerPosition(control.GetCameraPosition());
 
         ChunkCoord coord(0, 0);
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1,5,1), BlockType::GRASS);
-        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(2, 5, 1), BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
         //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
@@ -129,7 +130,7 @@ int main(void)
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Renderer renderer;
-        Control control(window, camera_position);
+        
 
 
         /* Loop until the user closes the window */

@@ -63,6 +63,8 @@ public:
     
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
+    void Generate();
+
     // Render functions
     VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);

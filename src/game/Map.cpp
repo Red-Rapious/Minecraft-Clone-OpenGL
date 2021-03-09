@@ -13,11 +13,18 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 
 std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 {
-	//if (calculateChunksDistance(chunkCoordVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
-	std::vector<ChunkCoord> vect;
-	vect.push_back(ChunkCoord(0, 0));
-	vect.push_back(ChunkCoord(1, 0));
-	return vect;
+	std::vector<ChunkCoord> chunksCoordToRender;
+	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	{
+		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
+		{
+			if (m_chunksUMap.find(ChunkCoord(i, j)) != m_chunksUMap.end()) // if the chunk exists
+				chunksCoordToRender.push_back(ChunkCoord(i, j));
+			/*else
+				// TODO: Add the chunk to render queue*/
+		}
+	}
+	return chunksCoordToRender;
 }
 
 void Map::AddChunkToMap(const Chunk& chunk)

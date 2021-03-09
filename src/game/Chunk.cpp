@@ -234,6 +234,11 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 	return count;
 }
 
+void Chunk::Generate()
+{
+	FillPlaneWithBlocks(0, BlockType::GRASS);
+}
+
 
 
 
@@ -316,8 +321,7 @@ void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::uniqu
 							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() == 16) // check if the memory isnt empty
 							{
 								// render the face if the blocks that correspond on the other chunk is empty
-								Chunk otherChunk = *chunksUMap.at(otherChunkCoord);
-								renderFace[(int)FaceType::RIGHT] = (otherChunk.m_blocksArray[0][y][z] == BlockType::NONE);
+								renderFace[(int)FaceType::RIGHT] = (chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0,y,z)) == BlockType::NONE);
 							}
 							else
 							{

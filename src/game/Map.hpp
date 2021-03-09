@@ -8,7 +8,6 @@ class Map
 {
 private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunksUMap;
-	//std::vector<Chunk> m_chunkVector;
 	VertexIndexBufferCouple m_worldCouple;
 	ChunkCoord m_playerPosition;
 
