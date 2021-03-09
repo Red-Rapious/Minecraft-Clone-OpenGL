@@ -20,5 +20,6 @@ public:
 	void AddChunkToMap(const Chunk& chunk);
 	VertexIndexBufferCouple GetCoupleToRender(ChunkCoord chunkPlayerPosition);
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord).get(); };
-	void UpdateChunkGeneration(const glm::vec3& cameraPosition);
+	void UpdateChunkGeneration();
+	void UpdatePlayerPosition(const glm::vec3& cameraPosition);
 };

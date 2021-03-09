@@ -78,9 +78,11 @@ int main(void)
         GLCall(glEnable(GL_DEPTH_TEST));
         // Accept fragment if it closer to the camera than the former one
         GLCall(glDepthFunc(GL_LESS));
+        
         // Cull face if its BEHIND - GL_FRONT is here to fix a strange bug
         GLCall(glEnable(GL_CULL_FACE));
         GLCall(glCullFace(GL_FRONT));
+        
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
@@ -93,9 +95,10 @@ int main(void)
         ChunkCoord coord(0, 0);
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        //map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(0,1,0), BlockType::GRASS);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(1,5,1), BlockType::GRASS);
+        map.GetChunkByCoord(coord)->SetBlockType(glm::vec3(2, 5, 1), BlockType::GRASS);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
+        //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
         
         ChunkCoord coord2(1, 0);
@@ -135,7 +138,7 @@ int main(void)
             renderer.Clear();
 
             control.UpdateInput();
-            control.GetCameraPosition();
+            map.UpdatePlayerPosition(control.GetCameraPosition());
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();

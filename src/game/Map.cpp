@@ -51,7 +51,17 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 	return m_worldCouple;
 }
 
-void Map::UpdateChunkGeneration(const glm::vec3& cameraPosition)
+void Map::UpdatePlayerPosition(const glm::vec3& cameraPosition)
 {
-	m_playerPosition = ConvertPositionToChunkCoord(cameraPosition);
+	ChunkCoord playerPosition = ConvertPositionToChunkCoord(cameraPosition);
+	if (!(m_playerPosition == playerPosition))
+	{
+		m_playerPosition = playerPosition;
+		UpdateChunkGeneration();
+	}
+}
+
+void Map::UpdateChunkGeneration()
+{
+	
 }
