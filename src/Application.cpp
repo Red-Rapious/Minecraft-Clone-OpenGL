@@ -97,6 +97,7 @@ int main(void)
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
+        
         ChunkCoord coord2(1, 0);
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);

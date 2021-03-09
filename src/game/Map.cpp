@@ -11,9 +11,18 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 	return ChunkCoord(position.x / CHUNK_X_BLOCK_COUNT, position.z / CHUNK_Z_BLOCK_COUNT);
 }
 
+std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
+{
+	//if (calculateChunksDistance(chunkCoordVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
+	std::vector<ChunkCoord> vect;
+	vect.push_back(ChunkCoord(0, 0));
+	vect.push_back(ChunkCoord(1, 0));
+	return vect;
+}
+
 void Map::AddChunkToMap(const Chunk& chunk)
 {
-	m_chunkVector.push_back(chunk);
+	//m_chunkVector.push_back(chunk);
 	m_chunksUMap[chunk.GetCoord()] = std::make_unique<Chunk>(chunk);
 }
 
@@ -26,13 +35,13 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 {
 	m_worldCouple = VertexIndexBufferCouple();
-	for (unsigned int i = 0 ; i < m_chunkVector.size() ; i++)
+	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
+	for (unsigned int i = 0 ; i < chunkCoordVector.size() ; i++)
 	{
-		// If in render distance, asks for the chunk's vertexBuffer and add it to the global vertexBuffer
-		if (calculateChunksDistance(m_chunkVector[i].GetCoord(), chunkPlayerPosition) <= RENDER_DISTANCE)
+		// If the chunk exists, render it
+		if (m_chunksUMap.find(chunkCoordVector[i]) != m_chunksUMap.end())
 		{
-			
-			VertexIndexBufferCouple chunkCouple = m_chunkVector[i].GetCoupleToRender(m_worldCouple.m_indexCount, m_chunksUMap);
+			VertexIndexBufferCouple chunkCouple = m_chunksUMap.at(chunkCoordVector[i])->GetCoupleToRender(m_worldCouple.m_indexCount, m_chunksUMap);
 			m_worldCouple += chunkCouple;
 		}
 	}
@@ -44,5 +53,5 @@ VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
 
 void Map::UpdateChunkGeneration(const glm::vec3& cameraPosition)
 {
-	ChunkCoord chunkWithPlayer = ConvertPositionToChunkCoord(cameraPosition);
+	m_playerPosition = ConvertPositionToChunkCoord(cameraPosition);
 }
