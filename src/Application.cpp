@@ -108,9 +108,6 @@ int main(void)
         map.AddChunkToMap(chunk2);
         map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
-        map.GetChunksCoordsToRender();
-        map.GenerateOneChunk();
-
         /* Graphics part */
         VertexArray va;
         VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender(coord);
@@ -133,8 +130,6 @@ int main(void)
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Renderer renderer;
-        
-        bool go = true;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -143,17 +138,16 @@ int main(void)
 
             control.UpdateInput();
             map.UpdatePlayerPosition(control.GetCameraPosition());
-            /*if (map.GenerateOneChunk())
+            if (map.GenerateOneChunk())
             {
-                va.Unbind();
                 vb.Unbind();
                 ib.Unbind();
                 vertexCouple = map.GetCoupleToRender(coord);
                 VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
-                
-                va.AddBuffer(vb, layout); // give the layout to opengl
                 IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
-            }*/
+            }
+
+
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();

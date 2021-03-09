@@ -19,6 +19,8 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 
 std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 {
+	// TODO: separate chunks generation from chunk rendering
+	// TODO: generate chunks from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
 	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
 	{
@@ -31,12 +33,12 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 				AddChunkToGenQueue(coord);
 		}
 	}
+	//std::cout << chunksCoordToRender.size() << "\n";
 	return chunksCoordToRender;
 }
 
 void Map::AddChunkToMap(const Chunk& chunk)
 {
-	//m_chunkVector.push_back(chunk);
 	m_chunksUMap[chunk.GetCoord()] = std::make_unique<Chunk>(chunk);
 }
 
@@ -71,8 +73,6 @@ void Map::UpdatePlayerPosition(const glm::vec3& cameraPosition)
 	if (!(m_playerPosition == playerPosition))
 	{
 		m_playerPosition = playerPosition;
-		// TODO: change the faces and chunks to render (update vertex buffer)
-		//GenerateOneChunk();
 	}
 }
 

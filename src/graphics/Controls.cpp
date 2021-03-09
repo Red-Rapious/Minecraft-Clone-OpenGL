@@ -40,6 +40,10 @@ void Control::UpdateMouse()
 	/* Compute new orientation */
 	m_horizontalAngle += m_mouseSpeed * m_deltaTime * float(m_windowWidth / 2 - xpos);
 	m_verticalAngle += m_mouseSpeed * m_deltaTime * float(m_windowHeight / 2 - ypos);
+	if (m_verticalAngle > 3.14f / 2)
+		m_verticalAngle = 3.14f / 2;
+	if (m_verticalAngle < -3.14f / 2)
+		m_verticalAngle = -3.14f / 2;
 
 }
 
