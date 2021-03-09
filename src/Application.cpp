@@ -93,6 +93,7 @@ int main(void)
 
 
         Map map;
+        control.UpdateInput();
         map.UpdatePlayerPosition(control.GetCameraPosition());
 
         ChunkCoord coord(0, 0);
@@ -106,7 +107,9 @@ int main(void)
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
         map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
-            
+
+        map.GetChunksCoordsToRender();
+        map.GenerateOneChunk();
 
         /* Graphics part */
         VertexArray va;
@@ -131,7 +134,7 @@ int main(void)
 
         Renderer renderer;
         
-
+        bool go = true;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -140,6 +143,17 @@ int main(void)
 
             control.UpdateInput();
             map.UpdatePlayerPosition(control.GetCameraPosition());
+            /*if (map.GenerateOneChunk())
+            {
+                va.Unbind();
+                vb.Unbind();
+                ib.Unbind();
+                vertexCouple = map.GetCoupleToRender(coord);
+                VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
+                
+                va.AddBuffer(vb, layout); // give the layout to opengl
+                IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
+            }*/
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();

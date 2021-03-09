@@ -6,6 +6,12 @@
 #include <memory>
 #include <unordered_map>
 
+void Map::AddChunkToGenQueue(ChunkCoord chunkCoord)
+{
+	if (std::find(m_chunkGenerationQueue.begin(), m_chunkGenerationQueue.end(), chunkCoord) == m_chunkGenerationQueue.end())
+		m_chunkGenerationQueue.push_back(chunkCoord);
+}
+
 ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 {
 	return ChunkCoord(position.x / CHUNK_X_BLOCK_COUNT, position.z / CHUNK_Z_BLOCK_COUNT);
@@ -18,10 +24,11 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 	{
 		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
 		{
-			if (m_chunksUMap.find(ChunkCoord(i, j)) != m_chunksUMap.end()) // if the chunk exists
-				chunksCoordToRender.push_back(ChunkCoord(i, j));
-			/*else
-				// TODO: Add the chunk to render queue*/
+			ChunkCoord coord = ChunkCoord(i, j);
+			if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
+				chunksCoordToRender.push_back(coord);
+			else
+				AddChunkToGenQueue(coord);
 		}
 	}
 	return chunksCoordToRender;
@@ -64,11 +71,20 @@ void Map::UpdatePlayerPosition(const glm::vec3& cameraPosition)
 	if (!(m_playerPosition == playerPosition))
 	{
 		m_playerPosition = playerPosition;
-		UpdateChunkGeneration();
+		// TODO: change the faces and chunks to render (update vertex buffer)
+		//GenerateOneChunk();
 	}
 }
 
-void Map::UpdateChunkGeneration()
+bool Map::GenerateOneChunk()
 {
+	if (m_chunkGenerationQueue.size() == 0)
+		return false; // no new chunk generated
 	
+	ChunkCoord generatedChunkCoord = m_chunkGenerationQueue[0];
+	Chunk generatedChunk(generatedChunkCoord);
+	generatedChunk.Generate();
+	AddChunkToMap(generatedChunk);
+	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue
+	return true; // a new chunk was generated
 }
