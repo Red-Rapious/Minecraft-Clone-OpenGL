@@ -48,7 +48,7 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
 }
 
-VertexIndexBufferCouple Map::GetCoupleToRender(ChunkCoord chunkPlayerPosition)
+VertexIndexBufferCouple Map::GetCoupleToRender()
 {
 	m_worldCouple = VertexIndexBufferCouple();
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();

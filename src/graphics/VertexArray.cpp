@@ -11,8 +11,10 @@ VertexArray::VertexArray()
 
 VertexArray::~VertexArray()
 {
-	GLCall(glDeleteVertexArrays(1, &m_RendererID));
+	DeleteVertexArray();
 }
+
+
 
 void VertexArray::Bind() const
 {
@@ -24,11 +26,17 @@ void VertexArray::Unbind() const
 	GLCall(glBindVertexArray(0));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+void VertexArray::DeleteVertexArray() const
+{
+	GLCall(glDeleteVertexArrays(1, &m_RendererID));
+}
+
+//void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+void VertexArray::AddBuffer(const VertexBufferLayout& layout)
 {
 	/* Function that set the attributes pointer to each of the elements with the same layout */
 	Bind();
-	vb.Bind();
+	//vb.Bind();
 	const auto& elements = layout.GetElements();
 	unsigned int offset = 0;
 	for (unsigned int i = 0 ; i < elements.size() ; i++)

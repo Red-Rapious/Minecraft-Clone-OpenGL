@@ -20,7 +20,7 @@ private:
 public:
 	inline Map() : m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}) {};
 	void AddChunkToMap(const Chunk& chunk);
-	VertexIndexBufferCouple GetCoupleToRender(ChunkCoord chunkPlayerPosition);
+	VertexIndexBufferCouple GetCoupleToRender();
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord).get(); };
 	bool GenerateOneChunk();
 	void UpdatePlayerPosition(const glm::vec3& cameraPosition);

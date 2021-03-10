@@ -236,7 +236,7 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 void Chunk::Generate()
 {
-	FillPlaneWithBlocks(1, BlockType::GRASS);
+	FillPlaneWithBlocks(0, BlockType::GRASS);
 }
 
 

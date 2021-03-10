@@ -43,6 +43,8 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    
+
     /* Create a windowed mode window and its OpenGL context */
     if (FULLSCREEN)
         window = glfwCreateWindow(1920, 1280, "Minecraft OpenGL", glfwGetPrimaryMonitor(), NULL); // 4:3
@@ -112,38 +114,34 @@ int main(void)
         
 
         /* Graphics part */
+        VertexBufferLayout bufferLayout;
+
+        bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
+        bufferLayout.Push<float>(2); // add 2 floats for the texture coords
+
+
         VertexArray vao;
+        vao.Bind();
+        
 
-
-        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender(playerInitialCoord);
+        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender();
         
         VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
-        VertexBufferLayout layout;
+        //VertexBuffer vb(nullptr, 0);
+        
+        vao.AddBuffer(bufferLayout);
 
-        layout.Push<float>(3); // add 3 floats for the vertex positions
-        layout.Push<float>(2); // add 2 floats for the texture coords
-        vao.AddBuffer(vb, layout);
-
-        IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
+        //IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
 
 
-        // TEST
-        while (map.GenerateOneChunk()) {}
-        vertexCouple = map.GetCoupleToRender(playerInitialCoord);
-
-        //vb.DeleteBuffer();
-        GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
-        vao.AddBuffer(vb, layout);
-
-        //ib.DeleteBuffer();
-        GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCouple.m_indexBuffer.size() * sizeof(unsigned int), vertexCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
 
 
         Shader shader("res/shaders/Basic.shader");
+
         shader.Bind();
         
 
-        Texture texture("res/textures/MinecraftTexturesHD.png");
+        Texture texture("res/textures/MinecraftTexturesPixel.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
@@ -157,22 +155,17 @@ int main(void)
             control.UpdateInput();
             map.UpdatePlayerPosition(control.GetCameraPosition());
             
-            /*if (map.GenerateOneChunk())
+            if (map.GenerateOneChunk())
             {
-                vertexCouple = map.GetCoupleToRender(coord);
+                //while (map.GenerateOneChunk()) {};
+                vertexCouple = map.GetCoupleToRender();
+                GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
+                
+                unsigned int id;
+                GLCall(glGenBuffers(1, &id));
+                GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+                GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCouple.m_indexBuffer.size() * sizeof(unsigned int), vertexCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
             }
-            
-            // TODO: try with an array containing the new vb not to make a redefinition
-
-            vb.Unbind();
-            VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float), true);
-            //vbs.push_back(vb);
-            vao.Unbind();
-            vao.AddBuffer(vb, layout); // this line causes an error on render
-            ib.Unbind();
-            IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
-            //ibs.push_back(ib);
-            */
 
 
 
