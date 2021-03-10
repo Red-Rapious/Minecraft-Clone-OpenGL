@@ -8,6 +8,11 @@
 #include <unordered_map>
 #include <memory>
 
+#include "../graphics/VertexBuffer.h"
+#include "../graphics/IndexBuffer.h"
+#include "../graphics/Renderer.h"
+#include "../graphics/VertexArray.h"
+
 enum class BlockType
 {
 	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, WOOD
@@ -46,6 +51,9 @@ private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
     VertexIndexBufferCouple m_vertexIndexBufferCouple;
+
+    VertexBuffer m_vertexBuffer;
+    IndexBuffer m_indexBuffer;
     
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
@@ -66,6 +74,7 @@ public:
     void Generate();
 
     // Render functions
+    void RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
-    void RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };

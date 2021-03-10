@@ -103,13 +103,7 @@ int main(void)
         /*ChunkCoord coord(0, 0);
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
-
-        
-        ChunkCoord coord2(1, 0);
-        Chunk chunk2(coord2);
-        map.AddChunkToMap(chunk2);
-        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);*/
+        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);*/
 
         
 
@@ -120,16 +114,16 @@ int main(void)
         bufferLayout.Push<float>(2); // add 2 floats for the texture coords
 
 
-        VertexArray vao;
+        VertexArray vao(bufferLayout);
         vao.Bind();
         
 
-        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender();
+        /*VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender();
         
         VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
-        //VertexBuffer vb(nullptr, 0);
+        //VertexBuffer vb(nullptr, 0);*/
         
-        vao.AddBuffer(bufferLayout);
+        //vao.AddBuffer(bufferLayout);
 
         //IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
 
@@ -155,18 +149,7 @@ int main(void)
             control.UpdateInput();
             map.UpdatePlayerPosition(control.GetCameraPosition());
             
-            if (map.GenerateOneChunk())
-            {
-                //while (map.GenerateOneChunk()) {};
-                vertexCouple = map.GetCoupleToRender();
-                
-                unsigned int id;
-                GLCall(glGenBuffers(1, &id));
-                GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
-
-                GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
-                GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCouple.m_indexBuffer.size() * sizeof(unsigned int), vertexCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
-            }
+            map.GenerateOneChunk();
 
 
 
@@ -177,8 +160,7 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            //renderer.Draw(vao, ib, shader);
-            GLCall(glDrawElements(GL_TRIANGLES, vertexCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
+            map.RenderAllNeededChunks(vao, renderer);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

@@ -242,16 +242,26 @@ void Chunk::Generate()
 
 
 
+void Chunk::RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+{
+	VertexIndexBufferCouple couple = GetCoupleToRender(0, chunksUMap);
+	m_vertexBuffer.Init(couple.m_vertexBuffer.data(), couple.m_vertexBuffer.size());
+	m_indexBuffer.Init(couple.m_indexBuffer.data(), couple.m_indexBuffer.size());
+	vao.AddBuffer(m_vertexBuffer);
+
+	renderer.Draw(m_indexBuffer);
+}
+
 /* FACE TO RENDER ALGORITHM PART */
 VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	m_vertexIndexBufferCouple.m_indexCount = originIndex;
-	RenderAllFacesNeeded(chunksUMap);
+	ListAllFacesToRender(chunksUMap);
 	return m_vertexIndexBufferCouple;
 }
 
 
-void Chunk::RenderAllFacesNeeded(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	const bool RENDER_UNGEN_CHUNKS_FACES = true;
 	const bool RENDER_BOTTOM_CHUNK_FACES = true;

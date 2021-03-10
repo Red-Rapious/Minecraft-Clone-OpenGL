@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Utility.hpp"
 
 #include <iostream>
 
@@ -29,6 +30,11 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
     ib.Bind();
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
     
+}
+
+void Renderer::Draw(const IndexBuffer& ib) const
+{
+    GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
 void Renderer::Draw(const VertexArray& va, const unsigned int & count, const Shader& shader) const

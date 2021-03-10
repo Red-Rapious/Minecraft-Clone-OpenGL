@@ -1,5 +1,5 @@
 #include "Controls.h"
-#include "Renderer.h"
+#include "Utility.hpp"
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"

@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "Utility.hpp"
+
 Shader::Shader(const std::string& filepath)
 	: m_FilePath(filepath), m_RendererID(0)
 {
