@@ -96,30 +96,48 @@ int main(void)
         control.UpdateInput();
         map.UpdatePlayerPosition(control.GetCameraPosition());
 
-        ChunkCoord coord(0, 0);
+        ChunkCoord playerInitialCoord(0, 0);
+        
+        /*ChunkCoord coord(0, 0);
         Chunk chunk(coord);
         map.AddChunkToMap(chunk);
         map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);
-        //map.GetChunkByCoord(coord)->FillPlaneWithBlocks(1, BlockType::GRASS);
 
         
         ChunkCoord coord2(1, 0);
         Chunk chunk2(coord2);
         map.AddChunkToMap(chunk2);
-        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);
+        map.GetChunkByCoord(coord2)->FillPlaneWithBlocks(1, BlockType::GRASS);*/
+
+        
 
         /* Graphics part */
-        VertexArray va;
-        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender(coord);
+        VertexArray vao;
+
+
+        VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender(playerInitialCoord);
         
         VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
         VertexBufferLayout layout;
 
         layout.Push<float>(3); // add 3 floats for the vertex positions
         layout.Push<float>(2); // add 2 floats for the texture coords
-        va.AddBuffer(vb, layout); // give the layout to opengl
+        vao.AddBuffer(vb, layout);
 
         IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
+
+
+        // TEST
+        while (map.GenerateOneChunk()) {}
+        vertexCouple = map.GetCoupleToRender(playerInitialCoord);
+
+        //vb.DeleteBuffer();
+        GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
+        vao.AddBuffer(vb, layout);
+
+        //ib.DeleteBuffer();
+        GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCouple.m_indexBuffer.size() * sizeof(unsigned int), vertexCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
+
 
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
@@ -138,14 +156,23 @@ int main(void)
 
             control.UpdateInput();
             map.UpdatePlayerPosition(control.GetCameraPosition());
-            if (map.GenerateOneChunk())
+            
+            /*if (map.GenerateOneChunk())
             {
-                vb.Unbind();
-                ib.Unbind();
                 vertexCouple = map.GetCoupleToRender(coord);
-                VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
-                IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
             }
+            
+            // TODO: try with an array containing the new vb not to make a redefinition
+
+            vb.Unbind();
+            VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float), true);
+            //vbs.push_back(vb);
+            vao.Unbind();
+            vao.AddBuffer(vb, layout); // this line causes an error on render
+            ib.Unbind();
+            IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
+            //ibs.push_back(ib);
+            */
 
 
 
@@ -156,7 +183,8 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            renderer.Draw(va, ib, shader);
+            //renderer.Draw(vao, ib, shader);
+            GLCall(glDrawElements(GL_TRIANGLES, vertexCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
