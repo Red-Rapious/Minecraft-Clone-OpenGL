@@ -15,6 +15,7 @@ private:
 	void AddChunkToGenQueue(ChunkCoord chunkCoord);
 
 	ChunkCoord ConvertPositionToChunkCoord(const glm::vec3& position);
+	void RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender);
 	
 
 public:

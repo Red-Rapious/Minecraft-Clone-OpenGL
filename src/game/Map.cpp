@@ -17,23 +17,50 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 	return ChunkCoord(position.x / CHUNK_X_BLOCK_COUNT, position.z / CHUNK_Z_BLOCK_COUNT);
 }
 
+void Map::RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
+{
+	if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
+		chunksCoordToRender.push_back(coord);
+	else
+		AddChunkToGenQueue(coord);
+}
+
 std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 {
 	// TODO: separate chunks generation from chunk rendering
-	// TODO: generate chunks from the center
+
+	
 	std::vector<ChunkCoord> chunksCoordToRender;
-	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	/*for (int i = -RENDER_DISTANCE + m_playerPosition.idx; i < RENDER_DISTANCE + m_playerPosition.idx; i++)
 	{
-		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
+		for (int j = -RENDER_DISTANCE + m_playerPosition.idz; j < RENDER_DISTANCE + m_playerPosition.idz; j++)
 		{
-			ChunkCoord coord = ChunkCoord(i, j);
-			if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
-				chunksCoordToRender.push_back(coord);
+			std::cout << i- m_playerPosition.idx << "  " << j- m_playerPosition.idx << "\n";
+			ChunkCoord coord(i, j);
+			RenderChunk(coord, chunksCoordToRender);
+		}
+	}*/
+
+	// Render the chunks like rings starting from the center
+	for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
+	{
+		for (int x = -d/2; x < d/2+1; x++)
+		{
+			if (x == -d / 2 || x == d / 2)
+			{
+				for (int z = -d / 2; z < d / 2 + 1; z++)
+				{
+					RenderChunk(ChunkCoord(x+ m_playerPosition.idx, z+ m_playerPosition.idz), chunksCoordToRender);
+				}
+			}
 			else
-				AddChunkToGenQueue(coord);
+			{
+				RenderChunk(ChunkCoord(x + m_playerPosition.idx, -d/2 + m_playerPosition.idz), chunksCoordToRender);
+				RenderChunk(ChunkCoord(x + m_playerPosition.idx, d/2 + m_playerPosition.idz), chunksCoordToRender);
+			}
 		}
 	}
-	//std::cout << chunksCoordToRender.size() << "\n";
+	
 	return chunksCoordToRender;
 }
 

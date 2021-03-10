@@ -159,11 +159,12 @@ int main(void)
             {
                 //while (map.GenerateOneChunk()) {};
                 vertexCouple = map.GetCoupleToRender();
-                GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
                 
                 unsigned int id;
                 GLCall(glGenBuffers(1, &id));
                 GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+
+                GLCall(glBufferData(GL_ARRAY_BUFFER, vertexCouple.m_vertexBuffer.size() * sizeof(float), vertexCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
                 GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexCouple.m_indexBuffer.size() * sizeof(unsigned int), vertexCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
             }
 
