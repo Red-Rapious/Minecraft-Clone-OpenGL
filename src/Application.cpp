@@ -90,7 +90,7 @@ int main(void)
 
 
         /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(0, 2, 0);
+        glm::vec3 camera_position(-2, 2, -2);
         Control control(window, camera_position);
 
 
@@ -108,14 +108,14 @@ int main(void)
         
 
         /* Graphics part */
-        //VertexBufferLayout bufferLayout;
-        //
-        //bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
-        //bufferLayout.Push<float>(2); // add 2 floats for the texture coords
+        VertexBufferLayout bufferLayout;
+
+        bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
+        bufferLayout.Push<float>(2); // add 2 floats for the texture coords
 
 
-        VertexArray vao = VertexArray();
-        //vao.Bind();
+        VertexArray vao(bufferLayout);
+        vao.Bind();
         
 
         /*VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender();
@@ -131,6 +131,7 @@ int main(void)
 
 
         Shader shader("res/shaders/Basic.shader");
+
         shader.Bind();
         
 
@@ -146,7 +147,11 @@ int main(void)
             renderer.Clear();
 
             control.UpdateInput();
+            map.UpdatePlayerPosition(control.GetCameraPosition());
             
+            map.GenerateOneChunk();
+
+
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();
@@ -155,10 +160,6 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            // Generation
-            map.UpdatePlayerPosition(control.GetCameraPosition());
-            map.GenerateOneChunk();
-            // Rendering
             map.RenderAllNeededChunks(vao, renderer);
 
             /* Swap front and back buffers */

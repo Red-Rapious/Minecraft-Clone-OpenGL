@@ -8,6 +8,7 @@ class Map
 {
 private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunksUMap;
+	//VertexIndexBufferCouple m_worldCouple;
 
 	ChunkCoord m_playerPosition;
 	std::vector<ChunkCoord> m_chunkGenerationQueue;
@@ -15,15 +16,16 @@ private:
 
 	ChunkCoord ConvertPositionToChunkCoord(const glm::vec3& position);
 	void RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender);
-	std::vector<ChunkCoord> GetChunksCoordsToRender();
 	
 
 public:
 	inline Map() : m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}) {};
 	void AddChunkToMap(const Chunk& chunk);
+	//VertexIndexBufferCouple GetCoupleToRender();
 	void RenderAllNeededChunks(VertexArray& vao, const Renderer& renderer);
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord).get(); };
 	bool GenerateOneChunk();
 	void UpdatePlayerPosition(const glm::vec3& cameraPosition);
 
+	std::vector<ChunkCoord> GetChunksCoordsToRender();
 };

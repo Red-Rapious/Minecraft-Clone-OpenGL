@@ -3,7 +3,8 @@
 #include "VertexBufferLayout.h" // new
 #include "Utility.hpp"
 
-VertexArray::VertexArray()
+VertexArray::VertexArray(VertexBufferLayout bufferLayout)
+	:m_bufferLayout(bufferLayout)
 {
 	GLCall(glGenVertexArrays(1, &m_RendererID));
 	GLCall(glBindVertexArray(m_RendererID));
@@ -13,6 +14,8 @@ VertexArray::~VertexArray()
 {
 	DeleteVertexArray();
 }
+
+
 
 void VertexArray::Bind() const
 {
@@ -29,18 +32,19 @@ void VertexArray::DeleteVertexArray() const
 	GLCall(glDeleteVertexArrays(1, &m_RendererID));
 }
 
-void VertexArray::AddBuffer(VertexBufferLayout layout)
+void VertexArray::AddBuffer(const VertexBuffer& vb)
+//void VertexArray::AddBuffer(const VertexBufferLayout& layout)
 {
 	/* Function that set the attributes pointer to each of the elements with the same layout */
 	Bind();
-	//vb.Bind();
-	const auto& elements = layout.GetElements();
+	vb.Bind();
+	const auto& elements = m_bufferLayout.GetElements();
 	unsigned int offset = 0;
 	for (unsigned int i = 0 ; i < elements.size() ; i++)
 	{
 		const auto& element = elements[i];
 		GLCall(glEnableVertexAttribArray(i));
-		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset)); // Define an array of generic vertex attributes = layout of the vertex buffer
+		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, m_bufferLayout.GetStride(), (const void*)offset)); // Define an array of generic vertex attributes = layout of the vertex buffer
 		offset += VertexBufferElement::GetSizeOfType(element.type) * element.count;
 	}
 	
