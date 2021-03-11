@@ -237,27 +237,40 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 void Chunk::Generate()
 {
 	FillPlaneWithBlocks(0, BlockType::GRASS);
+	// TODO: update couple
 }
 
 
 
 
-void Chunk::RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+void Chunk::RenderChunk(Renderer renderer, VertexArray vao)
 {
-	VertexIndexBufferCouple couple = GetCoupleToRender(0, chunksUMap);
-	m_vertexBuffer.Init(couple.m_vertexBuffer.data(), couple.m_vertexBuffer.size());
-	m_indexBuffer.Init(couple.m_indexBuffer.data(), couple.m_indexBuffer.size());
-	vao.AddBuffer(m_vertexBuffer);
+	
+
+	VertexBufferLayout layout;
+	layout.Push<float>(3);
+	layout.Push<float>(2);
+	vao.AddBuffer(layout);
+
+	m_vertexBuffer.Bind();
+	m_indexBuffer.Bind();
 
 	renderer.Draw(m_indexBuffer);
 }
 
 /* FACE TO RENDER ALGORITHM PART */
-VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+void Chunk::UpdateCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	m_vertexIndexBufferCouple.m_indexCount = originIndex;
+	// Called on generation and everytime the chunk evolve
+	
+
+	//m_vertexIndexBufferCouple.m_indexCount = 0;
 	ListAllFacesToRender(chunksUMap);
-	return m_vertexIndexBufferCouple;
+
+	m_vertexBuffer.Init(m_vertexIndexBufferCouple.m_vertexBuffer.data(), m_vertexIndexBufferCouple.m_vertexBuffer.size());
+	m_indexBuffer.Init(m_vertexIndexBufferCouple.m_indexBuffer.data(), m_vertexIndexBufferCouple.m_indexBuffer.size());
+	//vao.AddBuffer(m_vertexBuffer);
+	//return m_vertexIndexBufferCouple;
 }
 
 

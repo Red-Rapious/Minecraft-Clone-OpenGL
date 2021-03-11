@@ -1,13 +1,14 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include <vector>
-#include "glm/glm.hpp"
-#include "Constants.hpp"
-#include "../graphics/VertexIndexBufferCouple.hpp"
+
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
+#include "Constants.hpp"
+
+#include "../graphics/VertexIndexBufferCouple.hpp"
 #include "../graphics/VertexBuffer.h"
 #include "../graphics/IndexBuffer.h"
 #include "../graphics/Renderer.h"
@@ -54,6 +55,7 @@ private:
 
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
+
     
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
@@ -74,7 +76,7 @@ public:
     void Generate();
 
     // Render functions
-    void RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
-    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    void RenderChunk(Renderer renderer, VertexArray vao);
+    void UpdateCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };

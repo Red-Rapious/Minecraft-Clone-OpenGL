@@ -60,15 +60,24 @@ void Map::AddChunkToMap(const Chunk& chunk)
 
 void Map::RenderAllNeededChunks(VertexArray& vao, const Renderer& renderer)
 {
+	// Called by main (for now)
+	// Takes the coords of all the chunks needed to render, and asks the chunk to render itself
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
+	//unsigned int lastIndexCount = 0;
+
+	
+
 	for (unsigned int i = 0; i < chunkCoordVector.size(); i++)
 	{
 		// If the chunk exists, render it
 		if (m_chunksUMap.find(chunkCoordVector[i]) != m_chunksUMap.end())
 		{
-			m_chunksUMap.at(chunkCoordVector[i])->RenderChunk(vao, renderer, m_chunksUMap);
+			m_chunksUMap.at(chunkCoordVector[i])->UpdateCoupleToRender(m_chunksUMap);
+			m_chunksUMap.at(chunkCoordVector[i])->RenderChunk(renderer, vao);
 		}
 	}
+
+	
 }
 
 static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2)
@@ -76,26 +85,6 @@ static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2
 	/* Return the manhattan distance between the two chunks */
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
 }
-
-/*VertexIndexBufferCouple Map::GetCoupleToRender()
-{
-	m_worldCouple = VertexIndexBufferCouple();
-	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
-	for (unsigned int i = 0 ; i < chunkCoordVector.size() ; i++)
-	{
-		// If the chunk exists, render it
-		if (m_chunksUMap.find(chunkCoordVector[i]) != m_chunksUMap.end())
-		{
-			VertexIndexBufferCouple chunkCouple = m_chunksUMap.at(chunkCoordVector[i])->GetCoupleToRender(m_worldCouple.m_indexCount, m_chunksUMap);
-			m_worldCouple += chunkCouple;
-		}
-	}
-
-	if (m_worldCouple.m_vertexBuffer.size() == 0)
-		std::cout << "[VertexBufferRenderingError] The vector containing vertices is empty, cannot convert it to an array.\n";
-	return m_worldCouple;
-}*/
-
 
 
 void Map::UpdatePlayerPosition(const glm::vec3& cameraPosition)
@@ -116,6 +105,7 @@ bool Map::GenerateOneChunk()
 	Chunk generatedChunk(generatedChunkCoord);
 	generatedChunk.Generate();
 	AddChunkToMap(generatedChunk);
+	m_chunksUMap.at(generatedChunkCoord)->UpdateCoupleToRender(m_chunksUMap);
 	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue
 	return true; // a new chunk was generated
 }
