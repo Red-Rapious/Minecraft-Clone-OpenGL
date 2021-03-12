@@ -153,6 +153,7 @@
     <ClCompile Include="src\graphics\IndexBuffer.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\Text.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\graphics\VertexIndexBufferCouple.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -326,6 +327,7 @@
     <ClInclude Include="src\graphics\IndexBuffer.h" />
     <ClInclude Include="src\graphics\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
+    <ClInclude Include="src\graphics\Text.hpp" />
     <ClInclude Include="src\graphics\Texture.h" />
     <ClInclude Include="src\graphics\Utility.hpp" />
     <ClInclude Include="src\graphics\VertexIndexBufferCouple.hpp" />

@@ -57,6 +57,9 @@
     <ClCompile Include="src\graphics\VertexIndexBufferCouple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependancies\GLEW\doc\advanced.html" />
@@ -1385,6 +1388,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\Utility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\Text.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
