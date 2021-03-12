@@ -90,7 +90,7 @@ int main(void)
 
 
         /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(-2, 2, -2);
+        glm::vec3 camera_position(0, 15, 0);
         Control control(window, camera_position);
 
 
@@ -108,26 +108,12 @@ int main(void)
         
 
         /* Graphics part */
-        VertexBufferLayout bufferLayout;
-
-        bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
-        bufferLayout.Push<float>(2); // add 2 floats for the texture coords
-
-
-        VertexArray vao(bufferLayout);
+        VertexArray vao;
         vao.Bind();
-        
-
-        /*VertexIndexBufferCouple vertexCouple = map.GetCoupleToRender();
-        
-        VertexBuffer vb(vertexCouple.m_vertexBuffer.data(), vertexCouple.m_vertexBuffer.size() * sizeof(float));
-        //VertexBuffer vb(nullptr, 0);*/
-        
-        //vao.AddBuffer(bufferLayout);
-
-        //IndexBuffer ib(vertexCouple.m_indexBuffer.data(), vertexCouple.m_indexBuffer.size());
 
 
+        map.GetChunksCoordsToRender();
+        map.GenerateOneChunk();
 
 
         Shader shader("res/shaders/Basic.shader");
@@ -161,6 +147,8 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", MVP);
 
             map.RenderAllNeededChunks(vao, renderer);
+
+            //map.GetChunkByCoord(ChunkCoord(0, 0))->RenderChunk(vao, renderer, map.m_chunksUMap);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

@@ -52,8 +52,8 @@ private:
 	ChunkCoord m_coord;
     VertexIndexBufferCouple m_vertexIndexBufferCouple;
 
-    VertexBuffer m_vertexBuffer;
-    IndexBuffer m_indexBuffer;
+    unsigned int m_vertexBuffer;
+    unsigned int m_indexBuffer;
     
     void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
     void ClearVertexBuffer();
@@ -75,6 +75,6 @@ public:
 
     // Render functions
     void RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
-    VertexIndexBufferCouple GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    VertexIndexBufferCouple GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };

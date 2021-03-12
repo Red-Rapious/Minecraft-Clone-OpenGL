@@ -1,5 +1,6 @@
 #include "Chunk.hpp"
 #include "Constants.hpp"
+#include "../graphics/Utility.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -236,7 +237,13 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 void Chunk::Generate()
 {
-	FillPlaneWithBlocks(0, BlockType::GRASS);
+	FillPlaneWithBlocks(10+m_coord.idz, BlockType::GRASS);
+
+	GLCall(glGenBuffers(1, &m_vertexBuffer));
+	GLCall(glGenBuffers(1, &m_indexBuffer));
+
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBuffer));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer));
 }
 
 
@@ -244,18 +251,34 @@ void Chunk::Generate()
 
 void Chunk::RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	VertexIndexBufferCouple couple = GetCoupleToRender(0, chunksUMap);
-	m_vertexBuffer.Init(couple.m_vertexBuffer.data(), couple.m_vertexBuffer.size());
-	m_indexBuffer.Init(couple.m_indexBuffer.data(), couple.m_indexBuffer.size());
-	vao.AddBuffer(m_vertexBuffer);
+	//VertexIndexBufferCouple couple = GetCoupleToRender(chunksUMap);
 
-	renderer.Draw(m_indexBuffer);
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
+
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_vertexIndexBufferCouple.m_indexBuffer.size() * sizeof(unsigned int), m_vertexIndexBufferCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
+
+	VertexBufferLayout bufferLayout;
+
+	bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
+	bufferLayout.Push<float>(2); // add 2 floats for the texture coords
+	vao.AddBuffer(bufferLayout);
+
+	GLCall(glDrawElements(GL_TRIANGLES, m_vertexIndexBufferCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
+
+	//m_vertexBuffer.Init(couple.m_vertexBuffer.data(), couple.m_vertexBuffer.size());
+	//m_indexBuffer.Init(couple.m_indexBuffer.data(), couple.m_indexBuffer.size());
+	//vao.AddBuffer(m_vertexBuffer);
+
+	//renderer.Draw(m_indexBuffer);
+
 }
 
 /* FACE TO RENDER ALGORITHM PART */
-VertexIndexBufferCouple Chunk::GetCoupleToRender(const unsigned int& originIndex, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+VertexIndexBufferCouple Chunk::GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	m_vertexIndexBufferCouple.m_indexCount = originIndex;
+	//m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	ListAllFacesToRender(chunksUMap);
 	return m_vertexIndexBufferCouple;
 }
