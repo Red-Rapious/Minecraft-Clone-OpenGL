@@ -10,7 +10,6 @@ private:
 	glm::vec3 m_cameraPosition;
 	float m_horizontalAngle;
 	float m_verticalAngle;
-	float m_initialFOV;
 
 	float m_speed;
 	float m_mouseSpeed;
@@ -29,7 +28,7 @@ private:
 	
 
 public:
-	Control(GLFWwindow* window, glm::vec3 cameraPosition, float hAngle = 3.14f / 2, float vAngle = 0.0f, float iFOV = 250.0f, float speed = 3.0f, float mouseSpeed = 0.1f);
+	Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle = 3.14f / 2, const float& vAngle = 0.0f, const float& speed = 3.0f, const float& mouseSpeed = 0.1f);
 	
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();
@@ -37,5 +36,5 @@ public:
 	void UpdateInput();
 	void UpdateWSize();
 
-	inline glm::vec3 GetCameraPosition() const { return m_cameraPosition;  };
+	inline glm::vec3 GetCameraPosition() const { return m_cameraPosition; };
 };

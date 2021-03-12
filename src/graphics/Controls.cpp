@@ -9,8 +9,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/fast_trigonometry.hpp"
 
-Control::Control(GLFWwindow * window, glm::vec3 cameraPosition, float hAngle, float vAngle, float iFOV, float speed, float mouseSpeed)
-	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_initialFOV(iFOV), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
+constexpr float FOV = 90.0f;
+
+Control::Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle, const float& vAngle, const float& speed, const float& mouseSpeed)
+	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
 {
 	UpdateWSize();
 	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
@@ -19,13 +21,12 @@ Control::Control(GLFWwindow * window, glm::vec3 cameraPosition, float hAngle, fl
 
 glm::mat4 Control::getProjectionMatrix()
 {
-	return glm::perspective(glm::radians(m_initialFOV), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
+	return glm::perspective(glm::radians(FOV), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
 }
 
 glm::mat4 Control::getViewMatrix()
 {
 	glm::vec3 sightPoint = m_cameraPosition + m_direction;
-	m_up = -m_up; // quick fix because otherwise the camera is upside down
 	return glm::lookAt(m_cameraPosition, sightPoint, m_up);
 }
 

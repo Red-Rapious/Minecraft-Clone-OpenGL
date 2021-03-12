@@ -16,6 +16,6 @@ public:
 	void Unbind() const;
 	void DeleteVertexArray() const;
 
-	void AddBuffer(const VertexBufferLayout& layout);
+	void AddBuffer(const VertexBufferLayout& layout) const;
 	//void AddBuffer(const VertexBuffer& vb);
 };

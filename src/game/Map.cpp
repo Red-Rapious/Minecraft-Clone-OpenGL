@@ -30,7 +30,16 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 {
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
-	for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
+
+	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	{
+		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
+		{
+			RenderChunk(ChunkCoord(i,j), chunksCoordToRender);
+		}
+	}
+
+	/*for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
 	{
 		for (int x = -d/2; x < d/2+1; x++)
 		{
@@ -47,8 +56,9 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 				RenderChunk(ChunkCoord(x + m_playerPosition.idx, d/2 + m_playerPosition.idz), chunksCoordToRender);
 			}
 		}
-	}
+	}*/
 	
+	//std::cout << chunksCoordToRender.size() << "\n";
 	return chunksCoordToRender;
 }
 
@@ -57,7 +67,7 @@ void Map::AddChunkToMap(const Chunk& chunk)
 	m_chunksUMap[chunk.GetCoord()] = std::make_unique<Chunk>(chunk);
 }
 
-void Map::RenderAllNeededChunks(VertexArray& vao)
+void Map::RenderAllNeededChunks(const VertexArray& vao)
 {
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
 	if (chunkCoordVector.size() == 0)
@@ -66,15 +76,12 @@ void Map::RenderAllNeededChunks(VertexArray& vao)
 	}
 	else
 	{
-		
-
 		for (unsigned int i = 0; i < chunkCoordVector.size(); i++)
 		{
 			// If the chunk exists, render it
 			if (m_chunksUMap.find(chunkCoordVector[i]) != m_chunksUMap.end())
 			{
 				m_chunksUMap.at(chunkCoordVector[i])->RenderChunk(vao, m_chunksUMap);
-
 				
 			}
 		}

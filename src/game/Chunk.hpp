@@ -15,8 +15,14 @@
 
 enum class BlockType
 {
-	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, WOOD
+	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, LOG, PLANKS, BEDROCK, COAL, IRON
 };
+
+enum class FaceType
+{
+    FRONT, BACK, RIGHT, LEFT, UP, DOWN
+};
+
 
 
 /* Code created by @PolarToCartesian */
@@ -40,18 +46,15 @@ public:
 };
 /* */
 
-enum class FaceType
-{
-    FRONT, BACK, RIGHT, LEFT, UP, DOWN
-};
 
 class Chunk
 {
 private:
 	std::vector<std::vector<std::vector<BlockType>>> m_blocksArray;
 	ChunkCoord m_coord;
-    VertexIndexBufferCouple m_vertexIndexBufferCouple;
 
+    // Rendering members
+    VertexIndexBufferCouple m_vertexIndexBufferCouple;
     unsigned int m_vertexBuffer;
     unsigned int m_indexBuffer;
     
@@ -60,7 +63,7 @@ private:
     void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
    
 public:
-	Chunk(ChunkCoord coord);
+	Chunk(const ChunkCoord& coord);
     inline ChunkCoord GetCoord() const { return m_coord; };
 
     // Utility functions
@@ -69,12 +72,13 @@ public:
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
 	void FillPlaneWithBlocks(const unsigned int& height, const BlockType& type);
     
+    // Debug functions
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
     void Generate();
 
     // Render functions
-    void RenderChunk(VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    void RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     VertexIndexBufferCouple GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };

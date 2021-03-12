@@ -160,7 +160,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 
 
 /* STANDARD FUNCTIONS PART */
-Chunk::Chunk(ChunkCoord coord)
+Chunk::Chunk(const ChunkCoord& coord)
 	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple()
 {
 	// Initialise the chunk to an empty cube of air
@@ -237,7 +237,8 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 void Chunk::Generate()
 {
-	FillPlaneWithBlocks(10+m_coord.idz, BlockType::GRASS);
+	FillPlaneWithBlocks(10 + m_coord.idz, BlockType::LOG);
+	FillPlaneWithBlocks(11 + m_coord.idz, BlockType::LEAFS);
 
 	GLCall(glGenBuffers(1, &m_vertexBuffer));
 	GLCall(glGenBuffers(1, &m_indexBuffer));
@@ -249,7 +250,7 @@ void Chunk::Generate()
 
 
 
-void Chunk::RenderChunk(VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
