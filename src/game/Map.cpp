@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_map>
 
-void Map::AddChunkToGenQueue(ChunkCoord chunkCoord)
+void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 {
 	if (std::find(m_chunkGenerationQueue.begin(), m_chunkGenerationQueue.end(), chunkCoord) == m_chunkGenerationQueue.end())
 		m_chunkGenerationQueue.push_back(chunkCoord);
@@ -57,11 +57,13 @@ void Map::AddChunkToMap(const Chunk& chunk)
 	m_chunksUMap[chunk.GetCoord()] = std::make_unique<Chunk>(chunk);
 }
 
-void Map::RenderAllNeededChunks(VertexArray& vao, const Renderer& renderer)
+void Map::RenderAllNeededChunks(VertexArray& vao)
 {
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
 	if (chunkCoordVector.size() == 0)
-		std::cout << "[ChunksToRender Warning] No chunk to render, can't render all needed chunks\n";
+	{
+		//std::cout << "[ChunksToRender Warning] No chunk to render, can't render all needed chunks\n";
+	}
 	else
 	{
 		
@@ -71,7 +73,7 @@ void Map::RenderAllNeededChunks(VertexArray& vao, const Renderer& renderer)
 			// If the chunk exists, render it
 			if (m_chunksUMap.find(chunkCoordVector[i]) != m_chunksUMap.end())
 			{
-				m_chunksUMap.at(chunkCoordVector[i])->RenderChunk(vao, renderer, m_chunksUMap);
+				m_chunksUMap.at(chunkCoordVector[i])->RenderChunk(vao, m_chunksUMap);
 
 				
 			}
@@ -79,7 +81,7 @@ void Map::RenderAllNeededChunks(VertexArray& vao, const Renderer& renderer)
 	}
 }
 
-static unsigned int calculateChunksDistance(ChunkCoord coord1, ChunkCoord coord2)
+unsigned int Map::calculateChunksDistance(const ChunkCoord& coord1, const ChunkCoord& coord2)
 {
 	/* Return the manhattan distance between the two chunks */
 	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
@@ -106,6 +108,7 @@ bool Map::GenerateOneChunk()
 	AddChunkToMap(generatedChunk);
 	m_chunksUMap.at(generatedChunkCoord)->Generate();
 	m_chunksUMap.at(generatedChunkCoord)->GetCoupleToRender(m_chunksUMap);
+
 	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue
 	return true; // a new chunk was generated
 }

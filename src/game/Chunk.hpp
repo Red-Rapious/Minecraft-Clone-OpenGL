@@ -55,26 +55,26 @@ private:
     unsigned int m_vertexBuffer;
     unsigned int m_indexBuffer;
     
-    void AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord);
+    void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord);
     void ClearVertexBuffer();
-    void AddFaceToCouple(FaceType face_type, glm::vec3 block_coord, BlockType blockType);
+    void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
    
 public:
 	Chunk(ChunkCoord coord);
     inline ChunkCoord GetCoord() const { return m_coord; };
 
     // Utility functions
-    void SetBlockType(glm::vec3 blockPosition, BlockType type);
+    void SetBlockType(const glm::vec3& blockPosition, const BlockType& type);
     void DeleteAllBlocks();
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
-	void FillPlaneWithBlocks(unsigned int height, BlockType type);
+	void FillPlaneWithBlocks(const unsigned int& height, const BlockType& type);
     
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
     void Generate();
 
     // Render functions
-    void RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
+    void RenderChunk(VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     VertexIndexBufferCouple GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };

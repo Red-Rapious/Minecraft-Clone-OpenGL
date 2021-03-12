@@ -617,6 +617,7 @@
     <ClInclude Include="src\graphics\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\default_mc_textures.png" />
     <Image Include="res\textures\image.png" />
     <Image Include="res\textures\MinecraftTexturesHD.png" />
     <Image Include="res\textures\MinecraftTexturesPixel.png" />

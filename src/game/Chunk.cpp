@@ -6,12 +6,12 @@
 #include <memory>
 
 /* VERTEX AND INDEX BUFFERS PART */
-static float getTextureOriginY(BlockType blockType)
+static float getTextureOriginY(const BlockType& blockType)
 {
 	return (BLOCK_TYPES_TEXTURES_NUMBER - (int)(blockType));
 }
 
-static float getTextureCoordX(FaceType faceType)
+static float getTextureCoordX(const FaceType& faceType)
 {
 	return ((int)faceType);
 }
@@ -21,7 +21,7 @@ void Chunk::ClearVertexBuffer()
 	m_vertexIndexBufferCouple.m_vertexBuffer = {};
 }
 
-void Chunk::AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoord)
+void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord)
 {
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.x);
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.y);
@@ -32,7 +32,7 @@ void Chunk::AddVertexToVertexBuffer(glm::vec3 vertexCoord, glm::vec2 textureCoor
 }
 
 
-void Chunk::AddFaceToCouple(FaceType faceType, glm::vec3 blockCoord, BlockType blockType)
+void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType)
 {
 	glm::vec3 vertexCoord[4] = {}; // one for each vertex of each face
 	glm::vec2 textureCoord[4] = {};
@@ -167,7 +167,7 @@ Chunk::Chunk(ChunkCoord coord)
 	DeleteAllBlocks();
 }
 
-void Chunk::SetBlockType(glm::vec3 blockPosition, BlockType type)
+void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 {
 	if (!(blockPosition.x >= 0 && blockPosition.x < CHUNK_X_BLOCK_COUNT && blockPosition.y >= 0 && blockPosition.y < CHUNK_Y_BLOCK_COUNT && blockPosition.z >= 0 && blockPosition.z < CHUNK_Z_BLOCK_COUNT))
 		std::cout << "[SetBlockType] Impossible to set this block, the coordinates are incorrect\n";
@@ -176,7 +176,7 @@ void Chunk::SetBlockType(glm::vec3 blockPosition, BlockType type)
 }
 
 
-void Chunk::FillPlaneWithBlocks(unsigned int height, BlockType type)
+void Chunk::FillPlaneWithBlocks(const unsigned int& height, const BlockType& type)
 {
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT ; x++)
 	{
@@ -249,10 +249,8 @@ void Chunk::Generate()
 
 
 
-void Chunk::RenderChunk(VertexArray& vao, Renderer renderer, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+void Chunk::RenderChunk(VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	//VertexIndexBufferCouple couple = GetCoupleToRender(chunksUMap);
-
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
 
@@ -266,19 +264,11 @@ void Chunk::RenderChunk(VertexArray& vao, Renderer renderer, const std::unordere
 	vao.AddBuffer(bufferLayout);
 
 	GLCall(glDrawElements(GL_TRIANGLES, m_vertexIndexBufferCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
-
-	//m_vertexBuffer.Init(couple.m_vertexBuffer.data(), couple.m_vertexBuffer.size());
-	//m_indexBuffer.Init(couple.m_indexBuffer.data(), couple.m_indexBuffer.size());
-	//vao.AddBuffer(m_vertexBuffer);
-
-	//renderer.Draw(m_indexBuffer);
-
 }
 
 /* FACE TO RENDER ALGORITHM PART */
 VertexIndexBufferCouple Chunk::GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	//m_vertexIndexBufferCouple.m_indexCount = originIndex;
 	ListAllFacesToRender(chunksUMap);
 	return m_vertexIndexBufferCouple;
 }

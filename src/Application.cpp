@@ -95,15 +95,8 @@ int main(void)
 
 
         Map map;
-        control.UpdateInput();
-        map.UpdatePlayerPosition(control.GetCameraPosition());
 
         ChunkCoord playerInitialCoord(0, 0);
-        
-        /*ChunkCoord coord(0, 0);
-        Chunk chunk(coord);
-        map.AddChunkToMap(chunk);
-        map.GetChunkByCoord(coord)->FillPlaneWithBlocks(0, BlockType::DIRT);*/
 
         
 
@@ -112,16 +105,12 @@ int main(void)
         vao.Bind();
 
 
-        map.GetChunksCoordsToRender();
-        map.GenerateOneChunk();
-
-
         Shader shader("res/shaders/Basic.shader");
 
         shader.Bind();
         
 
-        Texture texture("res/textures/MinecraftTexturesPixel.png");
+        Texture texture("res/textures/default_mc_textures.png");
         texture.Bind(); // default slot is 0
         shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
@@ -146,9 +135,7 @@ int main(void)
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
 
-            map.RenderAllNeededChunks(vao, renderer);
-
-            //map.GetChunkByCoord(ChunkCoord(0, 0))->RenderChunk(vao, renderer, map.m_chunksUMap);
+            map.RenderAllNeededChunks(vao);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
