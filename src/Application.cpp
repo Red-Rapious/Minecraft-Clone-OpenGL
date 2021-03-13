@@ -90,7 +90,7 @@ int main(void)
 
 
         /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(0, 15, 0);
+        glm::vec3 camera_position(8, 15, 8);
         Control control(window, camera_position);
 
 
@@ -116,7 +116,7 @@ int main(void)
 
         Renderer renderer;
 
-        int i = 0;
+        //int i = 0;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -139,12 +139,13 @@ int main(void)
 
             map.RenderAllNeededChunks(vao);
 
-            i++;
-            if (i >= 20)
+            /*i++;
+            if (i >= 40)
             {
                 i = 0;
+                control.GetCameraPosition(true);
                 map.GetPlayerPosition(true);
-            }
+            }*/
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

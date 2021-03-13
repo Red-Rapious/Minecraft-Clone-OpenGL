@@ -14,7 +14,14 @@ void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 
 ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 {
-	return ChunkCoord(position.x / CHUNK_X_BLOCK_COUNT, position.z / CHUNK_Z_BLOCK_COUNT);
+	int x = position.z / CHUNK_Z_BLOCK_COUNT;
+	int z = position.x / CHUNK_X_BLOCK_COUNT;
+	if (position.z < 0)
+		x -= 1;
+	if (position.x < 0)
+		z -= 1;
+
+	return ChunkCoord(x,z);
 }
 
 void Map::RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
@@ -31,15 +38,13 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
 
-	/*for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
 	{
 		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
 		{
 			RenderChunk(ChunkCoord(i,j), chunksCoordToRender);
 		}
-	}*/
-
-	RenderChunk(ChunkCoord(m_playerPosition.idz, m_playerPosition.idx), chunksCoordToRender);
+	}
 
 	/*for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
 	{

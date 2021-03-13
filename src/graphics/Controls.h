@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include <iostream>
 
 class Control
 {
@@ -36,5 +37,9 @@ public:
 	void UpdateInput();
 	void UpdateWSize();
 
-	inline glm::vec3 GetCameraPosition() const { return m_cameraPosition; };
+	inline glm::vec3 GetCameraPosition(bool out=false) const { 
+		if (out)
+			std::cout << "Camera position: x=" << m_cameraPosition.x << " y=" << m_cameraPosition.y << " z=" << m_cameraPosition.x << "\n";
+		return m_cameraPosition; 
+	};
 };
