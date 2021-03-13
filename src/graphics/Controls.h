@@ -28,7 +28,7 @@ private:
 	
 
 public:
-	Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle = 3.14f / 2, const float& vAngle = 0.0f, const float& speed = 3.0f, const float& mouseSpeed = 0.1f);
+	Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle = 3.14f / 2, const float& vAngle = 0.0f, const float& speed = 5.5f, const float& mouseSpeed = 0.1f);
 	
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();

@@ -50,7 +50,7 @@ int main(void)
         window = glfwCreateWindow(1920, 1280, "Minecraft OpenGL", glfwGetPrimaryMonitor(), NULL); // 4:3
     else
         window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft OpenGL", NULL, NULL); // 4:3
-    //glfwSetWindowPos(window, 0, 0);
+    glfwSetWindowPos(window, 500, 200);
 
     if (!window)
     {
@@ -116,6 +116,8 @@ int main(void)
 
         Renderer renderer;
 
+        int i = 0;
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {
@@ -137,10 +139,18 @@ int main(void)
 
             map.RenderAllNeededChunks(vao);
 
+            i++;
+            if (i >= 20)
+            {
+                i = 0;
+                map.GetPlayerPosition(true);
+            }
+
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
             /* Poll for and process events */
             glfwPollEvents();
+
         }
 
     }

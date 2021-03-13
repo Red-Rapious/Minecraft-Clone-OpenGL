@@ -31,13 +31,15 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
 
-	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	/*for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
 	{
 		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
 		{
 			RenderChunk(ChunkCoord(i,j), chunksCoordToRender);
 		}
-	}
+	}*/
+
+	RenderChunk(ChunkCoord(m_playerPosition.idz, m_playerPosition.idx), chunksCoordToRender);
 
 	/*for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
 	{

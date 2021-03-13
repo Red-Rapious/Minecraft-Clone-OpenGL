@@ -3,6 +3,7 @@
 #include "../graphics/VertexIndexBufferCouple.hpp"
 #include "glm/glm.hpp"
 #include <memory>
+#include <iostream>
 
 class Map
 {
@@ -31,4 +32,9 @@ public:
 	void RenderAllNeededChunks(const VertexArray& vao);
 	void UpdatePlayerPosition(const glm::vec3& cameraPosition);
 
+	inline ChunkCoord GetPlayerPosition(bool out=false) const {
+		if (out)
+			std::cout << "Player position: x=" << m_playerPosition.idx << "  z=" << m_playerPosition.idz << "\n";
+		return m_playerPosition;
+	}
 };
