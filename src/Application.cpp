@@ -27,7 +27,6 @@ constexpr auto FULLSCREEN = false;
 
 int main(void)
 {
-
     GLFWwindow* window;
 
     /* Initialize GLFW */
@@ -42,10 +41,6 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-
-    
 
     /* Create a windowed mode window and its OpenGL context */
     if (FULLSCREEN)
@@ -98,25 +93,21 @@ int main(void)
         /* Map and camera creation (will be moved later) */
         glm::vec3 camera_position(8, 15, 8);
         Control control(window, camera_position);
+
         Map map;
 
         /* Graphics part */
         VertexArray vao;
         vao.Bind();
 
-
         Shader shader("res/shaders/Basic.shader");
-
         shader.Bind();
-        
+        shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Texture texture("res/textures/default_mc_textures.png");
         texture.Bind(); // default slot is 0
-        shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Renderer renderer;
-
-        //int i = 0;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -124,11 +115,9 @@ int main(void)
             renderer.Clear();
 
             control.UpdateInput();
-            map.UpdatePlayerPosition(control.GetCameraPosition());
+            map.UpdateChunkPlayerPosition(control.GetCameraPosition());
             
             map.GenerateOneChunk();
-
-
 
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();
@@ -138,14 +127,6 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", MVP);
 
             map.RenderAllNeededChunks(vao);
-
-            /*i++;
-            if (i >= 40)
-            {
-                i = 0;
-                control.GetCameraPosition(true);
-                map.GetPlayerPosition(true);
-            }*/
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

@@ -26,7 +26,7 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 	return ChunkCoord(x,z);
 }
 
-void Map::RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
+void Map::RenderSpecificChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
 {
 	// TODO: separate render from generation
 	if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
@@ -40,7 +40,7 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
 
-	RenderChunk(ChunkCoord(m_playerPosition.idx, m_playerPosition.idz), chunksCoordToRender);
+	RenderSpecificChunk(ChunkCoord(m_playerPosition.idx, m_playerPosition.idz), chunksCoordToRender);
 	for (int d = 1; d < RENDER_DISTANCE ; d++)
 	{
 		for (int x = -d ; x <= d ; x++)
@@ -49,13 +49,13 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 			{
 				for (int z = -d ; z <= d ; z++)
 				{
-					RenderChunk(ChunkCoord(x + m_playerPosition.idx, z + m_playerPosition.idz), chunksCoordToRender);
+					RenderSpecificChunk(ChunkCoord(x + m_playerPosition.idx, z + m_playerPosition.idz), chunksCoordToRender);
 				}
 			}
 			else
 			{
-				RenderChunk(ChunkCoord(x + m_playerPosition.idx, -d + m_playerPosition.idz), chunksCoordToRender);
-				RenderChunk(ChunkCoord(x + m_playerPosition.idx, d + m_playerPosition.idz), chunksCoordToRender);
+				RenderSpecificChunk(ChunkCoord(x + m_playerPosition.idx, -d + m_playerPosition.idz), chunksCoordToRender);
+				RenderSpecificChunk(ChunkCoord(x + m_playerPosition.idx, d + m_playerPosition.idz), chunksCoordToRender);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ unsigned int Map::calculateChunksDistance(const ChunkCoord& coord1, const ChunkC
 }
 
 
-void Map::UpdatePlayerPosition(const glm::vec3& cameraPosition)
+void Map::UpdateChunkPlayerPosition(const glm::vec3& cameraPosition)
 {
 	ChunkCoord playerPosition = ConvertPositionToChunkCoord(cameraPosition);
 	if (!(m_playerPosition == playerPosition))
@@ -115,7 +115,7 @@ bool Map::GenerateOneChunk()
 	
 	AddChunkToMap(generatedChunk);
 	m_chunksUMap.at(generatedChunkCoord)->Generate();
-	m_chunksUMap.at(generatedChunkCoord)->GetCoupleToRender(m_chunksUMap);
+	m_chunksUMap.at(generatedChunkCoord)->ListAllFacesToRender(m_chunksUMap);
 
 	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue
 	return true; // a new chunk was generated

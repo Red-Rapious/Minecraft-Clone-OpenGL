@@ -15,7 +15,7 @@ private:
 
 	// Methods
 	void AddChunkToGenQueue(const ChunkCoord& chunkCoord);
-	void RenderChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender);
+	void RenderSpecificChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender);
 	std::vector<ChunkCoord> GetChunksCoordsToRender();
 
 	// Utility methods
@@ -30,7 +30,7 @@ public:
 
 	bool GenerateOneChunk();
 	void RenderAllNeededChunks(const VertexArray& vao);
-	void UpdatePlayerPosition(const glm::vec3& cameraPosition);
+	void UpdateChunkPlayerPosition(const glm::vec3& cameraPosition);
 
 	inline ChunkCoord GetPlayerPosition(bool out=false) const {
 		if (out)

@@ -23,6 +23,7 @@ void Chunk::ClearVertexBuffer()
 
 void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord)
 {
+	// Add two vectors to a the vertex buffer of the chunk
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.x);
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.y);
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.z);
@@ -240,11 +241,11 @@ void Chunk::Generate()
 	FillPlaneWithBlocks(10 + m_coord.idz, BlockType::LOG);
 	FillPlaneWithBlocks(11 + m_coord.idz, BlockType::LEAFS);
 
-	GLCall(glGenBuffers(1, &m_vertexBuffer));
-	GLCall(glGenBuffers(1, &m_indexBuffer));
+	GLCall(glGenBuffers(1, &m_vertexBufferID));
+	GLCall(glGenBuffers(1, &m_indexBufferID));
 
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBuffer));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBufferID));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID));
 }
 
 
@@ -252,10 +253,10 @@ void Chunk::Generate()
 
 void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
 
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_vertexIndexBufferCouple.m_indexBuffer.size() * sizeof(unsigned int), m_vertexIndexBufferCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
 
 	VertexBufferLayout bufferLayout;
@@ -268,13 +269,6 @@ void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCo
 }
 
 /* FACE TO RENDER ALGORITHM PART */
-VertexIndexBufferCouple Chunk::GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
-{
-	ListAllFacesToRender(chunksUMap);
-	return m_vertexIndexBufferCouple;
-}
-
-
 void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	const bool RENDER_UNGEN_CHUNKS_FACES = true;

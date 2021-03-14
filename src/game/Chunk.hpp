@@ -15,7 +15,7 @@
 
 enum class BlockType
 {
-	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, LOG, PLANKS, BEDROCK, COAL, IRON
+	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, LOG, PLANKS, BEDROCK, COAL_ORE, IRON_ORE
 };
 
 enum class FaceType
@@ -55,8 +55,8 @@ private:
 
     // Rendering members
     VertexIndexBufferCouple m_vertexIndexBufferCouple;
-    unsigned int m_vertexBuffer;
-    unsigned int m_indexBuffer;
+    unsigned int m_vertexBufferID;
+    unsigned int m_indexBufferID;
     
     void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord);
     void ClearVertexBuffer();
@@ -68,8 +68,8 @@ public:
 
     // Utility functions
     void SetBlockType(const glm::vec3& blockPosition, const BlockType& type);
-    void DeleteAllBlocks();
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
+    void DeleteAllBlocks();
 	void FillPlaneWithBlocks(const unsigned int& height, const BlockType& type);
     
     // Debug functions
@@ -79,6 +79,5 @@ public:
 
     // Render functions
     void RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
-    VertexIndexBufferCouple GetCoupleToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
     void ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 };
