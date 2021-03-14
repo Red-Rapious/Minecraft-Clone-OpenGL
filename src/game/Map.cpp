@@ -14,8 +14,10 @@ void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 
 ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 {
-	int x = position.z / CHUNK_Z_BLOCK_COUNT;
+	int x = position.z / CHUNK_Z_BLOCK_COUNT; // invert because of some strange bug
 	int z = position.x / CHUNK_X_BLOCK_COUNT;
+
+	// -1/2 == 0, so to make the negative coords work we need to fix this
 	if (position.z < 0)
 		x -= 1;
 	if (position.x < 0)
@@ -38,34 +40,26 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
 
-	for (int i = -RENDER_DISTANCE / 2 + m_playerPosition.idx; i < RENDER_DISTANCE / 2 + m_playerPosition.idx; i++)
+	RenderChunk(ChunkCoord(m_playerPosition.idx, m_playerPosition.idz), chunksCoordToRender);
+	for (int d = 1; d < RENDER_DISTANCE ; d++)
 	{
-		for (int j = -RENDER_DISTANCE / 2 + m_playerPosition.idz; j < RENDER_DISTANCE / 2 + m_playerPosition.idz; j++)
+		for (int x = -d ; x <= d ; x++)
 		{
-			RenderChunk(ChunkCoord(i,j), chunksCoordToRender);
-		}
-	}
-
-	/*for (int d = 1; d < RENDER_DISTANCE+4; d+=2)
-	{
-		for (int x = -d/2; x < d/2+1; x++)
-		{
-			if (x == -d / 2 || x == d / 2)
+			if (x == -d || x == d)
 			{
-				for (int z = -d / 2; z < d / 2 + 1; z++)
+				for (int z = -d ; z <= d ; z++)
 				{
-					RenderChunk(ChunkCoord(x+ m_playerPosition.idx, z+ m_playerPosition.idz), chunksCoordToRender);
+					RenderChunk(ChunkCoord(x + m_playerPosition.idx, z + m_playerPosition.idz), chunksCoordToRender);
 				}
 			}
 			else
 			{
-				RenderChunk(ChunkCoord(x + m_playerPosition.idx, -d/2 + m_playerPosition.idz), chunksCoordToRender);
-				RenderChunk(ChunkCoord(x + m_playerPosition.idx, d/2 + m_playerPosition.idz), chunksCoordToRender);
+				RenderChunk(ChunkCoord(x + m_playerPosition.idx, -d + m_playerPosition.idz), chunksCoordToRender);
+				RenderChunk(ChunkCoord(x + m_playerPosition.idx, d + m_playerPosition.idz), chunksCoordToRender);
 			}
 		}
-	}*/
-	
-	//std::cout << chunksCoordToRender.size() << "\n";
+	}
+
 	return chunksCoordToRender;
 }
 

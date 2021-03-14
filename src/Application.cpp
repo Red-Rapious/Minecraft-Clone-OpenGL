@@ -43,6 +43,8 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
+
     
 
     /* Create a windowed mode window and its OpenGL context */
@@ -84,6 +86,10 @@ int main(void)
         // Cull face if its BEHIND - GL_FRONT is here to fix a strange bug
         GLCall(glEnable(GL_CULL_FACE));
         GLCall(glCullFace(GL_FRONT));
+
+        // Enable blend for transparency
+        //GLCall(glEnable(GL_BLEND));
+        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
@@ -92,13 +98,7 @@ int main(void)
         /* Map and camera creation (will be moved later) */
         glm::vec3 camera_position(8, 15, 8);
         Control control(window, camera_position);
-
-
         Map map;
-
-        ChunkCoord playerInitialCoord(0, 0);
-
-        
 
         /* Graphics part */
         VertexArray vao;
