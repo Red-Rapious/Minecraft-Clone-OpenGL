@@ -4,7 +4,6 @@
 #include "glm/glm.hpp"
 #include <memory>
 #include <iostream>
-#include "Chunk.hpp"
 
 class Map
 {
