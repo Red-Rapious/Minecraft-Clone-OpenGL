@@ -10,8 +10,11 @@
 Shader::Shader(const std::string& filepath)
 	: m_FilePath(filepath), m_RendererID(0)
 {
-    ShaderProgramSource source = ParseShader(filepath); // load shader file
-    m_RendererID = CreateShader(source.VertexSource, source.FragmentSource); // compile, attach, link shaders
+    if (filepath != "")
+    {
+        ShaderProgramSource source = ParseShader(filepath); // load shader file
+        m_RendererID = CreateShader(source.VertexSource, source.FragmentSource); // compile, attach, link shaders
+    }
 }
 
 Shader::~Shader()

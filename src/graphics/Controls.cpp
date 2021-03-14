@@ -12,11 +12,14 @@
 constexpr float FOV = 90.0f;
 
 Control::Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle, const float& vAngle, const float& speed, const float& mouseSpeed)
-	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
+	: m_deltaTime(0),  m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
 {
-	UpdateWSize();
-	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
-	GLCall(glfwSetCursorPos(m_window, m_windowWidth / 2, m_windowHeight / 2));
+	if (window != nullptr)
+	{
+		UpdateWSize(window);
+		GLCall(glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
+		GLCall(glfwSetCursorPos(window, m_windowWidth / 2, m_windowHeight / 2));
+	}
 }
 
 glm::mat4 Control::getProjectionMatrix()
@@ -30,13 +33,13 @@ glm::mat4 Control::getViewMatrix()
 	return glm::lookAt(m_cameraPosition, sightPoint, m_up);
 }
 
-void Control::UpdateMouse()
+void Control::UpdateMouse(GLFWwindow* window)
 {
 	/* Store the mouse position and reset it to the center of the window*/
 	double xpos, ypos; // mouse position
-	GLCall(glfwGetCursorPos(m_window, &xpos, &ypos));
+	GLCall(glfwGetCursorPos(window, &xpos, &ypos));
 	
-	GLCall(glfwSetCursorPos(m_window, m_windowWidth /2, m_windowHeight /2));
+	GLCall(glfwSetCursorPos(window, m_windowWidth /2, m_windowHeight /2));
 
 	/* Compute new orientation */
 	m_horizontalAngle += m_mouseSpeed * m_deltaTime * float(m_windowWidth / 2 - xpos);
@@ -48,25 +51,25 @@ void Control::UpdateMouse()
 
 }
 
-void Control::UpdateKeyboard()
+void Control::UpdateKeyboard(GLFWwindow* window)
 {
 	ComputeVectors();
 
 	/* Moves following one vector */
 	// Move forward
-	if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		m_cameraPosition += m_direction * m_deltaTime * m_speed;
 	}
 	// Move backward
-	if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		m_cameraPosition -= m_direction * m_deltaTime * m_speed;
 	}
 	// Strafe right
-	if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		m_cameraPosition += m_right * m_deltaTime * m_speed;
 	}
 	// Strafe left
-	if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		m_cameraPosition -= m_right * m_deltaTime * m_speed;
 	}
 }
@@ -96,15 +99,15 @@ void Control::ComputeVectors()
 	m_up = glm::cross(m_right, m_direction);
 }
 
-void Control::UpdateInput()
+void Control::UpdateInput(GLFWwindow* window)
 {
 	UpdateDeltaTime();
 	//UpdateWSize();
-	UpdateMouse();
-	UpdateKeyboard();
+	UpdateMouse(window);
+	UpdateKeyboard(window);
 }
 
-void Control::UpdateWSize()
+void Control::UpdateWSize(GLFWwindow* window)
 {
-	GLCall(glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight));
+	GLCall(glfwGetWindowSize(window, &m_windowWidth, &m_windowHeight));
 }

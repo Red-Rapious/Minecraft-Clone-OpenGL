@@ -11,7 +11,7 @@ private:
 	unsigned char* m_LocalBuffer; // contains a pointer to the data of the texture
 	int m_Width, m_Height, m_BPP;
 public:
-	Texture(const std::string& path);
+	Texture(const std::string& path="");
 	~Texture();
 
 	void Bind(unsigned int slot = 0) const;

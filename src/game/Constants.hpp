@@ -8,8 +8,8 @@ constexpr float       BLOCK_LENGTH = 1.f;
 constexpr int         TEXTURE_SIDE_LENGTH = 16; // in pixels
 constexpr int		  BLOCK_TYPES_TEXTURES_NUMBER = 10;
 
-constexpr int RENDER_DISTANCE = 2; // in chunks
-								    // the surface of the area renderer is ((RENDER_DISTANCE*2)+1)**2
+constexpr int RENDER_DISTANCE = 3; // in chunks
+// The surface of the area renderer is (RENDER_DISTANCE+1)**2, except for RD=1 where the surface is 1
 
 // Meta constants
 constexpr float CHUNK_X_LENGTH = CHUNK_X_BLOCK_COUNT * BLOCK_LENGTH;

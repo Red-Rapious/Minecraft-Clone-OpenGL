@@ -21,21 +21,21 @@ private:
 
 	glm::vec3 m_direction, m_right, m_up;
 
-	GLFWwindow* m_window;
-	void UpdateMouse();
-	void UpdateKeyboard();
+	//GLFWwindow* m_window;
+	void UpdateMouse(GLFWwindow* window);
+	void UpdateKeyboard(GLFWwindow* window);
 	void UpdateDeltaTime();
 	void ComputeVectors();
 	
 
 public:
-	Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle = 3.14f / 2, const float& vAngle = 0.0f, const float& speed = 5.5f, const float& mouseSpeed = 0.1f);
+	Control(GLFWwindow* window = nullptr, const glm::vec3& cameraPosition = glm::vec3(0, 0, 0), const float& hAngle = 3.14f / 2, const float& vAngle = 0.0f, const float& speed = 5.5f, const float& mouseSpeed = 0.1f);
 	
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();
 
-	void UpdateInput();
-	void UpdateWSize();
+	void UpdateInput(GLFWwindow* window);
+	void UpdateWSize(GLFWwindow* window);
 
 	inline glm::vec3 GetCameraPosition(bool out=false) const { 
 		if (out)
