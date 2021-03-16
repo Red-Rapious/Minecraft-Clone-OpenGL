@@ -11,7 +11,7 @@
 constexpr float FOV = 90.0f;
 
 Control::Control(GLFWwindow* window, const glm::vec3& cameraPosition, const float& hAngle, const float& vAngle, const float& speed, const float& mouseSpeed)
-	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0)
+	: m_deltaTime(0), m_window(window), m_cameraPosition(cameraPosition), m_horizontalAngle(hAngle), m_verticalAngle(vAngle), m_speed(speed), m_mouseSpeed(mouseSpeed), m_windowWidth(0), m_windowHeight(0), m_lastTime(0)
 {
 	UpdateWSize();
 	GLCall(glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN));
