@@ -1,5 +1,35 @@
-cmake_minimum_required(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.9)
 
-project(MinecraftCloneOpenGL VERSION 0.1)
+PROJECT(Minecraft VERSION 0.0.1)
 
-add_executable(Tutorial tutorial.cxx)
+SET(CMAKE_CXX_STANDARD		      17)
+SET(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(GLAD_EXPORT ON)
+
+FILE(GLOB_RECURSE Minecraft_SRC
+	"${PROJECT_SOURCE_DIR}/src/*.h"
+	"${PROJECT_SOURCE_DIR}/src/*.hpp"
+	"${PROJECT_SOURCE_DIR}/src/*.cpp"
+	"${PROJECT_SOURCE_DIR}/src/*.c"
+)
+
+ADD_EXECUTABLE(Minecraft "${Minecraft_SRC}")
+
+ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Dependencies/glfw")
+ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Dependencies/glm")
+ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Dependencies/glad")
+
+ADD_DEPENDENCIES(Minecraft glfw glm glad)
+TARGET_LINK_LIBRARIES(Minecraft glfw glm glad)
+
+TARGET_INCLUDE_DIRECTORIES(Minecraft PUBLIC
+	"${PROJECT_SOURCE_DIR}/Dependencies/glfw/"
+	"${PROJECT_SOURCE_DIR}/Dependencies/glad/"
+	"${PROJECT_SOURCE_DIR}/Dependencies/stb/"
+	"${PROJECT_SOURCE_DIR}/Dependencies/glm/"
+	"${PROJECT_SOURCE_DIR}/Dependencies/"
+)
+
+SET_PROPERTY(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Minecraft)
+SET_PROPERTY(TARGET Minecraft PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

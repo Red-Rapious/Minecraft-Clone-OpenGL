@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -64,8 +64,7 @@ int main(void)
     glfwSwapInterval(1);
 
     /* Initialising GLEW */
-    if (glewInit() != GLEW_OK)
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "[Initialisation error] Unable to initialise GLEW" << std::endl;
         ASSERT(false);
         return -1;

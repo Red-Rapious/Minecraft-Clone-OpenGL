@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <glad/glad.h>
 #include "Utility.hpp"
-#include <GL/glew.h>
 
 struct VertexBufferElement
 {

@@ -1,0 +1,12 @@
+[submodule "Dependancies/glm"]
+	path = Dependancies/glm
+	url = https://github.com/g-truc/glm
+[submodule "Dependancies/glfw"]
+	path = Dependancies/glfw
+	url = https://github.com/glfw/glfw
+[submodule "Dependencies/glad"]
+	path = Dependencies/glad
+	url = https://github.com/Dav1dde/glad
+[submodule "Dependencies/stb"]
+	path = Dependencies/stb
+	url = https://github.com/nothings/stb

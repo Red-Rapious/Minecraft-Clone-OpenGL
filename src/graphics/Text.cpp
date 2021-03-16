@@ -1,7 +1,6 @@
 #include "Text.hpp"
 
-#include "GL/glew.h"
-#include "stb_image/stb_image.h"
+#include "stb/stb_image.h"
 
 Text::Text(const std::string path)
 {
