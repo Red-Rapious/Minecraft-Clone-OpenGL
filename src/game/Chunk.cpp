@@ -256,7 +256,7 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 	{
 		for (unsigned int z = 0; z < CHUNK_X_BLOCK_COUNT; z++)
 		{
-			const int ymax = noise.normalizedOctaveNoise2D_0_1(m_coord.idx * CHUNK_X_BLOCK_COUNT + x / reverseScale, m_coord.idz * CHUNK_Z_BLOCK_COUNT + z / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT;
+			const int ymax = noise.normalizedOctaveNoise2D_0_1((m_coord.idx * CHUNK_X_BLOCK_COUNT + x) / reverseScale, (m_coord.idz * CHUNK_Z_BLOCK_COUNT + z) / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT;
 			
 			for (unsigned int y = 0; y <= ymax; y++)
 			{
