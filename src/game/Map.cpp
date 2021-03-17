@@ -6,6 +6,12 @@
 #include <memory>
 #include <unordered_map>
 
+Map::Map()
+	: m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}), m_noise(std::random_device()), m_seed(1234)
+{
+	m_noise.reseed((uint32_t)m_seed);
+}
+
 void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 {
 	if (std::find(m_chunkGenerationQueue.begin(), m_chunkGenerationQueue.end(), chunkCoord) == m_chunkGenerationQueue.end())
@@ -70,6 +76,7 @@ void Map::AddChunkToMap(const Chunk& chunk)
 
 void Map::RenderAllNeededChunks(const VertexArray& vao)
 {
+	// TODO: clear the buffers of non-rendered chunks
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
 	if (chunkCoordVector.size() == 0)
 	{
@@ -114,7 +121,7 @@ bool Map::GenerateOneChunk()
 	Chunk generatedChunk(generatedChunkCoord);
 	
 	AddChunkToMap(generatedChunk);
-	m_chunksUMap.at(generatedChunkCoord)->Generate();
+	m_chunksUMap.at(generatedChunkCoord)->Generate(m_noise);
 	m_chunksUMap.at(generatedChunkCoord)->ListAllFacesToRender(m_chunksUMap);
 
 	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue

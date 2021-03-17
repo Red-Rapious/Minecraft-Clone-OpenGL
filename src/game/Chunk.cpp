@@ -5,6 +5,18 @@
 #include <vector>
 #include <memory>
 
+Chunk::Chunk(const ChunkCoord& coord)
+	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple()
+{
+	// Initialise the chunk to an empty cube of air
+	DeleteAllBlocks();
+}
+
+Chunk::~Chunk()
+{
+	DeleteBuffers();
+}
+
 /* VERTEX AND INDEX BUFFERS PART */
 static float getTextureOriginY(const BlockType& blockType)
 {
@@ -161,12 +173,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 
 
 /* STANDARD FUNCTIONS PART */
-Chunk::Chunk(const ChunkCoord& coord)
-	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple()
-{
-	// Initialise the chunk to an empty cube of air
-	DeleteAllBlocks();
-}
+
 
 void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 {
@@ -236,11 +243,54 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 	return count;
 }
 
-void Chunk::Generate()
+void Chunk::Generate(const siv::PerlinNoise& noise)
 {
-	FillPlaneWithBlocks(10 + m_coord.idz, BlockType::LOG);
-	FillPlaneWithBlocks(11 + m_coord.idz, BlockType::LEAFS);
+	//FillPlaneWithBlocks(10 + m_coord.idz, BlockType::LOG);
+	//FillPlaneWithBlocks(11 + m_coord.idz, BlockType::LEAFS);
 
+	DeleteAllBlocks();
+	const float reverseScale = 50.0f;
+	const unsigned int sandLevel = 50;
+
+	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
+	{
+		for (unsigned int z = 0; z < CHUNK_X_BLOCK_COUNT; z++)
+		{
+			const int ymax = noise.normalizedOctaveNoise2D_0_1(m_coord.idx * CHUNK_X_BLOCK_COUNT + x / reverseScale, m_coord.idz * CHUNK_Z_BLOCK_COUNT + z / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT;
+			
+			for (unsigned int y = 0; y <= ymax; y++)
+			{
+				if (y == ymax)
+				{
+					if (y <= sandLevel)
+					{
+						SetBlockType(glm::vec3(x, y, z), BlockType::SAND);
+					}
+					else
+						SetBlockType(glm::vec3(x,y,z), BlockType::GRASS);
+				}
+				else if (y >= ymax - 2)
+				{
+					if (y <= sandLevel)
+					{
+						SetBlockType(glm::vec3(x, y, z), BlockType::SAND);
+					}
+					else
+						SetBlockType(glm::vec3(x, y, z), BlockType::DIRT);
+				}
+				else
+				{
+					SetBlockType(glm::vec3(x, y, z), BlockType::STONE);
+				}
+			}
+		}
+	}
+
+	GenerateBuffers();
+}
+
+void Chunk::GenerateBuffers()
+{
 	GLCall(glGenBuffers(1, &m_vertexBufferID));
 	GLCall(glGenBuffers(1, &m_indexBufferID));
 
@@ -248,7 +298,11 @@ void Chunk::Generate()
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID));
 }
 
-
+void Chunk::DeleteBuffers()
+{
+	GLCall(glDeleteBuffers(1, &m_vertexBufferID));
+	GLCall(glDeleteBuffers(1, &m_indexBufferID));
+}
 
 
 void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)

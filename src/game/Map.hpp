@@ -5,6 +5,8 @@
 #include <memory>
 #include <iostream>
 
+#include "../vendor/PerlinNoise.hpp"
+
 class Map
 {
 private:
@@ -12,6 +14,8 @@ private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunksUMap;
 	ChunkCoord m_playerPosition;
 	std::vector<ChunkCoord> m_chunkGenerationQueue;
+	siv::PerlinNoise m_noise;
+	int m_seed;
 
 	// Methods
 	void AddChunkToGenQueue(const ChunkCoord& chunkCoord);
@@ -23,7 +27,7 @@ private:
 	unsigned int calculateChunksDistance(const ChunkCoord& coord1, const ChunkCoord& coord2 = ChunkCoord(0, 0));
 
 public:
-	inline Map() : m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}) {};
+	Map();
 
 	void AddChunkToMap(const Chunk& chunk);
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord).get(); };

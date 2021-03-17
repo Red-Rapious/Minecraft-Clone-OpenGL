@@ -14,9 +14,11 @@
 #include "../graphics/Renderer.h"
 #include "../graphics/VertexArray.h"
 
+#include "../vendor/PerlinNoise.hpp"
+
 enum class BlockType
 {
-	NONE, GRASS, DIRT, ROCK, SAND, LEAFS, LOG, PLANKS, BEDROCK, COAL_ORE, IRON_ORE
+	NONE, GRASS, DIRT, STONE, SAND, LEAFS, LOG, PLANKS, BEDROCK, COAL_ORE, IRON_ORE
 };
 
 enum class FaceType
@@ -59,12 +61,15 @@ private:
     unsigned int m_vertexBufferID;
     unsigned int m_indexBufferID;
     
+    void GenerateBuffers();
+    void DeleteBuffers();
     void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord);
     void ClearVertexBuffer();
     void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
    
 public:
 	Chunk(const ChunkCoord& coord);
+    ~Chunk();
     inline ChunkCoord GetCoord() const { return m_coord; };
 
     // Utility functions
@@ -76,7 +81,7 @@ public:
     // Debug functions
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
-    void Generate();
+    void Generate(const siv::PerlinNoise& noise);
 
     // Render functions
     void RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
