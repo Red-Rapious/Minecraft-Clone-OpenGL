@@ -55,7 +55,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 	{
 	default:
 		break;
-	case FaceType::FRONT:
+	case FaceType::LEFT:
 		vertexCoord[0] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
 		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
 		vertexCoord[2] = glm::vec3(-0.5f, 0.5f, -0.5f); // H
@@ -68,7 +68,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		textureCoord[3] = glm::vec2(1, 1); // E
 		break;
 		
-	case FaceType::BACK:
+	case FaceType::RIGHT:
 		vertexCoord[0] = glm::vec3(0.5f, -0.5f, -0.5f); // B
 		vertexCoord[1] = glm::vec3(0.5f, -0.5f, 0.5f); // C
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, 0.5f); // F
@@ -83,7 +83,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		
 		
 	
-	case FaceType::LEFT:
+	case FaceType::BACK:
 		vertexCoord[0] = glm::vec3(-0.5f, -0.5f, -0.5f); // A
 		vertexCoord[1] = glm::vec3(0.5f, -0.5f, -0.5f); // B
 		vertexCoord[2] = glm::vec3(0.5f, 0.5f, -0.5f); // G
@@ -97,7 +97,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		break;
 		
 
-	case FaceType::RIGHT:
+	case FaceType::FRONT:
 		vertexCoord[0] = glm::vec3(0.5f, -0.5f, 0.5f); // C
 		vertexCoord[1] = glm::vec3(-0.5f, -0.5f, 0.5f); // D
 		vertexCoord[2] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
@@ -118,10 +118,10 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		vertexCoord[3] = glm::vec3(-0.5f, 0.5f, 0.5f); // E
 
 
-		textureCoord[0] = glm::vec2(0, 0); // H
-		textureCoord[1] = glm::vec2(0, 1); // G
-		textureCoord[2] = glm::vec2(1, 1); // F
-		textureCoord[3] = glm::vec2(1, 0); // E
+		textureCoord[0] = glm::vec2(0, 1); // H
+		textureCoord[1] = glm::vec2(1, 1); // G
+		textureCoord[2] = glm::vec2(1, 0); // F
+		textureCoord[3] = glm::vec2(0, 0); // E
 		break;
 
 	case FaceType::DOWN:
@@ -145,11 +145,11 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 	for (int i = 0; i < sizeof(vertexCoord) / sizeof(vertexCoord[0]); i++)
 	{
 		// Add the block coord (in world space) to the vertex
-		vertexCoord[i].x += blockCoord.z; // reverse to fix a coordinates bug
+		vertexCoord[i].x += blockCoord.x;
 		vertexCoord[i].y += blockCoord.y;
-		vertexCoord[i].z += blockCoord.x;
+		vertexCoord[i].z += blockCoord.z;
 		
-		vertexCoord[i] += glm::vec3(m_coord.idz * CHUNK_Z_BLOCK_COUNT, 0, m_coord.idx * CHUNK_X_BLOCK_COUNT); // chunk coord in world space
+		vertexCoord[i] += glm::vec3(m_coord.idx * CHUNK_X_BLOCK_COUNT, 0, m_coord.idz * CHUNK_Z_BLOCK_COUNT); // chunk coord in world space
 		
 		// Add the texture origin on the texture map
 		textureOriginY = getTextureOriginY(blockType); // TODO: dont compute it for every face, only for every block

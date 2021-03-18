@@ -90,7 +90,7 @@ int main(void)
 
 
         /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(8, 150, 8);
+        glm::vec3 camera_position(8, 100, 8);
         Control control(window, camera_position);
 
         Map map;

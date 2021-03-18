@@ -20,14 +20,14 @@ void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 
 ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 {
-	int x = position.z / CHUNK_Z_BLOCK_COUNT; // invert because of some strange bug
-	int z = position.x / CHUNK_X_BLOCK_COUNT;
+	int x = position.x / CHUNK_X_BLOCK_COUNT;
+	int z = position.z / CHUNK_Z_BLOCK_COUNT;
 
 	// -1/2 == 0, so to make the negative coords work we need to fix this
 	if (position.z < 0)
-		x -= 1;
-	if (position.x < 0)
 		z -= 1;
+	if (position.x < 0)
+		x -= 1;
 
 	return ChunkCoord(x,z);
 }
@@ -65,7 +65,6 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 			}
 		}
 	}
-
 	return chunksCoordToRender;
 }
 
