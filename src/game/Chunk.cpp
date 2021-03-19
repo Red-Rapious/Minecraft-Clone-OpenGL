@@ -246,7 +246,6 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 void Chunk::Generate(const siv::PerlinNoise& noise)
 {
-	//DeleteAllBlocks();
 	const float reverseScale = 50.0f;
 	const unsigned int sandLevel = 50;
 
@@ -346,7 +345,7 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0)
 							{
 								// render the face if the blocks that correspond on the other chunk is empty
-								renderFace[(int)FaceType::BACK] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 2)) == BlockType::NONE;
+								renderFace[(int)FaceType::BACK] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 1)) == BlockType::NONE;
 							}
 							else
 								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
@@ -418,7 +417,7 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 							{
 
 								// render the face if the blocks that correspond on the other chunk is empty
-								renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(CHUNK_X_BLOCK_COUNT-2, y, z)) == BlockType::NONE;
+								renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z)) == BlockType::NONE;
 
 							}
 							else
