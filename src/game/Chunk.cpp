@@ -247,19 +247,22 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 void Chunk::Generate(const siv::PerlinNoise& noise)
 {
 	const float reverseScale = 50.0f;
-	const unsigned int sandLevel = 50;
+	const float heightFactor = 0.35f;
+	const float sandFactor = 0.275f * heightFactor;
+	const glm::vec2 noiseMapStartingPoint(0,0);
+	ASSERT(heightFactor <= 1.0f);
 
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
 		for (unsigned int z = 0; z < CHUNK_X_BLOCK_COUNT; z++)
 		{
-			const int ymax = noise.normalizedOctaveNoise2D_0_1((m_coord.idx * CHUNK_X_BLOCK_COUNT + x) / reverseScale, (m_coord.idz * CHUNK_Z_BLOCK_COUNT + z) / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT;
+			unsigned int ymax = noise.normalizedOctaveNoise2D_0_1((int)(m_coord.idx * CHUNK_X_BLOCK_COUNT + x) / reverseScale, (int)(m_coord.idz * CHUNK_Z_BLOCK_COUNT + z) / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT * heightFactor;
 			
 			for (unsigned int y = 0; y <= ymax; y++)
 			{
 				if (y == ymax)
 				{
-					if (y <= sandLevel)
+					if (y <= CHUNK_Y_BLOCK_COUNT*sandFactor)
 					{
 						SetBlockType(glm::vec3(x, y, z), BlockType::SAND);
 					}
@@ -268,7 +271,7 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 				}
 				else if (y >= ymax - 2)
 				{
-					if (y <= sandLevel)
+					if (y <= CHUNK_Y_BLOCK_COUNT * sandFactor)
 					{
 						SetBlockType(glm::vec3(x, y, z), BlockType::SAND);
 					}
