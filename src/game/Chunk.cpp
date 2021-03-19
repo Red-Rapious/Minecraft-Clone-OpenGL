@@ -148,8 +148,9 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		vertexCoord[i].x += blockCoord.x;
 		vertexCoord[i].y += blockCoord.y;
 		vertexCoord[i].z += blockCoord.z;
-		
-		vertexCoord[i] += glm::vec3(m_coord.idx * CHUNK_X_BLOCK_COUNT, 0, m_coord.idz * CHUNK_Z_BLOCK_COUNT); // chunk coord in world space
+
+		// Add chunk coord in world space
+		vertexCoord[i] += glm::vec3(m_coord.idx * CHUNK_X_BLOCK_COUNT, 0, (m_coord.idz) * CHUNK_Z_BLOCK_COUNT);
 		
 		// Add the texture origin on the texture map
 		textureOriginY = getTextureOriginY(blockType); // TODO: dont compute it for every face, only for every block
@@ -245,10 +246,7 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 
 void Chunk::Generate(const siv::PerlinNoise& noise)
 {
-	//FillPlaneWithBlocks(10 + m_coord.idz, BlockType::LOG);
-	//FillPlaneWithBlocks(11 + m_coord.idz, BlockType::LEAFS);
-
-	DeleteAllBlocks();
+	//DeleteAllBlocks();
 	const float reverseScale = 50.0f;
 	const unsigned int sandLevel = 50;
 
@@ -285,7 +283,6 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 			}
 		}
 	}
-
 	GenerateBuffers();
 }
 
@@ -340,38 +337,16 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 					bool renderFace[6] = { false };
 
 					/* For each face, check if its supposed to be rendered */
-					// FRONT
+					// BACK
 					if (z == 0)
 					{
-						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz - 1);
+						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz - 1); // coherent with the opengl z axis
 						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
 							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0)
 							{
 								// render the face if the blocks that correspond on the other chunk is empty
-								renderFace[(int)FaceType::FRONT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 2)) == BlockType::NONE;
-							}
-							else
-								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
-						}
-						else
-							renderFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
-					}
-					else
-					{
-						renderFace[(int)FaceType::FRONT] = m_blocksArray[x][y][z-1] == BlockType::NONE;
-					}
-
-					// BACK
-					if (z == CHUNK_Z_BLOCK_COUNT-1)
-					{
-						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz + 1);
-						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
-						{
-							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0)
-							{
-								// render the face if the blocks that correspond on the other chunk is empty
-								renderFace[(int)FaceType::BACK] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, 0)) == BlockType::NONE;
+								renderFace[(int)FaceType::BACK] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, CHUNK_Z_BLOCK_COUNT - 2)) == BlockType::NONE;
 							}
 							else
 								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
@@ -381,7 +356,29 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 					}
 					else
 					{
-						renderFace[(int)FaceType::BACK] = m_blocksArray[x][y][z + 1] == BlockType::NONE;
+						renderFace[(int)FaceType::BACK] = m_blocksArray[x][y][z-1] == BlockType::NONE;
+					}
+
+					// FRONT
+					if (z == CHUNK_Z_BLOCK_COUNT-1)
+					{
+						ChunkCoord otherChunkCoord(m_coord.idx, m_coord.idz + 1);
+						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
+						{
+							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0)
+							{
+								// render the face if the blocks that correspond on the other chunk is empty
+								renderFace[(int)FaceType::FRONT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(x, y, 0)) == BlockType::NONE;
+							}
+							else
+								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
+						}
+						else
+							renderFace[(int)FaceType::FRONT] = RENDER_UNGEN_CHUNKS_FACES;
+					}
+					else
+					{
+						renderFace[(int)FaceType::FRONT] = m_blocksArray[x][y][z + 1] == BlockType::NONE;
 					}
 
 					// RIGHT

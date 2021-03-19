@@ -65,6 +65,7 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 			}
 		}
 	}
+
 	return chunksCoordToRender;
 }
 

@@ -115,7 +115,7 @@ int main(void)
 
             control.UpdateInput();
             map.UpdateChunkPlayerPosition(control.GetCameraPosition());
-            
+
             map.GenerateOneChunk();
 
             glm::mat4 proj = control.getProjectionMatrix();
