@@ -70,6 +70,11 @@ int main(void)
         return -1;
     }
 
+    std::vector<int> v = { 15,23 };
+    std::cout << v[0] << v[1] << "\n";
+    std::remove(v.begin(), v.end(), 15);
+    std::cout << v[0] << v[1] << "\n";
+
     {
         /* GL enables */
         // Enable depth test

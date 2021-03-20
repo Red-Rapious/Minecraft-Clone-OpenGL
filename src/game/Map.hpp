@@ -14,6 +14,7 @@ private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunksUMap;
 	ChunkCoord m_playerPosition;
 	std::vector<ChunkCoord> m_chunkGenerationQueue;
+	std::vector<ChunkCoord> m_lastChunksToRender;
 	siv::PerlinNoise m_noise;
 	int m_seed;
 

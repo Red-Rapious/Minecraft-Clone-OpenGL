@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 Map::Map()
-	: m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}), m_noise(std::random_device()), m_seed(1234)
+	: m_playerPosition(ChunkCoord(0, 0)), m_chunkGenerationQueue({}), m_noise(std::random_device()), m_seed(1234), m_lastChunksToRender({})
 {
 	m_noise.reseed((uint32_t)m_seed);
 }
@@ -34,9 +34,12 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 
 void Map::RenderSpecificChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
 {
-	// TODO: separate render from generation
 	if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
+	{
 		chunksCoordToRender.push_back(coord);
+		if (!(std::count(m_lastChunksToRender.begin(), m_lastChunksToRender.end(), coord)))// if the chunk wasn't in the last frame, generate his buffers
+			m_chunksUMap.at(coord)->GenerateBuffers();
+	}
 	else
 		AddChunkToGenQueue(coord);
 }
@@ -45,7 +48,6 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 {
 	// Render the chunks like rings starting from the center
 	std::vector<ChunkCoord> chunksCoordToRender;
-
 	RenderSpecificChunk(ChunkCoord(m_playerPosition.idx, m_playerPosition.idz), chunksCoordToRender);
 	for (int d = 1; d < RENDER_DISTANCE ; d++)
 	{
@@ -66,6 +68,14 @@ std::vector<ChunkCoord> Map::GetChunksCoordsToRender()
 		}
 	}
 
+	for (unsigned int i = 0; i < m_lastChunksToRender.size(); i++) 
+		// for every chunk who was there last frame but is not in the actual one
+	{
+		if (!(std::count(chunksCoordToRender.begin(), chunksCoordToRender.end(), m_lastChunksToRender[i]))) // if isn't rendered this frame
+			GetChunkByCoord(m_lastChunksToRender[i])->DeleteBuffers(); // free the buffers from memory to prevent memory leaks
+	}
+
+	m_lastChunksToRender = chunksCoordToRender;
 	return chunksCoordToRender;
 }
 
