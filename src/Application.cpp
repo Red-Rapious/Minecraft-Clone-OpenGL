@@ -70,11 +70,6 @@ int main(void)
         return -1;
     }
 
-    std::vector<int> v = { 15,23 };
-    std::cout << v[0] << v[1] << "\n";
-    std::remove(v.begin(), v.end(), 15);
-    std::cout << v[0] << v[1] << "\n";
-
     {
         /* GL enables */
         // Enable depth test
@@ -94,8 +89,8 @@ int main(void)
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
 
-        /* Map and camera creation (will be moved later) */
-        glm::vec3 camera_position(8, 100, 8);
+        /* Map and camera creation */
+        glm::vec3 camera_position(8, 50, 8);
         Control control(window, camera_position);
 
         Map map;
