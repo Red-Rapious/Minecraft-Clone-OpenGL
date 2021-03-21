@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "Utility.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& filepath)
 	: m_FilePath(filepath), m_RendererID(0)
@@ -44,6 +45,13 @@ void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
 void Shader::SetUniform1i(const std::string& name, int value)
 {
     GLCall(glUniform1i(GetUniformLocation(name), value));
+}
+
+void Shader::SetUniformvec3(const std::string& name, glm::vec3 value)
+{
+    const float* ptr = glm::value_ptr(value);
+    int location = GetUniformLocation(name);
+    GLCall(glUniform3fv(location, 1, ptr));
 }
 
 

@@ -12,6 +12,7 @@ FILE(GLOB_RECURSE Minecraft_SRC
 	"${PROJECT_SOURCE_DIR}/src/*.hpp"
 	"${PROJECT_SOURCE_DIR}/src/*.cpp"
 	"${PROJECT_SOURCE_DIR}/src/*.c"
+	"${PROJECT_SOURCE_DIR}/res/shaders/*.shader"
 )
 
 ADD_EXECUTABLE(Minecraft "${Minecraft_SRC}")

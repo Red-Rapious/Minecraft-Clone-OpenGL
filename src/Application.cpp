@@ -114,7 +114,8 @@ int main(void)
             renderer.Clear();
 
             control.UpdateInput();
-            map.UpdateChunkPlayerPosition(control.GetCameraPosition());
+            camera_position = control.GetCameraPosition();
+            map.UpdateChunkPlayerPosition(camera_position);
 
             map.GenerateOneChunk();
 
@@ -124,6 +125,7 @@ int main(void)
 
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
+            shader.SetUniformvec3("u_CameraPosition", camera_position);
 
             map.RenderAllNeededChunks(vao);
 
