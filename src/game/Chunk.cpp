@@ -269,6 +269,8 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 					else
 						SetBlockType(glm::vec3(x,y,z), BlockType::GRASS);
 				}
+				else if (y==0)
+					SetBlockType(glm::vec3(x, y, z), BlockType::BEDROCK);
 				else if (y >= ymax - 2)
 				{
 					if (y <= CHUNK_Y_BLOCK_COUNT * sandFactor)
@@ -285,7 +287,6 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 			}
 		}
 	}
-	GenerateBuffers();
 }
 
 void Chunk::GenerateBuffers()
