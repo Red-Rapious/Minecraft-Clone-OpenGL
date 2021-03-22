@@ -131,7 +131,7 @@ bool Map::GenerateOneChunk()
 	Chunk generatedChunk(generatedChunkCoord);
 	
 	AddChunkToMap(generatedChunk);
-	m_chunksUMap.at(generatedChunkCoord)->Generate(m_noise);
+	m_chunksUMap.at(generatedChunkCoord)->Generate(m_noise, m_chunksUMap);
 	m_chunksUMap.at(generatedChunkCoord)->ListAllFacesToRender(m_chunksUMap);
 
 	m_chunkGenerationQueue.erase(m_chunkGenerationQueue.begin()); // delete the chunk from the render queue

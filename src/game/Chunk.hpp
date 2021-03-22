@@ -64,6 +64,8 @@ private:
     void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord);
     void ClearVertexBuffer();
     void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
+    
+    void CreateTree(const glm::vec3 &coords);
    
 public:
 	Chunk(const ChunkCoord& coord);
@@ -79,7 +81,7 @@ public:
     // Debug functions
     unsigned int GetNumberOfNonAirBlocks(const bool& out = false) const;
 
-    void Generate(const siv::PerlinNoise& noise);
+    void Generate(const siv::PerlinNoise& noise, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);
 
     // Render functions
     void RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap);

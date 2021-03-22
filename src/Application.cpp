@@ -88,6 +88,7 @@ int main(void)
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
+        srand(time(0));
 
         /* Map and camera creation */
         glm::vec3 camera_position(8, 50, 8);

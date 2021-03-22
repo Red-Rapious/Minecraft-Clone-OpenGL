@@ -179,7 +179,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 {
 	if (!(blockPosition.x >= 0 && blockPosition.x < CHUNK_X_BLOCK_COUNT && blockPosition.y >= 0 && blockPosition.y < CHUNK_Y_BLOCK_COUNT && blockPosition.z >= 0 && blockPosition.z < CHUNK_Z_BLOCK_COUNT))
-		std::cout << "[SetBlockType] Impossible to set this block, the coordinates are incorrect\n";
+		std::cout << "[SetBlockType] Impossible to set this block, the coordinates are incorrect: " << blockPosition.x << ", " << blockPosition.y << ", " << blockPosition.z << "\n";
 	else
 		m_blocksArray[(unsigned int)blockPosition.x][(unsigned int)blockPosition.y][(unsigned int)blockPosition.z] = type;
 }
@@ -244,8 +244,37 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 	return count;
 }
 
-void Chunk::Generate(const siv::PerlinNoise& noise)
+enum ChunkRelativePosition
 {
+	NORTH, SOUTH, EAST, WEST
+};
+
+void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
+{
+	// Trees coordinates generation
+	// Trees coordinates are calculated before terrain generation, to be able to get the y coordinate of the tree
+	const unsigned int minNbTrees = 0;
+	const unsigned int maxNbTrees = 3;
+	const unsigned int numberOfTrees = rand() % (maxNbTrees + 1) + minNbTrees;
+
+	std::vector<glm::vec3> treesCoordinates;
+
+	bool isChunkGenerated[4] = { false };
+	//isChunkGenerated[NORTH] = chunksUMap.find(ChunkCoord(m_coord.idx, m_coord.idz - 1)) != chunksUMap.end();
+	//isChunkGenerated[SOUTH] = chunksUMap.find(ChunkCoord(m_coord.idx, m_coord.idz + 1)) != chunksUMap.end();
+	//isChunkGenerated[EAST] = chunksUMap.find(ChunkCoord(m_coord.idx + 1, m_coord.idz)) != chunksUMap.end();
+	//isChunkGenerated[WEST] = chunksUMap.find(ChunkCoord(m_coord.idx - 1, m_coord.idz)) != chunksUMap.end();
+
+	int trunkCoordX;
+	int trunkCoordZ;
+	for (unsigned int i = 0 ; i < numberOfTrees ; i++)
+	{
+		// Calculate the coordinates of the tree
+		treesCoordinates.push_back(glm::vec3(2 + (rand() % 12), -1, 2 + (rand() % 12)));
+	}
+
+
+	// Terrain generation
 	const float reverseScale = 50.0f;
 	const float heightFactor = 0.35f;
 	const float sandFactor = 0.275f * heightFactor;
@@ -285,8 +314,52 @@ void Chunk::Generate(const siv::PerlinNoise& noise)
 					SetBlockType(glm::vec3(x, y, z), BlockType::STONE);
 				}
 			}
+
+			for (unsigned int w = 0 ; w<treesCoordinates.size() ; w++)
+			{
+				if (treesCoordinates[w] == glm::vec3(x, -1, z))
+					treesCoordinates[w].y = ymax;
+			}
 		}
 	}
+
+	// Trees generation
+	for (unsigned int i = 0; i < treesCoordinates.size(); i++)
+	{
+		if (treesCoordinates[i].y < CHUNK_Y_BLOCK_COUNT-8)
+			CreateTree(glm::vec3(treesCoordinates[i]));
+	}
+}	
+
+void Chunk::CreateTree(const glm::vec3& coords)
+{
+	const unsigned int trunkHeight = 5;
+
+	for (int i = -2; i <= 2; i++)
+	{
+		for (int j = -2; j <= 2; j++)
+		{
+			SetBlockType(glm::vec3(coords.x+i, coords.y + 3, coords.z+j), BlockType::LEAFS);
+			SetBlockType(glm::vec3(coords.x +i, coords.y + 4, coords.z +j), BlockType::LEAFS);
+		}
+	}
+
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			SetBlockType(glm::vec3(coords.x + i, coords.y + 5, coords.z + j), BlockType::LEAFS);
+		}
+	}
+
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z), BlockType::LEAFS);
+	SetBlockType(glm::vec3(coords.x -1, coords.y + 6, coords.z), BlockType::LEAFS);
+	SetBlockType(glm::vec3(coords.x +1, coords.y + 6, coords.z), BlockType::LEAFS);
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z +1), BlockType::LEAFS);
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z -1), BlockType::LEAFS);
+
+	for (unsigned int i = 0; i < trunkHeight; i++)
+		SetBlockType(glm::vec3(coords.x, coords.y + i, coords.z), BlockType::LOG);
 }
 
 void Chunk::GenerateBuffers()
@@ -390,15 +463,7 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 						ChunkCoord otherChunkCoord(m_coord.idx + 1, m_coord.idz);
 						if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if a chunk exists where the face points towards
 						{
-							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() == 16) // check if the memory isnt empty
-							{
-								// render the face if the blocks that correspond on the other chunk is empty
-								renderFace[(int)FaceType::RIGHT] = (chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0,y,z)) == BlockType::NONE);
-							}
-							else
-							{
-								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
-							}
+							renderFace[(int)FaceType::RIGHT] = (chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(0, y, z)) == BlockType::NONE);
 						}
 						else
 						{
@@ -419,10 +484,8 @@ void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::uniqu
 						{
 							if (chunksUMap.at(otherChunkCoord)->m_blocksArray.size() != 0) // here, this condition isn't supposed to be true
 							{
-
 								// render the face if the blocks that correspond on the other chunk is empty
 								renderFace[(int)FaceType::LEFT] = chunksUMap.at(otherChunkCoord)->GetBlockType(glm::vec3(CHUNK_X_BLOCK_COUNT-1, y, z)) == BlockType::NONE;
-
 							}
 							else
 								std::cout << "[InterChunkAccess Error] Unable to access to a properly loaded chunk at coordinates: " << otherChunkCoord.idx << ", " << otherChunkCoord.idz << "\n";
