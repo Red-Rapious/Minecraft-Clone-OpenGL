@@ -20,8 +20,11 @@ void main()
 
 	const float LOG2 = -1.442695;
 	const float density = 0.02;
-	float d = density * length(gl_Position.xyz);
+	float distance = length(gl_Position.xyz);
+	float d = density * distance;
+
 	fogAmount = 1.0 - clamp(exp2(d * d * LOG2), 0.0, 1.0);
+	//fogAmount = 1.0 - clamp(exp(-density * distance), 0.0, 1.0);
 };
 
 
