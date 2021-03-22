@@ -133,7 +133,6 @@ int main(void)
 
             glm::mat4 MVP = proj * view * model;
             shader.SetUniformMat4f("u_MVP", MVP);
-            shader.SetUniformvec3("u_CameraPosition", camera_position);
 
             map.RenderAllNeededChunks(vao);
 
