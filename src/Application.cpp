@@ -18,6 +18,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 
+#include "stb/stb_image.h"
+
 #include "game/Chunk.hpp"
 #include "game/Map.hpp"
 
@@ -44,9 +46,9 @@ int main(void)
 
     /* Create a windowed mode window and its OpenGL context */
     if (FULLSCREEN)
-        window = glfwCreateWindow(1920, 1280, "Minecraft OpenGL", glfwGetPrimaryMonitor(), NULL); // 4:3
+        window = glfwCreateWindow(1920, 1280, "Minecraft", glfwGetPrimaryMonitor(), NULL); // 4:3
     else
-        window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft OpenGL", NULL, NULL); // 4:3
+        window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft", NULL, NULL); // 4:3
     glfwSetWindowPos(window, 500, 200);
 
     if (!window)
@@ -56,6 +58,11 @@ int main(void)
         ASSERT(false);
         return -1;
     }
+
+    GLFWimage icons[1];
+    icons[0].pixels = stbi_load("res/icons/icon512.png", &icons[0].width, &icons[0].height, 0, 4);
+
+    glfwSetWindowIcon(window, 1, icons);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
