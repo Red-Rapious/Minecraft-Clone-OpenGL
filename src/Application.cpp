@@ -46,7 +46,7 @@ int main(void)
 
     /* Create a windowed mode window and its OpenGL context */
     if (FULLSCREEN)
-        window = glfwCreateWindow(1920, 1280, "Minecraft", glfwGetPrimaryMonitor(), NULL); // 4:3
+        window = glfwCreateWindow(1920, 1280, "Minecraft", glfwGetPrimaryMonitor(), NULL);
     else
         window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft", NULL, NULL); // 4:3
     glfwSetWindowPos(window, 500, 200);
