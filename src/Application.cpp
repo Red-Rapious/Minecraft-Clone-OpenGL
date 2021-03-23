@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <string>
 
 #include "graphics/Renderer.h"
 #include "graphics/IndexBuffer.h"
@@ -145,11 +146,17 @@ int main(void)
             texture.Bind();
             map.RenderAllNeededChunks(vao);
 
-            
+            {
+                const int size = 18;
+                std::string x = std::to_string((int)camera_position.x);
+                std::string y = std::to_string((int)camera_position.y);
+                std::string z = std::to_string((int)camera_position.z);
+                text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, size);
 
+                ChunkCoord chunkCoord = map.GetPlayerPosition();
+                text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+size, size);
+            }
             
-
-            text.PrintText(window, vao, &textShader, "Test", 0, 0, 100);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

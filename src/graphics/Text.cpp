@@ -28,6 +28,7 @@ void Text::PrintText(GLFWwindow* window, const VertexArray& vao, Shader* shader,
     shader->SetUniform1i("u_windowSizeY", windowY);
 
     std::vector<float> vertexBuffer;
+    const unsigned int charWidth = size*0.8;
 
 	for (unsigned int i = 0; i < text.size(); i++) // for each character of the string
 	{
@@ -35,34 +36,34 @@ void Text::PrintText(GLFWwindow* window, const VertexArray& vao, Shader* shader,
         float uv_x = (character % 16) / 16.0f;
         float uv_y = (character / 16) / 16.0f;
 
-        vertexBuffer.push_back(x + i * size); //ul
+        vertexBuffer.push_back(x + i * charWidth); //ul
         vertexBuffer.push_back(y + size);
         vertexBuffer.push_back(uv_x);
         vertexBuffer.push_back(1.0f - uv_y);
 
-        vertexBuffer.push_back(x + i * size + size); //ur
+        vertexBuffer.push_back(x + i * charWidth + charWidth); //ur
         vertexBuffer.push_back(y + size);
         vertexBuffer.push_back(uv_x + 1.0f / 16.0f);
         vertexBuffer.push_back(1.0f - uv_y);
 
-        vertexBuffer.push_back(x + i * size); //dl
+        vertexBuffer.push_back(x + i * charWidth); //dl
         vertexBuffer.push_back(y);
         vertexBuffer.push_back(uv_x);
         vertexBuffer.push_back(1.0f - (uv_y + 1.0f / 16.0f));
 
 
 
-        vertexBuffer.push_back(x + i * size + size); //dr
+        vertexBuffer.push_back(x + i * charWidth + charWidth); //dr
         vertexBuffer.push_back(y);
         vertexBuffer.push_back(uv_x + 1.0f / 16.0f);
         vertexBuffer.push_back(1.0f - (uv_y + 1.0f / 16.0f));
 
-        vertexBuffer.push_back(x + i * size); //dl
+        vertexBuffer.push_back(x + i * charWidth); //dl
         vertexBuffer.push_back(y);
         vertexBuffer.push_back(uv_x);
         vertexBuffer.push_back(1.0f - (uv_y + 1.0f / 16.0f));
 
-        vertexBuffer.push_back(x + i * size + size); //ur
+        vertexBuffer.push_back(x + i * charWidth + charWidth); //ur
         vertexBuffer.push_back(y + size);
         vertexBuffer.push_back(uv_x + 1.0f / 16.0f);
         vertexBuffer.push_back(1.0f - uv_y);
