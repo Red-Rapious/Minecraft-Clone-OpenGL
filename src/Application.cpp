@@ -13,6 +13,7 @@
 #include "graphics/Texture.h"
 #include "graphics/Controls.h"
 #include "graphics/VertexIndexBufferCouple.hpp"
+#include "graphics/Text.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -89,8 +90,8 @@ int main(void)
         GLCall(glCullFace(GL_FRONT));
 
         // Enable blend for transparency
-        //GLCall(glEnable(GL_BLEND));
-        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
@@ -102,14 +103,20 @@ int main(void)
         Control control(window, camera_position);
 
         Map map;
+        Text text("res/textures/ascii.png");
+        
 
         /* Graphics part */
         VertexArray vao;
         vao.Bind();
 
-        Shader shader("res/shaders/Basic.shader");
-        shader.Bind();
-        shader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
+        Shader blocksShader("res/shaders/Blocks.shader");
+        blocksShader.Bind();
+        blocksShader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
+
+        Shader textShader("res/shaders/Text.shader");
+        textShader.Bind();
+        textShader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
         Texture texture("res/textures/default_mc_textures.png");
         texture.Bind(); // default slot is 0
@@ -132,9 +139,19 @@ int main(void)
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
             glm::mat4 MVP = proj * view * model;
-            shader.SetUniformMat4f("u_MVP", MVP);
+            blocksShader.Bind();
+            blocksShader.SetUniformMat4f("u_MVP", MVP);
 
+            texture.Bind();
             map.RenderAllNeededChunks(vao);
+
+            textShader.Bind();
+            int windowX;
+            int windowY;
+            GLCall(glfwGetWindowSize(window, &windowX, &windowY)); // to move for optimisation
+            textShader.SetUniform1i("u_windowSizeX", windowX);
+            textShader.SetUniform1i("u_windowSizeY", windowY);
+            text.PrintText(vao, "Test", 0, 0, 100);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

@@ -2,16 +2,20 @@
 #include <string>
 
 #include <glad/glad.h>
+#include "Texture.h"
+#include "VertexArray.h"
 
 class Text
 {
 private:
-	unsigned char* m_LocalBuffer;
-	unsigned int m_vbID;
-	unsigned int m_uvID;
+	Texture m_texture;
+	unsigned int m_vertexBufferID;
+
+	void GenerateBuffer();
+
 public:
 	Text(const std::string path);
 	inline ~Text() { CleanupText(); };
-	void PrintText(const char* text, const int& x, const int& y, const unsigned int& size);
+	void PrintText(const VertexArray &vao, const std::string text, const int& x, const int& y, const unsigned int& size);
 	void CleanupText();
 };
