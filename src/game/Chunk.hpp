@@ -61,8 +61,7 @@ private:
     unsigned int m_vertexBufferID;
     unsigned int m_indexBufferID;
     
-    void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord);
-    void ClearVertexBuffer();
+    void AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord, const FaceType& faceType);
     void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
     
     void CreateTree(const glm::vec3 &coords);

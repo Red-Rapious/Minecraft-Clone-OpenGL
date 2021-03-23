@@ -28,12 +28,7 @@ static float getTextureCoordX(const FaceType& faceType)
 	return ((int)faceType);
 }
 
-void Chunk::ClearVertexBuffer()
-{
-	m_vertexIndexBufferCouple.m_vertexBuffer = {};
-}
-
-void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord)
+void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord, const FaceType& faceType)
 {
 	// Add two vectors to a the vertex buffer of the chunk
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)vertexCoord.x);
@@ -42,6 +37,8 @@ void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec
 
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)textureCoord.x);
 	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((float)textureCoord.y);
+
+	m_vertexIndexBufferCouple.m_vertexBuffer.push_back((unsigned int)faceType);
 }
 
 
@@ -49,6 +46,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 {
 	glm::vec3 vertexCoord[4] = {}; // one for each vertex of each face
 	glm::vec2 textureCoord[4] = {};
+	
 	unsigned int indices[6] = { 0,1,2,0,2,3 };
 
 	switch (faceType)
@@ -159,7 +157,7 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 		textureCoord[i].y = (textureOriginY + textureCoord[i].y) / BLOCK_TYPES_TEXTURES_NUMBER;
 
 		// Add vertex to the vertex buffer
-		AddVertexToVertexBuffer(vertexCoord[i], textureCoord[i]);
+		AddVertexToVertexBuffer(vertexCoord[i], textureCoord[i], faceType);
 	}
 
 	// Add the good indices to the index buffer
@@ -174,8 +172,6 @@ void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoor
 
 
 /* STANDARD FUNCTIONS PART */
-
-
 void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 {
 	if (!(blockPosition.x >= 0 && blockPosition.x < CHUNK_X_BLOCK_COUNT && blockPosition.y >= 0 && blockPosition.y < CHUNK_Y_BLOCK_COUNT && blockPosition.z >= 0 && blockPosition.z < CHUNK_Z_BLOCK_COUNT))
@@ -381,15 +377,18 @@ void Chunk::DeleteBuffers()
 void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size()*5/6 + sizeof(GL_UNSIGNED_INT) * m_vertexIndexBufferCouple.m_vertexBuffer.size() / 6, m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
 
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferID));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_vertexIndexBufferCouple.m_indexBuffer.size() * sizeof(unsigned int), m_vertexIndexBufferCouple.m_indexBuffer.data(), GL_STATIC_DRAW));
+
+
 
 	VertexBufferLayout bufferLayout;
 
 	bufferLayout.Push<float>(3); // add 3 floats for the vertex positions
 	bufferLayout.Push<float>(2); // add 2 floats for the texture coords
+	bufferLayout.Push<unsigned int>(1); // add 1 int for the face type
 	vao.AddBuffer(bufferLayout);
 
 	GLCall(glDrawElements(GL_TRIANGLES, m_vertexIndexBufferCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
