@@ -2,8 +2,10 @@
 #include <string>
 
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 #include "Texture.h"
 #include "VertexArray.h"
+#include "Shader.h"
 
 class Text
 {
@@ -15,7 +17,5 @@ private:
 
 public:
 	Text(const std::string path);
-	inline ~Text() { CleanupText(); };
-	void PrintText(const VertexArray &vao, const std::string text, const int& x, const int& y, const unsigned int& size);
-	void CleanupText();
+	void PrintText(GLFWwindow* window, const VertexArray &vao, Shader* shader, const std::string text, const int& x, const int& y, const unsigned int& size);
 };

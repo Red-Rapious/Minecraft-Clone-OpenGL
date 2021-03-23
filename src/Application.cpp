@@ -145,13 +145,11 @@ int main(void)
             texture.Bind();
             map.RenderAllNeededChunks(vao);
 
-            textShader.Bind();
-            int windowX;
-            int windowY;
-            GLCall(glfwGetWindowSize(window, &windowX, &windowY)); // to move for optimisation
-            textShader.SetUniform1i("u_windowSizeX", windowX);
-            textShader.SetUniform1i("u_windowSizeY", windowY);
-            text.PrintText(vao, "Test", 0, 0, 100);
+            
+
+            
+
+            text.PrintText(window, vao, &textShader, "Test", 0, 0, 100);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

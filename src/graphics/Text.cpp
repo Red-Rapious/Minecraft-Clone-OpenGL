@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Utility.hpp"
+#include "GLFW/glfw3.h"
 
 Text::Text(const std::string path)
 	:m_texture(path), m_vertexBufferID(-1)
@@ -16,10 +17,16 @@ void Text::GenerateBuffer()
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexBufferID));
 }
 
-void Text::PrintText(const VertexArray& vao, const std::string text, const int& x, const int& y, const unsigned int& size)
+void Text::PrintText(GLFWwindow* window, const VertexArray& vao, Shader* shader, const std::string text, const int& x, const int& y, const unsigned int& size)
 {
-    //std::vector<glm::vec2> vertices;
-    //std::vector<glm::vec2> UVs;
+    int windowX;
+    int windowY;
+    GLCall(glfwGetWindowSize(window, &windowX, &windowY));
+
+    shader->Bind();
+    shader->SetUniform1i("u_windowSizeX", windowX);
+    shader->SetUniform1i("u_windowSizeY", windowY);
+
     std::vector<float> vertexBuffer;
 
 	for (unsigned int i = 0; i < text.size(); i++) // for each character of the string
@@ -72,9 +79,4 @@ void Text::PrintText(const VertexArray& vao, const std::string text, const int& 
 
     m_texture.Bind();
     GLCall(glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.size()));
-
-}
-
-void Text::CleanupText()
-{
 }
