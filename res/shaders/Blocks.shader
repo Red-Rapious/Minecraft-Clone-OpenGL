@@ -17,7 +17,7 @@ void main()
     v_TexCoord = texCoord;
 
 	const float LOG2 = -1.442695;
-	const float density = 0.017;
+	const float density = 0.013;
 	float distance = length(gl_Position.xyz);
 	float d = density * distance;
 
