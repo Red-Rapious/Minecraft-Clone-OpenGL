@@ -97,15 +97,13 @@ int main(void)
         // Change clear color to a blue sky
         GLCall(glClearColor(0.53, 0.81, 0.92, 1.0));
 
-        srand(time(0));
+        srand(time(0)); // Init seed for the trees creation
 
-        /* Map and camera creation */
+        /* Non-rendering bjects instanciation */
         glm::vec3 camera_position(8, 50, 8);
-        Control control(window, camera_position);
 
+        Control control(window, camera_position);
         Map map;
-        Text text("res/textures/ascii.png");
-        
 
         /* Graphics part */
         VertexArray vao;
@@ -119,11 +117,14 @@ int main(void)
         textShader.Bind();
         textShader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
 
-        Texture texture("res/textures/default_mc_textures.png");
-        texture.Bind(); // default slot is 0
+        Texture blocksTexture("res/textures/default_mc_textures.png");
+        blocksTexture.Bind(); // default slot is 0
 
         Renderer renderer;
         double lastTime = glfwGetTime();
+
+        Text text("res/textures/ascii.png");
+        const int textSize = 18;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -134,8 +135,9 @@ int main(void)
             camera_position = control.GetCameraPosition();
             map.UpdateChunkPlayerPosition(camera_position);
 
-            map.GenerateOneChunk();
+            map.GenerateOneChunk(); // Generate only one chunk per frame to avoid huge freezes
 
+            // Generate the matrices
             glm::mat4 proj = control.getProjectionMatrix();
             glm::mat4 view = control.getViewMatrix();
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -144,22 +146,24 @@ int main(void)
             blocksShader.Bind();
             blocksShader.SetUniformMat4f("u_MVP", MVP);
 
-            texture.Bind();
+            blocksTexture.Bind();
             map.RenderAllNeededChunks(vao);
 
             {
-                const int size = 18;
+                // Camera position
                 std::string x = std::to_string((int)camera_position.x);
                 std::string y = std::to_string((int)camera_position.y);
                 std::string z = std::to_string((int)camera_position.z);
-                text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, size);
-
-                ChunkCoord chunkCoord = map.GetPlayerPosition();
-                text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+size, size);
-
-                text.PrintText(window, vao, &textShader, "Delta = "+std::to_string(glfwGetTime()- lastTime) + "   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * size, size);
-                lastTime = glfwGetTime();
+                text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, textSize);
             }
+
+            // Player in chunk position
+            ChunkCoord chunkCoord = map.GetPlayerPosition();
+            text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+ textSize, textSize);
+
+            // SPF and FPS counters
+            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string(glfwGetTime()- lastTime) + "   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * textSize, textSize);
+            lastTime = glfwGetTime();
             
 
             /* Swap front and back buffers */
@@ -167,8 +171,7 @@ int main(void)
             /* Poll for and process events */
             glfwPollEvents();
 
-        }
-
+        } // end of main loop
     }
     glfwTerminate();
 
