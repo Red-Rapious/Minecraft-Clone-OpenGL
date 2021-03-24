@@ -123,6 +123,7 @@ int main(void)
         texture.Bind(); // default slot is 0
 
         Renderer renderer;
+        double lastTime = glfwGetTime();
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -155,6 +156,9 @@ int main(void)
 
                 ChunkCoord chunkCoord = map.GetPlayerPosition();
                 text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+size, size);
+
+                text.PrintText(window, vao, &textShader, "Delta = "+std::to_string(glfwGetTime()- lastTime) + "   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * size, size);
+                lastTime = glfwGetTime();
             }
             
 
