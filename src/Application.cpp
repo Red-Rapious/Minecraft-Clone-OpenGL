@@ -149,6 +149,9 @@ int main(void)
             blocksTexture.Bind();
             map.RenderAllNeededChunks(vao);
 
+
+            textShader.Bind();
+            textShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0); // set text color
             {
                 // Camera position
                 std::string x = std::to_string((int)camera_position.x);
@@ -162,6 +165,7 @@ int main(void)
             text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+ textSize, textSize);
 
             // SPF and FPS counters
+            // TODO: change text color following the amount of FPS
             text.PrintText(window, vao, &textShader, "Delta = "+std::to_string(glfwGetTime()- lastTime) + "   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * textSize, textSize);
             lastTime = glfwGetTime();
             
@@ -172,7 +176,7 @@ int main(void)
             glfwPollEvents();
 
         } // end of main loop
-    }
+    } // end of OpenGL scope
     glfwTerminate();
 
     return 0;
