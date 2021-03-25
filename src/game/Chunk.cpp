@@ -20,12 +20,12 @@ Chunk::~Chunk()
 /* VERTEX AND INDEX BUFFERS PART */
 static float getTextureOriginY(const BlockType& blockType)
 {
-	return (BLOCK_TYPES_TEXTURES_NUMBER - (int)(blockType));
+	return (float)(BLOCK_TYPES_TEXTURES_NUMBER - (int)(blockType));
 }
 
 static float getTextureCoordX(const FaceType& faceType)
 {
-	return ((int)faceType);
+	return ((float)faceType);
 }
 
 void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec2& textureCoord, const FaceType& faceType)
@@ -261,8 +261,6 @@ void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<Chu
 	//isChunkGenerated[EAST] = chunksUMap.find(ChunkCoord(m_coord.idx + 1, m_coord.idz)) != chunksUMap.end();
 	//isChunkGenerated[WEST] = chunksUMap.find(ChunkCoord(m_coord.idx - 1, m_coord.idz)) != chunksUMap.end();
 
-	int trunkCoordX;
-	int trunkCoordZ;
 	for (unsigned int i = 0 ; i < numberOfTrees ; i++)
 	{
 		// Calculate the coordinates of the tree
@@ -281,7 +279,7 @@ void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<Chu
 	{
 		for (unsigned int z = 0; z < CHUNK_X_BLOCK_COUNT; z++)
 		{
-			unsigned int ymax = noise.normalizedOctaveNoise2D_0_1((int)(m_coord.idx * CHUNK_X_BLOCK_COUNT + x) / reverseScale, (int)(m_coord.idz * CHUNK_Z_BLOCK_COUNT + z) / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT * heightFactor;
+			unsigned int ymax = (unsigned int)(noise.normalizedOctaveNoise2D_0_1((int)(m_coord.idx * CHUNK_X_BLOCK_COUNT + x) / reverseScale, (int)(m_coord.idz * CHUNK_Z_BLOCK_COUNT + z) / reverseScale, 3) * CHUNK_Y_BLOCK_COUNT * heightFactor);
 			
 			for (unsigned int y = 0; y <= ymax; y++)
 			{
@@ -391,7 +389,7 @@ void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCo
 	bufferLayout.Push<int>(1); // add 1 int for the face type
 	vao.AddBuffer(bufferLayout);
 
-	GLCall(glDrawElements(GL_TRIANGLES, m_vertexIndexBufferCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
+	GLCall(glDrawElements(GL_TRIANGLES, (GLsizei)m_vertexIndexBufferCouple.m_indexBuffer.size(), GL_UNSIGNED_INT, nullptr));
 }
 
 /* FACE TO RENDER ALGORITHM PART */
