@@ -3,10 +3,10 @@
 
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoord;
-layout(location = 2) in int faceType;
+layout(location = 2) in float faceType;
 
 out vec2 v_TexCoord;
-out int v_faceType;
+out float v_faceType;
 out float fogAmount;
 
 uniform mat4 u_MVP;
@@ -42,7 +42,7 @@ void main()
 layout(location = 0) out vec4 color;
 
 in vec2 v_TexCoord;
-in int v_faceType;
+in float v_faceType;
 in float fogAmount;
 
 uniform sampler2D u_Texture;
@@ -52,25 +52,25 @@ void main()
 	vec4 texColor = texture(u_Texture, v_TexCoord);
 
 	color = texColor;
-	int faceType = v_faceType;
-	//color = vec4(faceType);
-	//faceType = 0;
-	//if (faceType == 4)
-	//{
-	//	//color *= 1.0;
-	//}
-	//else if (v_faceType == RIGHT || v_faceType == LEFT)
-	//{
-	//	color *= 0.8;
-	//}
-	//else if (v_faceType == FRONT || v_faceType == BACK)
-	//{
-	//	color *= 0.6;
-	//}
-	//else 
-	//{
-	//	color *= 0.5;
-	//}
+	int faceType = int(v_faceType);
+	
 
 	color = mix(color, vec4(0.53, 0.81, 0.92, 1.0), fogAmount);
+
+	if (faceType == UP)
+	{
+		color.xyz *= 1.0;
+	}
+	else if (v_faceType == RIGHT || v_faceType == LEFT)
+	{
+		color.xyz *= 0.8;
+	}
+	else if (v_faceType == FRONT || v_faceType == BACK)
+	{
+		color.xyz *= 0.6;
+	}
+	else
+	{
+		color.xyz *= 0.5;
+	}
 };
