@@ -52,11 +52,12 @@ void main()
 	vec4 texColor = texture(u_Texture, v_TexCoord);
 
 	color = texColor;
-	//int faceType = v_faceType;
+	int faceType = v_faceType;
+	//color = vec4(faceType);
 	//faceType = 0;
 	//if (faceType == 4)
 	//{
-	//	color *= 1.0;
+	//	//color *= 1.0;
 	//}
 	//else if (v_faceType == RIGHT || v_faceType == LEFT)
 	//{
