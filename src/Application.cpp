@@ -166,7 +166,7 @@ int main(void)
 
             // SPF and FPS counters
             // TODO: change text color following the amount of FPS
-            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string(glfwGetTime()- lastTime) + "   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * textSize, textSize);
+            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string((int)((glfwGetTime()- lastTime)*1000)) + "ms   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * textSize, textSize);
             lastTime = glfwGetTime();
             
 
