@@ -61,11 +61,11 @@ void main()
 	{
 		color.xyz *= 1.0;
 	}
-	else if (v_faceType == RIGHT || v_faceType == LEFT)
+	else if (faceType == RIGHT || faceType == LEFT)
 	{
 		color.xyz *= 0.8;
 	}
-	else if (v_faceType == FRONT || v_faceType == BACK)
+	else if (faceType == FRONT || faceType == BACK)
 	{
 		color.xyz *= 0.6;
 	}
@@ -73,4 +73,6 @@ void main()
 	{
 		color.xyz *= 0.5;
 	}
+
+	//color = vec4(float(faceType)/5, float(faceType)/5, float(faceType)/5, 1.0);
 };
