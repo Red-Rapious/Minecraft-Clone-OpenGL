@@ -165,8 +165,17 @@ int main(void)
             text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+ textSize, textSize);
 
             // SPF and FPS counters
-            // TODO: change text color following the amount of FPS
-            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string((int)((glfwGetTime()- lastTime)*1000)) + "ms   FPS=" +std::to_string((int)(1/(glfwGetTime() - lastTime))), 10, 10 + 2 * textSize, textSize);
+            float spf = glfwGetTime() - lastTime;
+            float fps = 1 / spf;
+            if (fps < 30)
+            {
+                textShader.SetUniform4f("u_Color", 1.0, 0.2, 0.20, 1.0);
+            }
+            else if (fps > 60)
+            {
+                textShader.SetUniform4f("u_Color", 0.2, 1.0, 0.33, 1.0);
+            }
+            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string((int)(spf*1000)) + "ms   FPS=" +std::to_string((int)fps), 10, 10 + 2 * textSize, textSize);
             lastTime = glfwGetTime();
             
 
