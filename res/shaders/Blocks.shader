@@ -49,30 +49,36 @@ uniform sampler2D u_Texture;
 
 void main()
 {
+	bool useFaceShadow = false;
 	vec4 texColor = texture(u_Texture, v_TexCoord);
 
 	color = texColor;
-	int faceType = int(v_faceType);
-	
 
-	color = mix(color, vec4(0.53, 0.81, 0.92, 1.0), fogAmount);
+	if (useFaceShadow)
+	{
+		int faceType = int(v_faceType);
 
-	if (faceType == UP)
-	{
-		color.xyz *= 1.0;
-	}
-	else if (faceType == RIGHT || faceType == LEFT)
-	{
-		color.xyz *= 0.8;
-	}
-	else if (faceType == FRONT || faceType == BACK)
-	{
-		color.xyz *= 0.6;
-	}
-	else
-	{
-		color.xyz *= 0.5;
-	}
 
-	//color = vec4(float(faceType)/5, float(faceType)/5, float(faceType)/5, 1.0);
+		color = mix(color, vec4(0.53, 0.81, 0.92, 1.0), fogAmount);
+
+		if (faceType == UP)
+		{
+			color.xyz *= 1.0;
+		}
+		else if (faceType == RIGHT || faceType == LEFT)
+		{
+			color.xyz *= 0.8;
+		}
+		else if (faceType == FRONT || faceType == BACK)
+		{
+			color.xyz *= 0.6;
+		}
+		else
+		{
+			color.xyz *= 0.5;
+		}
+
+		// debug
+		color = vec4(float(faceType) / 5, float(faceType) / 5, float(faceType) / 5, 1.0);
+	}
 };
