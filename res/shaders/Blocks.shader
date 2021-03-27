@@ -49,17 +49,15 @@ uniform sampler2D u_Texture;
 
 void main()
 {
-	bool useFaceShadow = false;
+	bool useFaceShadow = true;
 	vec4 texColor = texture(u_Texture, v_TexCoord);
 
 	color = texColor;
+	color = mix(color, vec4(0.53, 0.81, 0.92, 1.0), fogAmount);
 
 	if (useFaceShadow)
 	{
 		int faceType = int(v_faceType);
-
-
-		color = mix(color, vec4(0.53, 0.81, 0.92, 1.0), fogAmount);
 
 		if (faceType == UP)
 		{
