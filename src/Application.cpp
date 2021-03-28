@@ -125,6 +125,8 @@ int main(void)
 
         Text text("res/textures/ascii.png");
         const int textSize = 18;
+        const char* openGLVersion = (char*)glGetString(GL_VERSION);
+        std::cout << openGLVersion << "\n";
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -163,6 +165,9 @@ int main(void)
             // Player in chunk position
             ChunkCoord chunkCoord = map.GetPlayerPosition();
             text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+ textSize, textSize);
+
+            // OpenGL version
+            text.PrintText(window, vao, &textShader, openGLVersion, 10, 745, 18);
 
             // SPF and FPS counters
             float spf = glfwGetTime() - lastTime;
