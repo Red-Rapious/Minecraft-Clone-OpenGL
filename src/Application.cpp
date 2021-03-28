@@ -126,7 +126,6 @@ int main(void)
         Text text("res/textures/ascii.png");
         const int textSize = 18;
         const char* openGLVersion = (char*)glGetString(GL_VERSION);
-        std::cout << openGLVersion << "\n";
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
