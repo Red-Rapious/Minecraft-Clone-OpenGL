@@ -32,12 +32,12 @@ void main()
 
 #shader fragment
 #version 330 core
-#define FRONT 0
-#define BACK 1
-#define RIGHT 2
-#define LEFT 3
-#define UP 4
-#define DOWN 5
+#define FRONT 0.0f
+#define BACK  1.0f
+#define RIGHT 2.0f
+#define LEFT  3.0f
+#define UP    4.0f
+#define DOWN  5.0f
 
 layout(location = 0) out vec4 color;
 
@@ -57,7 +57,7 @@ void main()
 
 	if (useFaceShadow)
 	{
-		int faceType = int(v_faceType);
+		float faceType = float(v_faceType);
 
 		if (faceType == UP)
 		{
