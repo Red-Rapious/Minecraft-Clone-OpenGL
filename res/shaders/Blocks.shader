@@ -57,7 +57,7 @@ void main()
 
 	if (useFaceShadow)
 	{
-		float faceType = float(v_faceType);
+		int faceType = int(round(v_faceType));
 
 		if (faceType == UP)
 		{
@@ -75,8 +75,5 @@ void main()
 		{
 			color.xyz *= 0.5;
 		}
-
-		// debug
-		color = vec4(float(faceType) / 5, float(faceType) / 5, float(faceType) / 5, 1.0);
 	}
 };
