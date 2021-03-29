@@ -333,8 +333,8 @@ void Chunk::CreateTree(const glm::vec3& coords)
 	{
 		for (int j = -2; j <= 2; j++)
 		{
-			SetBlockType(glm::vec3(coords.x+i, coords.y + 3, coords.z+j), BlockType::LEAFS);
-			SetBlockType(glm::vec3(coords.x +i, coords.y + 4, coords.z +j), BlockType::LEAFS);
+			SetBlockType(glm::vec3(coords.x+i, coords.y + 3, coords.z+j), BlockType::OPAQUE_LEAFS);
+			SetBlockType(glm::vec3(coords.x +i, coords.y + 4, coords.z +j), BlockType::OPAQUE_LEAFS);
 		}
 	}
 
@@ -342,15 +342,15 @@ void Chunk::CreateTree(const glm::vec3& coords)
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			SetBlockType(glm::vec3(coords.x + i, coords.y + 5, coords.z + j), BlockType::LEAFS);
+			SetBlockType(glm::vec3(coords.x + i, coords.y + 5, coords.z + j), BlockType::OPAQUE_LEAFS);
 		}
 	}
 
-	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z), BlockType::LEAFS);
-	SetBlockType(glm::vec3(coords.x -1, coords.y + 6, coords.z), BlockType::LEAFS);
-	SetBlockType(glm::vec3(coords.x +1, coords.y + 6, coords.z), BlockType::LEAFS);
-	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z +1), BlockType::LEAFS);
-	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z -1), BlockType::LEAFS);
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z), BlockType::OPAQUE_LEAFS);
+	SetBlockType(glm::vec3(coords.x -1, coords.y + 6, coords.z), BlockType::OPAQUE_LEAFS);
+	SetBlockType(glm::vec3(coords.x +1, coords.y + 6, coords.z), BlockType::OPAQUE_LEAFS);
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z +1), BlockType::OPAQUE_LEAFS);
+	SetBlockType(glm::vec3(coords.x, coords.y + 6, coords.z -1), BlockType::OPAQUE_LEAFS);
 
 	for (unsigned int i = 0; i < trunkHeight; i++)
 		SetBlockType(glm::vec3(coords.x, coords.y + i, coords.z), BlockType::LOG);
