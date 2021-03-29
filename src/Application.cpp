@@ -126,6 +126,9 @@ int main(void)
         Text text("res/textures/ascii.png");
         const int textSize = 18;
         const char* openGLVersion = (char*)glGetString(GL_VERSION);
+        bool displayDebugText = true;
+        const unsigned int defaultSwitchKeyCounter = 10;
+        int switchKeyCounter = 0; // number of frames to wait before switching the mode again
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -150,38 +153,51 @@ int main(void)
             blocksTexture.Bind();
             map.RenderAllNeededChunks(vao);
 
-
-            textShader.Bind();
-            textShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0); // set text color
+            if (displayDebugText)
             {
-                // Camera position
-                std::string x = std::to_string((int)camera_position.x);
-                std::string y = std::to_string((int)camera_position.y);
-                std::string z = std::to_string((int)camera_position.z);
-                text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, textSize);
-            }
+                textShader.Bind();
+                textShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0); // set text color
+                {
+                    // Camera position
+                    std::string x = std::to_string((int)camera_position.x);
+                    std::string y = std::to_string((int)camera_position.y);
+                    std::string z = std::to_string((int)camera_position.z);
+                    text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, textSize);
+                }
 
-            // Player in chunk position
-            ChunkCoord chunkCoord = map.GetPlayerPosition();
-            text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10+ textSize, textSize);
+                // Player in chunk position
+                ChunkCoord chunkCoord = map.GetPlayerPosition();
+                text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10 + textSize, textSize);
 
-            // OpenGL version
-            text.PrintText(window, vao, &textShader, openGLVersion, 10, 745, 18);
+                // OpenGL version
+                text.PrintText(window, vao, &textShader, openGLVersion, 10, 745, 18);
 
-            // SPF and FPS counters
-            float spf = glfwGetTime() - lastTime;
-            float fps = 1 / spf;
-            if (fps < 30)
-            {
-                textShader.SetUniform4f("u_Color", 1.0, 0.2, 0.20, 1.0);
+                // SPF and FPS counters
+                float spf = glfwGetTime() - lastTime;
+                float fps = 1 / spf;
+                if (fps < 30)
+                {
+                    textShader.SetUniform4f("u_Color", 1.0, 0.2, 0.20, 1.0);
+                }
+                else if (fps > 60)
+                {
+                    textShader.SetUniform4f("u_Color", 0.2, 1.0, 0.33, 1.0);
+                }
+                text.PrintText(window, vao, &textShader, "Delta = " + std::to_string((int)(spf * 1000)) + "ms   FPS=" + std::to_string((int)fps), 10, 10 + 2 * textSize, textSize);
+                
             }
-            else if (fps > 60)
-            {
-                textShader.SetUniform4f("u_Color", 0.2, 1.0, 0.33, 1.0);
-            }
-            text.PrintText(window, vao, &textShader, "Delta = "+std::to_string((int)(spf*1000)) + "ms   FPS=" +std::to_string((int)fps), 10, 10 + 2 * textSize, textSize);
             lastTime = glfwGetTime();
-            
+
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            {
+                if (switchKeyCounter == 0)
+                {
+                    displayDebugText = !displayDebugText;
+                    switchKeyCounter = defaultSwitchKeyCounter;
+                }     
+            }
+            if (switchKeyCounter > 0)
+                switchKeyCounter--;
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
