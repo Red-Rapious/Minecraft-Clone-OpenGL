@@ -180,7 +180,7 @@ void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 		m_blocksArray[(unsigned int)blockPosition.x][(unsigned int)blockPosition.y][(unsigned int)blockPosition.z] = type;
 }
 
-void Chunk::SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap, const glm::vec3& blockPosition, const BlockType& type)
+void Chunk::SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap, const glm::vec3& blockPosition, const BlockType& type, const bool& regenBuffers)
 {
 	int x = blockPosition.x; 
 	int y = blockPosition.y;
@@ -200,7 +200,14 @@ void Chunk::SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_
 
 		if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if the other chunk exists
 		{
+			int t1 = x - chunkCX * 16;
+			int t2 = z - chunkCZ * 16;
 			chunksUMap.at(otherChunkCoord)->SetBlockType(glm::vec3(x-chunkCX*16, y, z-chunkCZ*16), type);
+			if (regenBuffers)
+			{
+				chunksUMap.at(otherChunkCoord)->ListAllFacesToRender(chunksUMap);
+				chunksUMap.at(otherChunkCoord)->GenerateBuffers();
+			}
 		}
 	}
 }
@@ -383,6 +390,7 @@ void Chunk::CreateTree(const glm::vec3& coords)
 
 void Chunk::GenerateBuffers()
 {
+	//DeleteBuffers();
 	GLCall(glGenBuffers(1, &m_vertexBufferID));
 	GLCall(glGenBuffers(1, &m_indexBufferID));
 
