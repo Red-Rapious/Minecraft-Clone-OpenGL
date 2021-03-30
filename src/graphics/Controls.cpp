@@ -50,15 +50,18 @@ void Control::UpdateMouse()
 void Control::UpdateKeyboard()
 {
 	ComputeVectors();
+	
 
 	/* Moves following one vector */
 	// Move forward
 	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS) {
-		m_cameraPosition += m_direction * m_deltaTime * m_speed;
+		//m_cameraPosition += m_direction * m_deltaTime * m_speed;
+		m_cameraPosition += m_forward * m_deltaTime * m_speed;
 	}
 	// Move backward
 	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS) {
-		m_cameraPosition -= m_direction * m_deltaTime * m_speed;
+		//m_cameraPosition -= m_direction * m_deltaTime * m_speed;
+		m_cameraPosition -= m_forward * m_deltaTime * m_speed;
 	}
 	// Strafe right
 	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS) {
@@ -67,6 +70,16 @@ void Control::UpdateKeyboard()
 	// Strafe left
 	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS) {
 		m_cameraPosition -= m_right * m_deltaTime * m_speed;
+	}
+
+	// Go up
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		m_cameraPosition += glm::vec3(0,1,0) * m_deltaTime * m_speed;
+	}
+
+	// Go down
+	if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		m_cameraPosition -= glm::vec3(0, 1, 0) * m_deltaTime * m_speed;
 	}
 }
 
@@ -90,6 +103,12 @@ void Control::ComputeVectors()
 		sin(m_horizontalAngle - 3.14f / 2.0f),
 		0,
 		cos(m_horizontalAngle - 3.14f / 2.0f)
+	);
+
+	m_forward = glm::vec3(
+		sin(m_horizontalAngle),
+		0,
+		cos(m_horizontalAngle)
 	);
 
 	m_up = glm::cross(m_right, m_direction);

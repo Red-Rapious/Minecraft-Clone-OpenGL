@@ -18,7 +18,7 @@ private:
 
 	int m_windowWidth, m_windowHeight;
 
-	glm::vec3 m_direction, m_right, m_up;
+	glm::vec3 m_direction, m_right, m_up, m_forward;
 
 	GLFWwindow* m_window;
 	void UpdateMouse();
