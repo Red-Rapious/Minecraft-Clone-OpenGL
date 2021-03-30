@@ -188,7 +188,7 @@ int main(void)
             }
             lastTime = glfwGetTime();
 
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
             {
                 if (switchKeyCounter == 0)
                 {

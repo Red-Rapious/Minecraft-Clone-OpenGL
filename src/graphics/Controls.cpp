@@ -53,19 +53,19 @@ void Control::UpdateKeyboard()
 
 	/* Moves following one vector */
 	// Move forward
-	if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS) {
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS) {
 		m_cameraPosition += m_direction * m_deltaTime * m_speed;
 	}
 	// Move backward
-	if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS) {
 		m_cameraPosition -= m_direction * m_deltaTime * m_speed;
 	}
 	// Strafe right
-	if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS) {
 		m_cameraPosition += m_right * m_deltaTime * m_speed;
 	}
 	// Strafe left
-	if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS) {
 		m_cameraPosition -= m_right * m_deltaTime * m_speed;
 	}
 }
