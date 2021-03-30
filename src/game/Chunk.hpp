@@ -65,6 +65,7 @@ private:
     void AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType);
     
     void CreateTree(const glm::vec3 &coords);
+    void SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap, const glm::vec3& blockPosition, const BlockType& type);
    
 public:
 	Chunk(const ChunkCoord& coord);

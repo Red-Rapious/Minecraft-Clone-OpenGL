@@ -180,6 +180,31 @@ void Chunk::SetBlockType(const glm::vec3& blockPosition, const BlockType& type)
 		m_blocksArray[(unsigned int)blockPosition.x][(unsigned int)blockPosition.y][(unsigned int)blockPosition.z] = type;
 }
 
+void Chunk::SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap, const glm::vec3& blockPosition, const BlockType& type)
+{
+	int x = blockPosition.x; 
+	int y = blockPosition.y;
+	int z = blockPosition.z;
+	if (x >= 0 && y >= 0 && z >= 0 && x < CHUNK_X_BLOCK_COUNT && y < CHUNK_Y_BLOCK_COUNT && z < CHUNK_Z_BLOCK_COUNT)
+		// if the block is in this chunk
+		this->SetBlockType(blockPosition, type);
+	else // if the block is in another chunk
+	{
+		int chunkCX = x/CHUNK_X_BLOCK_COUNT;
+		int chunkCZ = z / CHUNK_Z_BLOCK_COUNT;
+		if (x < 0)
+			chunkCX--;
+		if (z < 0)
+			chunkCZ--;
+		ChunkCoord otherChunkCoord(chunkCX,chunkCZ);
+
+		if (chunksUMap.find(otherChunkCoord) != chunksUMap.end()) // if the other chunk exists
+		{
+			chunksUMap.at(otherChunkCoord)->SetBlockType(glm::vec3(x-chunkCX*16, y, z-chunkCZ*16), type);
+		}
+	}
+}
+
 
 void Chunk::FillPlaneWithBlocks(const unsigned int& height, const BlockType& type)
 {
