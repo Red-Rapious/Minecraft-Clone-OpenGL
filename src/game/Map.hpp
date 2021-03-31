@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include <memory>
 #include <iostream>
+#include "Chunk.hpp"
 
 #include "../vendor/PerlinNoise.hpp"
 
