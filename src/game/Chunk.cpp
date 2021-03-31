@@ -237,12 +237,8 @@ void Chunk::DeleteAllBlocks()
 		m_blocksArray.push_back(vect);
 		for (unsigned int y = 0; y < CHUNK_Y_BLOCK_COUNT; y++)
 		{
-			std::vector<BlockType> vect;
+			std::vector<BlockType> vect(CHUNK_Z_BLOCK_COUNT, BlockType::NONE);
 			m_blocksArray[x].push_back(vect);
-			for (unsigned int z = 0; z < CHUNK_Z_BLOCK_COUNT; z++)
-			{
-				m_blocksArray[x][y].push_back(BlockType::NONE);
-			}
 		}
 	}
 }
