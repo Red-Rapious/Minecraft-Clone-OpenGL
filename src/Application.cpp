@@ -83,9 +83,7 @@ int main(void)
 
         srand(time(0)); // Init seed for the trees creation
 
-        /* Non-rendering bjects instanciation */
         glm::vec3 defaultCameraPosition(8, 50, 8);
-
         World world(window, defaultCameraPosition);
 
         /* Loop until the user closes the window */

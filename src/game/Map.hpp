@@ -26,7 +26,6 @@ private:
 
 	// Utility methods
 	ChunkCoord ConvertPositionToChunkCoord(const glm::vec3& position);
-	unsigned int calculateChunksDistance(const ChunkCoord& coord1, const ChunkCoord& coord2 = ChunkCoord(0, 0));
 
 public:
 	Map();

@@ -19,7 +19,7 @@ void Map::AddChunkToGenQueue(const ChunkCoord& chunkCoord)
 }
 
 ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
-{
+{	// Convert a 3D position into a 2D, chunk-normalized position
 	int x = position.x / CHUNK_X_BLOCK_COUNT;
 	int z = position.z / CHUNK_Z_BLOCK_COUNT;
 
@@ -33,7 +33,7 @@ ChunkCoord Map::ConvertPositionToChunkCoord(const glm::vec3& position)
 }
 
 void Map::RenderSpecificChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender)
-{
+{	// Add the chunk to the render list if its generated, otherwise add it to the generation queue
 	if (m_chunksUMap.find(coord) != m_chunksUMap.end()) // if the chunk exists
 	{
 		chunksCoordToRender.push_back(coord);
@@ -86,7 +86,6 @@ void Map::AddChunkToMap(const Chunk& chunk)
 
 void Map::RenderAllNeededChunks(const VertexArray& vao)
 {
-	// TODO: clear the buffers of non-rendered chunks
 	std::vector<ChunkCoord> chunkCoordVector = GetChunksCoordsToRender();
 	if (chunkCoordVector.size() == 0)
 	{
@@ -106,13 +105,6 @@ void Map::RenderAllNeededChunks(const VertexArray& vao)
 	}
 }
 
-unsigned int Map::calculateChunksDistance(const ChunkCoord& coord1, const ChunkCoord& coord2)
-{
-	/* Return the manhattan distance between the two chunks */
-	return (unsigned int)(glm::abs(coord1.idx - coord2.idx) + glm::abs(coord1.idz - coord2.idz));
-}
-
-
 void Map::UpdateChunkPlayerPosition(const glm::vec3& cameraPosition)
 {
 	ChunkCoord playerPosition = ConvertPositionToChunkCoord(cameraPosition);
@@ -123,10 +115,11 @@ void Map::UpdateChunkPlayerPosition(const glm::vec3& cameraPosition)
 }
 
 bool Map::GenerateOneChunk()
-{
+{	// Function called every frame: generate one chunk from the generation queue
 	if (m_chunkGenerationQueue.size() == 0)
 		return false; // no new chunk generated
 	
+	// else: if there's chunks to generate
 	ChunkCoord generatedChunkCoord = m_chunkGenerationQueue[0];
 	Chunk generatedChunk(generatedChunkCoord);
 	

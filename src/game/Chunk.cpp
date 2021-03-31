@@ -9,6 +9,7 @@ Chunk::Chunk(const ChunkCoord& coord)
 	: m_coord(coord), m_blocksArray(), m_vertexIndexBufferCouple()
 {
 	// Initialise the chunk to an empty cube of air
+	// TODO: change to a less ressource consuming method
 	DeleteAllBlocks();
 }
 
@@ -43,7 +44,9 @@ void Chunk::AddVertexToVertexBuffer(const glm::vec3& vertexCoord, const glm::vec
 
 
 void Chunk::AddFaceToCouple(const FaceType& faceType, const glm::vec3& blockCoord, const BlockType& blockType)
-{
+{	// Called for each face that's going to be rendered
+	// Add the proper vertex coordinates, textures UVs, and index count to the buffers
+
 	glm::vec3 vertexCoord[4] = {}; // one for each vertex of each face
 	glm::vec2 textureCoord[4] = {};
 	
@@ -214,7 +217,7 @@ void Chunk::SetBlockInterChunk(const std::unordered_map<ChunkCoord, std::unique_
 
 
 void Chunk::FillPlaneWithBlocks(const unsigned int& height, const BlockType& type)
-{
+{	// Debug function
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT ; x++)
 	{
 		for (unsigned int z = 0 ; z < CHUNK_Z_BLOCK_COUNT; z++)
@@ -226,7 +229,7 @@ void Chunk::FillPlaneWithBlocks(const unsigned int& height, const BlockType& typ
 }
 
 void Chunk::DeleteAllBlocks()
-{
+{	// Clear the array, and push back 16*16*256 blocks of air
 	m_blocksArray = {};
 	for (unsigned int x = 0; x < CHUNK_X_BLOCK_COUNT; x++)
 	{
@@ -245,7 +248,7 @@ void Chunk::DeleteAllBlocks()
 }
 
 unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
-{
+{	// Debug function
 	if (m_blocksArray.size() == 0)
 	{
 		std::cout << "[Chunk Blocks Error] The array of blocks is empty, cannot calculate any blocks\n";
@@ -272,10 +275,10 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 	return count;
 }
 
-enum ChunkRelativePosition
-{
-	NORTH, SOUTH, EAST, WEST
-};
+//enum ChunkRelativePosition
+//{
+//	NORTH, SOUTH, EAST, WEST
+//};
 
 void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
 {
@@ -287,7 +290,7 @@ void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<Chu
 
 	std::vector<glm::vec3> treesCoordinates;
 
-	bool isChunkGenerated[4] = { false };
+	//bool isChunkGenerated[4] = { false };
 	//isChunkGenerated[NORTH] = chunksUMap.find(ChunkCoord(m_coord.idx, m_coord.idz - 1)) != chunksUMap.end();
 	//isChunkGenerated[SOUTH] = chunksUMap.find(ChunkCoord(m_coord.idx, m_coord.idz + 1)) != chunksUMap.end();
 	//isChunkGenerated[EAST] = chunksUMap.find(ChunkCoord(m_coord.idx + 1, m_coord.idz)) != chunksUMap.end();
@@ -358,7 +361,7 @@ void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<Chu
 }	
 
 void Chunk::CreateTree(const glm::vec3& coords)
-{
+{	// Create a tree, where the specified coords are the coords of the lower block of the trunk
 	const unsigned int trunkHeight = 5;
 
 	for (int i = -2; i <= 2; i++)
@@ -427,7 +430,9 @@ void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCo
 
 /* FACE TO RENDER ALGORITHM PART */
 void Chunk::ListAllFacesToRender(const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
-{
+{	// Called once everytime the chunk or a neighboor is changing
+	// For each block, check for each face is there's a non-air block next to it: if so, it doesn't render the face
+	
 	const bool RENDER_UNGEN_CHUNKS_FACES = true;
 	const bool RENDER_BOTTOM_CHUNK_FACES = true;
 
