@@ -281,7 +281,7 @@ unsigned int Chunk::GetNumberOfNonAirBlocks(const bool& out) const
 //};
 
 void Chunk::Generate(const siv::PerlinNoise& noise, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
-{
+{	// Called ONCE on chunk generation: create the terrain, trees, etc...
 	// Trees coordinates generation
 	// Trees coordinates are calculated before terrain generation, to be able to get the y coordinate of the tree
 	const unsigned int minNbTrees = 0;
@@ -392,7 +392,8 @@ void Chunk::CreateTree(const glm::vec3& coords)
 }
 
 void Chunk::GenerateBuffers()
-{
+{	// Called everytime the geometry of the chunk changes
+
 	//DeleteBuffers();
 	GLCall(glGenBuffers(1, &m_vertexBufferID));
 	GLCall(glGenBuffers(1, &m_indexBufferID));
@@ -409,7 +410,7 @@ void Chunk::DeleteBuffers()
 
 
 void Chunk::RenderChunk(const VertexArray& vao, const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& chunksUMap)
-{
+{	// Called once every frame, make the draw call for the chunk
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*m_vertexIndexBufferCouple.m_vertexBuffer.size(), m_vertexIndexBufferCouple.m_vertexBuffer.data(), GL_STATIC_DRAW));
 
