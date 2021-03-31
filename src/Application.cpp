@@ -121,7 +121,7 @@ int main(void)
         blocksTexture.Bind(); // default slot is 0
 
         Renderer renderer;
-        double lastTime = glfwGetTime();
+        
 
         Text text("res/textures/ascii.png");
         const int textSize = 18;
@@ -129,6 +129,7 @@ int main(void)
         bool displayDebugText = true;
         const unsigned int defaultSwitchKeyCounter = 10;
         int switchKeyCounter = 0; // number of frames to wait before switching the mode again
+        double lastTime = glfwGetTime();
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -170,7 +171,7 @@ int main(void)
                 text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10 + textSize, textSize);
 
                 // OpenGL version
-                text.PrintText(window, vao, &textShader, openGLVersion, 10, 745, 18);
+                text.PrintText(window, vao, &textShader, openGLVersion, textSize/2, 745, textSize);
 
                 // SPF and FPS counters
                 float spf = glfwGetTime() - lastTime;
