@@ -24,12 +24,12 @@ private:
 	void RenderSpecificChunk(const ChunkCoord& coord, std::vector<ChunkCoord>& chunksCoordToRender);
 	std::vector<ChunkCoord> GetChunksCoordsToRender();
 
-	// Utility methods
-	ChunkCoord ConvertPositionToChunkCoord(const glm::vec3& position);
 
 public:
 	Map();
 
+	// Utility methods
+	ChunkCoord ConvertPositionToChunkCoord(const glm::vec3& position);
 	void AddChunkToMap(const Chunk& chunk);
 	inline Chunk* GetChunkByCoord(const ChunkCoord& coord) const { return m_chunksUMap.at(coord).get(); };
 

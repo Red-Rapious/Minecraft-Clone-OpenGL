@@ -1,7 +1,7 @@
 #pragma once
 
-#include "glm/glm.hpp"
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 #include <vector>
 #include "glm/glm.hpp"
 #include "Constants.hpp"
@@ -75,6 +75,7 @@ public:
     // Utility functions
     void SetBlockType(const glm::vec3& blockPosition, const BlockType& type);
     inline BlockType GetBlockType(const glm::vec3& blockPosition) const { return m_blocksArray[blockPosition.x][blockPosition.y][blockPosition.z]; };
+    inline std::vector<std::vector<std::vector<BlockType>>> GetBlocksArray() const { return m_blocksArray; }
     void DeleteAllBlocks();
 	void FillPlaneWithBlocks(const unsigned int& height, const BlockType& type);
     

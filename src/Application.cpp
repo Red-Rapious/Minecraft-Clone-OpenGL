@@ -6,7 +6,7 @@
 
 #include "game/World.hpp"
 
-constexpr auto FULLSCREEN = true;
+constexpr auto FULLSCREEN = false;
 
 int main(void)
 {

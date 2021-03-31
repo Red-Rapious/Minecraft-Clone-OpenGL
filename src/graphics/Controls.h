@@ -1,8 +1,8 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "GLFW/glfw3.h"
 #include <iostream>
+#include "../game/Chunk.hpp"
 
 class Control
 {
@@ -41,4 +41,6 @@ public:
 			std::cout << "Camera position: x=" << m_cameraPosition.x << " y=" << m_cameraPosition.y << " z=" << m_cameraPosition.z << "\n";
 		return m_cameraPosition; 
 	};
+
+	glm::vec3 GetAimedBlock(std::vector<std::vector<std::vector<BlockType>>> blocksArray);
 };
