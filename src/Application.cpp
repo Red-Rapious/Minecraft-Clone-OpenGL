@@ -1,29 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
-#include <unordered_map>
-#include <string>
-
-#include "graphics/Renderer.h"
-#include "graphics/IndexBuffer.h"
-#include "graphics/VertexBuffer.h"
-#include "graphics/VertexArray.h"
-#include "graphics/VertexBufferLayout.h"
-#include "graphics/Shader.h"
-#include "graphics/Texture.h"
-#include "graphics/Controls.h"
-#include "graphics/VertexIndexBufferCouple.hpp"
-#include "graphics/Text.hpp"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
 
 #include "stb/stb_image.h"
-
-#include "game/Chunk.hpp"
-#include "game/Map.hpp"
 
 #include "game/World.hpp"
 
