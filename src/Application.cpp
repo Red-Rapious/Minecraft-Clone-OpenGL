@@ -25,6 +25,8 @@
 #include "game/Chunk.hpp"
 #include "game/Map.hpp"
 
+#include "game/World.hpp"
+
 constexpr auto W_WIDTH = 1024;
 constexpr auto W_HEIGHT = 768;
 constexpr auto FULLSCREEN = false;
@@ -100,105 +102,14 @@ int main(void)
         srand(time(0)); // Init seed for the trees creation
 
         /* Non-rendering bjects instanciation */
-        glm::vec3 camera_position(8, 50, 8);
+        glm::vec3 defaultCameraPosition(8, 50, 8);
 
-        Control control(window, camera_position);
-        Map map;
-
-        /* Graphics part */
-        VertexArray vao;
-        vao.Bind();
-
-        Shader blocksShader("res/shaders/Blocks.shader");
-        blocksShader.Bind();
-        blocksShader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
-
-        Shader textShader("res/shaders/Text.shader");
-        textShader.Bind();
-        textShader.SetUniform1i("u_Texture", 0); // 0 = slot, default value
-
-        Texture blocksTexture("res/textures/default_mc_textures.png");
-        blocksTexture.Bind(); // default slot is 0
-
-        Renderer renderer;
-        
-
-        Text text("res/textures/ascii.png");
-        const int textSize = 18;
-        const char* openGLVersion = (char*)glGetString(GL_VERSION);
-        bool displayDebugText = true;
-        const unsigned int defaultSwitchKeyCounter = 10;
-        int switchKeyCounter = 0; // number of frames to wait before switching the mode again
-        double lastTime = glfwGetTime();
+        World world(window, defaultCameraPosition);
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {
-            renderer.Clear();
-
-            control.UpdateInput();
-            camera_position = control.GetCameraPosition();
-            map.UpdateChunkPlayerPosition(camera_position);
-
-            map.GenerateOneChunk(); // Generate only one chunk per frame to avoid huge freezes
-
-            // Generate the matrices
-            glm::mat4 proj = control.getProjectionMatrix();
-            glm::mat4 view = control.getViewMatrix();
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
-            glm::mat4 MVP = proj * view * model;
-            blocksShader.Bind();
-            blocksShader.SetUniformMat4f("u_MVP", MVP);
-
-            blocksTexture.Bind();
-            map.RenderAllNeededChunks(vao);
-
-            if (displayDebugText)
-            {
-                textShader.Bind();
-                textShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0); // set text color
-                {
-                    // Camera position
-                    std::string x = std::to_string((int)camera_position.x);
-                    std::string y = std::to_string((int)camera_position.y);
-                    std::string z = std::to_string((int)camera_position.z);
-                    text.PrintText(window, vao, &textShader, "Camera position : x = " + x + " y = " + y + " z=" + z, 10, 10, textSize);
-                }
-
-                // Player in chunk position
-                ChunkCoord chunkCoord = map.GetPlayerPosition();
-                text.PrintText(window, vao, &textShader, "Actual chunk: x = " + std::to_string(chunkCoord.idx) + " z=" + std::to_string(chunkCoord.idz), 10, 10 + textSize, textSize);
-
-                // OpenGL version
-                text.PrintText(window, vao, &textShader, openGLVersion, textSize/2, 745, textSize);
-
-                // SPF and FPS counters
-                float spf = glfwGetTime() - lastTime;
-                float fps = 1 / spf;
-                if (fps < 30)
-                {
-                    textShader.SetUniform4f("u_Color", 1.0, 0.2, 0.20, 1.0);
-                }
-                else if (fps > 60)
-                {
-                    textShader.SetUniform4f("u_Color", 0.2, 1.0, 0.33, 1.0);
-                }
-                text.PrintText(window, vao, &textShader, "Delta = " + std::to_string((int)(spf * 1000)) + "ms   FPS=" + std::to_string((int)fps), 10, 10 + 2 * textSize, textSize);
-                
-            }
-            lastTime = glfwGetTime();
-
-            if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            {
-                if (switchKeyCounter == 0)
-                {
-                    displayDebugText = !displayDebugText;
-                    switchKeyCounter = defaultSwitchKeyCounter;
-                }     
-            }
-            if (switchKeyCounter > 0)
-                switchKeyCounter--;
+            world.UpdateFrame(window);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
