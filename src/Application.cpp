@@ -6,9 +6,7 @@
 
 #include "game/World.hpp"
 
-constexpr auto W_WIDTH = 1024;
-constexpr auto W_HEIGHT = 768;
-constexpr auto FULLSCREEN = false;
+constexpr auto FULLSCREEN = true;
 
 int main(void)
 {
@@ -26,13 +24,18 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+    int monitorWidth, monitorHeight;
+    glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), nullptr, nullptr, &monitorWidth, &monitorHeight);
+    const float ratio = 0.8;
 
     /* Create a windowed mode window and its OpenGL context */
     if (FULLSCREEN)
-        window = glfwCreateWindow(1920, 1280, "Minecraft", glfwGetPrimaryMonitor(), NULL);
+        window = glfwCreateWindow(monitorWidth, monitorHeight, "Minecraft", glfwGetPrimaryMonitor(), NULL);
     else
-        window = glfwCreateWindow(W_WIDTH, W_HEIGHT, "Minecraft", NULL, NULL); // 4:3
-    glfwSetWindowPos(window, 500, 200);
+        window = glfwCreateWindow(monitorWidth*ratio, monitorHeight*ratio, "Minecraft", NULL, NULL); // 4:3
+    glfwSetWindowPos(window, (monitorWidth*(1-ratio))/2, (monitorHeight*(1-ratio)) / 2);
 
     if (!window)
     {
