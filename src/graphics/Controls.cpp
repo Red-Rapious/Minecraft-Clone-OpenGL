@@ -135,12 +135,15 @@ glm::vec3 Control::GetAimedBlock(std::vector<std::vector<std::vector<BlockType>>
 	glm::vec3 intDirection = glm::vec3((int)(m_direction.x*factor), (int)(m_direction.y*factor), (int)(m_direction.z*factor));
 	
 	glm::vec3 analysedBlock = cameraPositionInBlock;
+	int i = 1;
 	while (analysedBlock.x >= 0 && analysedBlock.x < CHUNK_X_BLOCK_COUNT && analysedBlock.y >= 0 && analysedBlock.y < CHUNK_Y_BLOCK_COUNT && analysedBlock.z >= 0 && analysedBlock.z < CHUNK_Z_BLOCK_COUNT)
 	{
+		
 		if (blocksArray[analysedBlock.x][analysedBlock.y][analysedBlock.z] != BlockType::NONE)
 			return analysedBlock;
 		else
-			analysedBlock += intDirection;
+			analysedBlock = cameraPositionInBlock + glm::vec3(i)*intDirection;
+		i++;
 	}
 	
 	return glm::vec3(-1,-1,-1); // no block is aimed at
