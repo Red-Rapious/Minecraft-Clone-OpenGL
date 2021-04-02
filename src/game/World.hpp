@@ -10,6 +10,7 @@
 #include "../graphics/Controls.h"
 #include "../graphics/VertexIndexBufferCouple.hpp"
 #include "../graphics/Text.hpp"
+#include "../graphics/Crossair.hpp"
 
 #include "Map.hpp"
 
@@ -23,6 +24,7 @@ private:
 	Shader m_textShader;
 	Texture m_blocksTexture;
 	Text m_text;
+	Crossair m_crossair;
 	Renderer m_renderer;
 
 	const int m_textSize = 18;

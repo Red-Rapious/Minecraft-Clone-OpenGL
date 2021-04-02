@@ -3,7 +3,7 @@
 #include "glm/gtx/transform.hpp"
 
 World::World(GLFWwindow* window, glm::vec3 defaultCameraPosition)
-	: m_control(window, defaultCameraPosition), m_blocksShader("res/shaders/Blocks.shader"), m_textShader("res/shaders/Text.shader"), m_blocksTexture("res/textures/default_mc_textures.png"), m_text("res/textures/ascii.png")
+	: m_control(window, defaultCameraPosition), m_blocksShader("res/shaders/Blocks.shader"), m_textShader("res/shaders/Text.shader"), m_blocksTexture("res/textures/default_mc_textures.png"), m_text("res/textures/ascii.png"), m_crossair("res/textures/crossair.png")
 {
 	m_vao.Bind();
 
@@ -92,4 +92,8 @@ void World::UpdateFrame(GLFWwindow* window)
         glm::vec3 block = m_control.GetAimedBlock(m_map.GetChunkByCoord(m_map.ConvertPositionToChunkCoord(cameraPosition))->GetBlocksArray());
         std::cout << block.x << "  " << block.y << "  " << block.z << "\n";
     }
+
+
+    m_textShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0);
+    m_crossair.RenderCrossair(window, m_vao, &m_textShader, 20); // always keep an even number here
 }
