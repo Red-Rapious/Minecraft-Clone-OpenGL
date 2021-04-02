@@ -21,7 +21,7 @@ private:
 	Map m_map;
 	VertexArray m_vao;
 	Shader m_blocksShader;
-	Shader m_textShader;
+	Shader m_basicShader;
 	Texture m_blocksTexture;
 	Text m_text;
 	Crossair m_crossair;
