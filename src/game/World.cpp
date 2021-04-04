@@ -90,7 +90,7 @@ void World::UpdateFrame(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) // change to click later
     {
         glm::vec3 block = m_control.GetAimedBlock(m_map.GetChunkByCoord(m_map.ConvertPositionToChunkCoord(cameraPosition))->GetBlocksArray());
-        std::cout << block.x << "  " << block.y << "  " << block.z << "\n";
+        std::cout << "Selected: " << (int)(m_map.GetChunkByCoord(m_map.ConvertPositionToChunkCoord(cameraPosition))->GetBlocksArray()[block.x][block.y][block.z]) << " at " << block.x << "  " << block.y << "  " << block.z << "\n";
     }
 
 

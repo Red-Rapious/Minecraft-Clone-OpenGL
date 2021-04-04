@@ -130,21 +130,26 @@ void Control::UpdateWSize()
 
 glm::vec3 Control::GetAimedBlock(std::vector<std::vector<std::vector<BlockType>>> blocksArray)
 {
-	glm::vec3 cameraPositionInBlock = glm::vec3((int)m_cameraPosition.x%16, (int)m_cameraPosition.y % 16, (int)m_cameraPosition.z % 16);
-	float factor = 1/std::min(std::min(m_direction.x, m_direction.y), m_direction.z);
-	glm::vec3 intDirection = glm::vec3((int)(m_direction.x*factor), (int)(m_direction.y*factor), (int)(m_direction.z*factor));
+	glm::vec3 cameraPositionInBlock = glm::vec3((int)m_cameraPosition.x%CHUNK_X_BLOCK_COUNT, (int)m_cameraPosition.y % CHUNK_Y_BLOCK_COUNT, (int)m_cameraPosition.z % CHUNK_Z_BLOCK_COUNT);
+	//float factor = 1/std::min(std::min(m_direction.x, m_direction.y), m_direction.z);
+	//glm::vec3 intDirection = glm::vec3((int)(m_direction.x*factor), (int)(m_direction.y*factor), (int)(m_direction.z*factor));
 	
+	const float factor = 0.1f;
+	glm::vec3 analysedPosition = m_cameraPosition;
 	glm::vec3 analysedBlock = cameraPositionInBlock;
-	int i = 1;
+
+	//std::cout << "Dir: " << m_direction.x << "  " << m_direction.y << "   " << m_direction.z << "\n";
 	while (analysedBlock.x >= 0 && analysedBlock.x < CHUNK_X_BLOCK_COUNT && analysedBlock.y >= 0 && analysedBlock.y < CHUNK_Y_BLOCK_COUNT && analysedBlock.z >= 0 && analysedBlock.z < CHUNK_Z_BLOCK_COUNT)
 	{
-		
+		//std::cout << "Block: " << analysedBlock.x << "  " << analysedBlock.y << "   " << analysedBlock.z << "\n";
 		if (blocksArray[analysedBlock.x][analysedBlock.y][analysedBlock.z] != BlockType::NONE)
 			return analysedBlock;
 		else
-			analysedBlock = cameraPositionInBlock + glm::vec3(i)*intDirection;
-		i++;
+		{
+			analysedPosition += factor * glm::normalize(m_direction);
+			analysedBlock = glm::vec3((int)analysedPosition.x % CHUNK_X_BLOCK_COUNT, (int)analysedPosition.y % CHUNK_Y_BLOCK_COUNT, (int)analysedPosition.z % CHUNK_Z_BLOCK_COUNT);
+		}
 	}
-	
+
 	return glm::vec3(-1,-1,-1); // no block is aimed at
 }
