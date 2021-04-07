@@ -7,7 +7,6 @@
 #include "../graphics/Shader.h"
 #include "../graphics/Texture.h"
 #include "../graphics/Controls.h"
-#include "../graphics/VertexIndexBufferCouple.hpp"
 #include "../graphics/Text.hpp"
 #include "../graphics/Crossair.hpp"
 
