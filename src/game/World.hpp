@@ -3,7 +3,6 @@
 #include "../graphics/Renderer.h"
 #include "../graphics/IndexBuffer.h"
 #include "../graphics/VertexBuffer.h"
-#include "../graphics/VertexArray.h"
 #include "../graphics/VertexBufferLayout.h"
 #include "../graphics/Shader.h"
 #include "../graphics/Texture.h"
