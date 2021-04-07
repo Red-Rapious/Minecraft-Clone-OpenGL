@@ -4,6 +4,7 @@
 
 #include "stb/stb_image.h"
 
+#include "menu/MainMenu.hpp"
 #include "game/World.hpp"
 
 constexpr auto FULLSCREEN = false;
@@ -83,13 +84,16 @@ int main(void)
 
         srand(time(0)); // Init seed for the trees creation
 
+        MainMenu mainMenu(window);
+
         glm::vec3 defaultCameraPosition(8, 50, 8);
         World world(window, defaultCameraPosition);
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
         {
-            world.UpdateFrame(window);
+            //world.UpdateFrame(window);
+            mainMenu.UpdateFrame(window);
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
