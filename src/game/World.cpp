@@ -95,5 +95,5 @@ void World::UpdateFrame(GLFWwindow* window)
 
 
     m_basicShader.SetUniform4f("u_Color", 1.0, 1.0, 1.0, 1.0);
-    m_crossair.RenderCrossair(window, m_vao, &m_basicShader, 20); // always keep an even number here
+    m_crossair.RenderImage(window, m_vao, &m_basicShader, 20); // always keep an even number here
 }

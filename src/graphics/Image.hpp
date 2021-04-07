@@ -6,7 +6,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
-class Crossair
+class Image
 {
 private:
 	Texture m_texture;
@@ -15,7 +15,7 @@ private:
 	void GenerateBuffer();
 
 public:
-	Crossair(const std::string path);
-	void RenderCrossair(GLFWwindow* window, const VertexArray& vao, Shader* shader, const unsigned int size);
+	Image(const std::string path);
+	void RenderImage(GLFWwindow* window, const VertexArray& vao, Shader* shader, const unsigned int size);
 
 };

@@ -8,7 +8,7 @@
 #include "../graphics/Texture.h"
 #include "../graphics/Controls.h"
 #include "../graphics/Text.hpp"
-#include "../graphics/Crossair.hpp"
+#include "../graphics/Image.hpp"
 
 #include "Map.hpp"
 
@@ -22,7 +22,7 @@ private:
 	Shader m_basicShader;
 	Texture m_blocksTexture;
 	Text m_text;
-	Crossair m_crossair;
+	Image m_crossair;
 	Renderer m_renderer;
 
 	const int m_textSize = 18;
