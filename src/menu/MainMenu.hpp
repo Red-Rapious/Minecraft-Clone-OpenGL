@@ -22,5 +22,5 @@ private:
 
 public:
 	MainMenu(GLFWwindow* window);
-	void UpdateFrame(GLFWwindow* window);
+	bool UpdateFrame(GLFWwindow* window);
 };
