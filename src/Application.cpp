@@ -89,7 +89,7 @@ int main(void)
         glm::vec3 defaultCameraPosition(8, 50, 8);
         World world(window, defaultCameraPosition);
 
-        bool onMainMenu = true;
+        bool onMainMenu = false; // start on main menu
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
