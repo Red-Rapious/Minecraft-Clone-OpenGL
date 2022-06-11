@@ -12,3 +12,6 @@ A clone of the famous java game, coded in C++ with OpenGL
 ![Screenshot 1](demo/screenshot1.PNG)
 ![Screenshot 2](demo/screenshot2.PNG)
 ![Screenshot 3](demo/screenshot3.PNG)
+
+## License
+This work is licensed under the [CC-BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
