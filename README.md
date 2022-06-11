@@ -1,12 +1,12 @@
-# MinecraftCloneOpenGL
+# Minecraft-Clone-OpenGL
 A clone of the famous java game, coded in C++ with OpenGL
 
 ## Libraries used :
-- *GLFW*
-- *GLAD* (new versions)
-- *GLEW* (for older versions of the repo)
-- *glm* for maths
-- *stb_image* for png loading
+- `GLFW`
+- `GLAD` (new versions)
+- `GLEW` (for older versions of the repo)
+- `glm` for maths
+- `stb_image` for png loading
 
 ## Screenshots
 ![Screenshot 1](demo/screenshot1.PNG)
