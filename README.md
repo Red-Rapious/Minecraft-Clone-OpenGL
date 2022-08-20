@@ -1,5 +1,5 @@
 # Minecraft-Clone-OpenGL
-A clone of the famous java game, coded in C++ with OpenGL
+A clone of the famous java game, coded in C++ with OpenGL. Probably my biggest, most personal project yet
 
 ## Libraries used :
 - `GLFW`
